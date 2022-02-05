@@ -1,4 +1,7 @@
-﻿namespace FileCabinetApp
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace FileCabinetApp
 {
     public static class Program
     {
@@ -101,6 +104,72 @@
             FileCabinetApp.FileCabinetService fileService = new FileCabinetService();
             var recordsCount = fileService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create()
+        {
+            string? firstNameOfUser = null;
+            while (firstNameOfUser == null)
+            {
+                Console.WriteLine("First name:");
+                firstNameOfUser = Console.ReadLine();
+            }
+
+            string? lastNameOfUser = null;
+            while (lastNameOfUser == null)
+            {
+                Console.WriteLine("Last name:");
+                lastNameOfUser = Console.ReadLine();
+            }
+
+            DateTime dateOfBirth = default;
+            while (dateOfBirth == default)
+            {
+                Console.WriteLine("Date of birth: ");
+                string? dateFromConsole = Console.ReadLine();
+                if (dateFromConsole != null)
+                {
+                    dateOfBirth = ConvertToDateTime(dateFromConsole);
+                }
+            }
+
+            FileCabinetService currentUser = new FileCabinetService();
+            int userId = currentUser.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth);
+
+            Console.WriteLine($"Record #{userId} is created.");
+        }
+
+        private static DateTime ConvertToDateTime(string source)
+        {
+            if (source == null)
+            {
+                return default(DateTime);
+            }
+
+            Regex customBirthDateFormat = new Regex(@"[0-1]?[0-9]{1}\D\s?[0-3]?[0-9]{1}\D\s?[1-2]{1}[0-9]{3}$");
+
+            if (!customBirthDateFormat.IsMatch(source))
+            {
+                return default(DateTime);
+            }
+
+            char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ', '*', '-', '+' };
+            source = string.Concat(source.Split(separatorsForDateOfBirth));
+
+            DateTime birthDateOfUser = default(DateTime);
+            int dateOfBirth = int.Parse(source, CultureInfo.CurrentCulture);
+
+            int yearOfBirth = dateOfBirth % 10000;
+            birthDateOfUser.AddYears(yearOfBirth);
+            dateOfBirth /= 10000;
+
+            int dayOfBirth = dateOfBirth % 100;
+            birthDateOfUser.AddDays(dayOfBirth);
+
+            int monthOfBirth = dateOfBirth / 100;
+            birthDateOfUser.AddMonths(monthOfBirth);
+
+            return birthDateOfUser;
         }
     }
 }
