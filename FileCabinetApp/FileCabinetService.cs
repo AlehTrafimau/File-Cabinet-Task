@@ -8,6 +8,7 @@ namespace FileCabinetApp
 
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
         {
@@ -25,6 +26,7 @@ namespace FileCabinetApp
             this.list.Add(record);
             AddToDictionary(this.firstNameDictionary, firstName, record);
             AddToDictionary(this.lastNameDictionary, lastName, record);
+            AddToDictionary(this.dateOfBirthDictionary, dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), record);
 
             return record.Id;
         }
@@ -60,7 +62,11 @@ namespace FileCabinetApp
                 EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, lastName, id);
             }
 
+            DateTime dateOfBirthBeforeEdit = this.list[numberOfRecordForEdit].DateOfBirth;
             this.list[numberOfRecordForEdit].DateOfBirth = dateOfBirth;
+
+            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), id);
+
             this.list[numberOfRecordForEdit].PassNumber = passNumber;
             this.list[numberOfRecordForEdit].SerieOfPassNumber = serieOfPassNumber;
             this.list[numberOfRecordForEdit].CurrentBankAccount = currentBankAccount;
