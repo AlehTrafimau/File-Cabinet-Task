@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -133,7 +134,7 @@ namespace FileCabinetApp
             }
             else
             {
-                Console.WriteLine($"Invalid parameter: {parameters}");
+                Console.WriteLine($"Parameters did not enter");
             }
         }
 
@@ -170,9 +171,71 @@ namespace FileCabinetApp
                 Console.WriteLine("There are no records here");
             }
 
-            foreach (FileCabinetRecord i in notesInformation)
+            foreach (FileCabinetRecord currentRecord in notesInformation)
             {
-                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount: {i.CurrentBankAccount}$");
+                Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
+                    $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2);
+            string command = inputs[0].ToUpperInvariant();
+            string parameterForSearch;
+            string[] availableCommands = new string[] { "FIRSTNAME", "LASTNAME", "DATEOFBIRTH" };
+
+            if (inputs.Length == 2)
+            {
+                parameterForSearch = inputs[1];
+
+                if (Regex.IsMatch(parameterForSearch, @"^\W{1}\S+\W{1}$"))
+                {
+                    parameterForSearch = parameterForSearch.Trim(new char[] { '"', '+', '/', '\\', '*' });
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Enter parameter for search");
+                return;
+            }
+
+            List<FileCabinetRecord> notesInformation = new List<FileCabinetRecord>();
+
+            if (availableCommands.Contains(command))
+            {
+                switch (command)
+                {
+                    case "FIRSTNAME":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByFirstName(parameterForSearch));
+                        break;
+                    case "LASTNAME":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByLastName(parameterForSearch));
+                        break;
+                    case "DATEOFBIRTH":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByDayOfBirth(parameterForSearch));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid command: {command}.");
+                return;
+            }
+
+            if (notesInformation.Count != 0)
+            {
+                foreach (FileCabinetRecord currentRecord in notesInformation)
+                {
+                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
+                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Notes are not found");
             }
         }
     }
