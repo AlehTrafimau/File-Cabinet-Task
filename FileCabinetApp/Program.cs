@@ -21,6 +21,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new string[] { "stat", "prints notes statistics", "The 'stat' command prints notes' statistics." },
             new string[] { "create", "saves user's dates and returns user's ID", "The 'create' command saves user's dates and returns user's ID." },
             new string[] { "list", "prints all notes of this service", "The 'help' command prints all notes of this service." },
+            new string[] { "edit", "edits note in sevice according input ID", "The 'edit' command edits note in sevice according input ID" },
         };
 
         public static void Main(string[] args)
@@ -106,6 +108,35 @@ namespace FileCabinetApp
             isRunning = false;
         }
 
+        private static void Edit(string parameters)
+        {
+            if (parameters != string.Empty && Regex.IsMatch(parameters, @"^([1-9]{1}(\d*))|(0+[1-9]{1}\d*)$"))
+            {
+                int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
+                if (Program.fileCabinetService.GetStat() < requestedID)
+                {
+                    Console.WriteLine($"#{requestedID} record is not found");
+                    return;
+                }
+
+                string? firstNameOfUser = VerifyEntryData.FirstNameCheck();
+                string? lastNamуOfUser = VerifyEntryData.LastNameCheck();
+                DateTime dateOfBirth = VerifyEntryData.DateOfBirthCheck();
+                char serieOfPassNumber = VerifyEntryData.SerieOfPassNumberCheck();
+                short passNumber = VerifyEntryData.PassNumberCheck();
+                decimal summOnBankAccount = VerifyEntryData.BankAccountCheck();
+
+                if (firstNameOfUser != null && lastNamуOfUser != null)
+                {
+                    Program.fileCabinetService.EditRecord(requestedID, firstNameOfUser, lastNamуOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid parameter: {parameters}");
+            }
+        }
+
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
@@ -114,100 +145,18 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            string? firstNameOfUser;
-            while (true)
-            {
-                Console.Write("First name: ");
-                firstNameOfUser = Console.ReadLine();
-                if (firstNameOfUser != null && firstNameOfUser.Length >= 2 && firstNameOfUser.Length <= 60 && !Regex.IsMatch(firstNameOfUser, @"^\s+$"))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format first name");
-                }
-            }
+            string? firstNameOfUser = VerifyEntryData.FirstNameCheck();
+            string? lastNamуOfUser = VerifyEntryData.LastNameCheck();
+            DateTime dateOfBirth = VerifyEntryData.DateOfBirthCheck();
+            char serieOfPassNumber = VerifyEntryData.SerieOfPassNumberCheck();
+            short passNumber = VerifyEntryData.PassNumberCheck();
+            decimal summOnBankAccount = VerifyEntryData.BankAccountCheck();
 
-            string? lastNameOfUser;
-            while (true)
+            int userId = 0;
+            if (firstNameOfUser != null && lastNamуOfUser != null)
             {
-                Console.Write("Last name: ");
-                lastNameOfUser = Console.ReadLine();
-                if (lastNameOfUser != null && lastNameOfUser.Length >= 2 && lastNameOfUser.Length <= 60 && !Regex.IsMatch(lastNameOfUser, @"^\s+$"))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format last name");
-                }
+                userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNamуOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
             }
-
-            DateTime dateOfBirth = default;
-            while (dateOfBirth == default)
-            {
-                Console.Write("Date of birth: ");
-                string? dateFromConsole = Console.ReadLine();
-                if (dateFromConsole != null)
-                {
-                    dateOfBirth = ConvertToDateTime(dateFromConsole);
-                }
-            }
-
-            char serieOfPassNumber = default;
-            while (true)
-            {
-                Console.Write("Serie of your pass number: ");
-                string? source = Console.ReadLine();
-                if (source != null && Regex.IsMatch(source, @"^[A-Z]{1}|[a-z]{1}$"))
-                {
-                    serieOfPassNumber = char.Parse(source);
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Enter valid serie of number (1 letter)");
-                }
-            }
-
-            short passNumber = default;
-            while (true)
-            {
-                Console.Write("Your pass number: ");
-                string? source = Console.ReadLine();
-                if (source != null && Regex.IsMatch(source, @"^(\d{4}|\d{3}|\d{2}|\d{1})$"))
-                {
-                    passNumber = short.Parse(source, CultureInfo.InvariantCulture);
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Enter valid pass number (4 digits)");
-                }
-            }
-
-            decimal bankAccount = default;
-            while (true)
-            {
-                Console.Write("Your current bank account ($): ");
-                string? source = Console.ReadLine();
-                if (source != null && Regex.IsMatch(source, @"\d+(\.?\d+)?$"))
-                {
-                    bool isConvertedToDecimal = decimal.TryParse(source, out decimal result);
-                    if (isConvertedToDecimal)
-                    {
-                        bankAccount = result;
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Enter valid bank account");
-                    }
-                }
-            }
-
-            int userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
             Console.WriteLine($"Record #{userId} is created.");
         }
@@ -216,45 +165,15 @@ namespace FileCabinetApp
         {
             FileCabinetRecord[] notesInformation = Program.fileCabinetService.GetRecords();
 
+            if (notesInformation.Length == 0)
+            {
+                Console.WriteLine("There are no records here");
+            }
+
             foreach (FileCabinetRecord i in notesInformation)
             {
-                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount: {i.CurrentBankAccount} $");
+                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount: {i.CurrentBankAccount}$");
             }
-        }
-
-        private static DateTime ConvertToDateTime(string source)
-        {
-            if (source == null)
-            {
-                return default;
-            }
-
-            Regex customBirthDateFormat = new Regex(@"^((0{1}|^)[1-9]{1}|1{1}[0-2]{1})\D\s?((0{1}[1-9]{1})|([1-9]{1})|([1-2]{1}[0-9]{1})|(3{1}[0-1]{1}))\D\s?((1{1}9{1}[5-9]{1}[0-9]{1})|(2{1}0{1}[0-9]{2}))$");
-
-            if (!customBirthDateFormat.IsMatch(source))
-            {
-                Console.WriteLine("Invalid date of birth. Date format: month/ day/ year.");
-                return default;
-            }
-
-            char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ' };
-            string[] sourceSplit = source.Split(separatorsForDateOfBirth);
-
-            int yearOfBirth = int.Parse(sourceSplit[2], CultureInfo.InvariantCulture);
-            int dayOfBirth = int.Parse(sourceSplit[1], CultureInfo.InvariantCulture);
-            int monthOfBirth = int.Parse(sourceSplit[0], CultureInfo.InvariantCulture);
-            DateTime birthDateOfUser = new DateTime(yearOfBirth, monthOfBirth, dayOfBirth, 0, 0, 0);
-            DateTime currentDate = DateTime.Now;
-
-            int resultOfCompare = birthDateOfUser.CompareTo(currentDate);
-
-            if (resultOfCompare >= 0)
-            {
-                Console.WriteLine("Invalid date of birth (greater than current time or same as current time)");
-                return default;
-            }
-
-            return birthDateOfUser;
         }
     }
 }
