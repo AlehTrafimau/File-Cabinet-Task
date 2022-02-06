@@ -21,8 +21,8 @@
 
         public FileCabinetRecord[] GetRecords()
         {
-            // TODO: добавьте реализацию метода
-            return Array.Empty<FileCabinetRecord>();
+            List<FileCabinetRecord> copyInnerListOfService = new List<FileCabinetRecord>(this.list);
+            return copyInnerListOfService.ToArray();
         }
 
         public int GetStat()

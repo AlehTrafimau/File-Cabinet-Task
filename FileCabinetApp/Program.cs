@@ -10,6 +10,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
 
         private static bool isRunning = true;
 
@@ -17,12 +18,18 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "stat", "prints notes statistics", "The 'stat' command prints notes' statistics." },
+            new string[] { "create", "saves user's dates and returns user's ID", "The 'create' command saves user's dates and returns user's ID." },
+            new string[] { "list", "prints all notes of this service", "The 'help' command prints all notes of this service." },
         };
 
         public static void Main(string[] args)
@@ -30,6 +37,7 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
+            FileCabinetService fs = new FileCabinetService();
 
             do
             {
@@ -45,7 +53,7 @@ namespace FileCabinetApp
                     continue;
                 }
 
-                var index = Array.FindIndex(commands, 0, commands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(commands, 0, commands.Length, i => i.Item1.Equals(command, StringComparison.Ordinal));
                 if (index >= 0)
                 {
                     const int parametersIndex = 1;
@@ -70,7 +78,7 @@ namespace FileCabinetApp
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.Ordinal));
                 if (index >= 0)
                 {
                     Console.WriteLine(helpMessages[index][Program.ExplanationHelpIndex]);
@@ -101,31 +109,30 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            FileCabinetApp.FileCabinetService fileService = new FileCabinetService();
-            var recordsCount = fileService.GetStat();
+            var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
-        private static void Create()
+        private static void Create(string parameters)
         {
             string? firstNameOfUser = null;
             while (firstNameOfUser == null)
             {
-                Console.WriteLine("First name:");
+                Console.Write("First name: ");
                 firstNameOfUser = Console.ReadLine();
             }
 
             string? lastNameOfUser = null;
             while (lastNameOfUser == null)
             {
-                Console.WriteLine("Last name:");
+                Console.Write("Last name: ");
                 lastNameOfUser = Console.ReadLine();
             }
 
             DateTime dateOfBirth = default;
             while (dateOfBirth == default)
             {
-                Console.WriteLine("Date of birth: ");
+                Console.Write("Date of birth: ");
                 string? dateFromConsole = Console.ReadLine();
                 if (dateFromConsole != null)
                 {
@@ -133,10 +140,19 @@ namespace FileCabinetApp
                 }
             }
 
-            FileCabinetService currentUser = new FileCabinetService();
-            int userId = currentUser.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth);
+            int userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth);
 
             Console.WriteLine($"Record #{userId} is created.");
+        }
+
+        private static void List(string parameters)
+        {
+            FileCabinetRecord[] notesInformation = Program.fileCabinetService.GetRecords();
+
+            foreach (FileCabinetRecord i in notesInformation)
+            {
+                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}");
+            }
         }
 
         private static DateTime ConvertToDateTime(string source)
@@ -154,20 +170,12 @@ namespace FileCabinetApp
             }
 
             char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ', '*', '-', '+' };
-            source = string.Concat(source.Split(separatorsForDateOfBirth));
+            string[] sourceSplit = source.Split(separatorsForDateOfBirth);
 
-            DateTime birthDateOfUser = default(DateTime);
-            int dateOfBirth = int.Parse(source, CultureInfo.CurrentCulture);
-
-            int yearOfBirth = dateOfBirth % 10000;
-            birthDateOfUser.AddYears(yearOfBirth);
-            dateOfBirth /= 10000;
-
-            int dayOfBirth = dateOfBirth % 100;
-            birthDateOfUser.AddDays(dayOfBirth);
-
-            int monthOfBirth = dateOfBirth / 100;
-            birthDateOfUser.AddMonths(monthOfBirth);
+            int yearOfBirth = int.Parse(sourceSplit[2], CultureInfo.InvariantCulture);
+            int dayOfBirth = int.Parse(sourceSplit[1], CultureInfo.InvariantCulture);
+            int monthOfBirth = int.Parse(sourceSplit[0], CultureInfo.InvariantCulture);
+            DateTime birthDateOfUser = new DateTime(yearOfBirth, monthOfBirth, dayOfBirth);
 
             return birthDateOfUser;
         }
