@@ -37,7 +37,6 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
-            FileCabinetService fs = new FileCabinetService();
 
             do
             {
