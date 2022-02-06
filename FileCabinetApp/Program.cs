@@ -189,14 +189,14 @@ namespace FileCabinetApp
             {
                 parameterForSearch = inputs[1];
 
-                if (Regex.IsMatch(parameterForSearch, @"^\W{1}\w+\W{1}$"))
+                if (Regex.IsMatch(parameterForSearch, @"^\W{1}\S+\W{1}$"))
                 {
                     parameterForSearch = parameterForSearch.Trim(new char[] { '"', '+', '/', '\\', '*' });
                 }
             }
             else
             {
-                Console.WriteLine($"Invalid command: {command}. Enter parameter for search");
+                Console.WriteLine($"Enter parameter for search");
                 return;
             }
 
@@ -212,9 +212,17 @@ namespace FileCabinetApp
                     case "LASTNAME":
                         notesInformation.AddRange(Program.fileCabinetService.FindByLastName(parameterForSearch));
                         break;
+                    case "DATEOFBIRTH":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByDayOfBirth(parameterForSearch));
+                        break;
                     default:
                         break;
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid command: {command}.");
+                return;
             }
 
             if (notesInformation.Count != 0)

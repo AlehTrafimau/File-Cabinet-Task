@@ -1,4 +1,6 @@
-﻿namespace FileCabinetApp
+﻿using System.Globalization;
+
+namespace FileCabinetApp
 {
     public class FileCabinetService
     {
@@ -70,6 +72,28 @@
                 }
             }
 
+            return result.ToArray();
+        }
+
+        public FileCabinetRecord[] FindByDayOfBirth(string dateParameter)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            bool isConversation = DateTime.TryParse(dateParameter, out DateTime dayOfBirth);
+
+            if (isConversation)
+            {
+                foreach (FileCabinetRecord currentRecord in this.list)
+                {
+                    if (currentRecord.DateOfBirth == dayOfBirth)
+                    {
+                        result.Add(currentRecord);
+                    }
+                }
+
+                return result.ToArray();
+            }
+
+            Console.WriteLine("Conversation error. Format date of birth parameter: \"1994 - Jul - 30\"");
             return result.ToArray();
         }
     }
