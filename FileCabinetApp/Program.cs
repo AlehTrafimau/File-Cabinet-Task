@@ -182,28 +182,39 @@ namespace FileCabinetApp
         {
             string[] inputs = parameters.Split(' ', 2);
             string command = inputs[0].ToUpperInvariant();
-            string nameForSearch;
+            string parameterForSearch;
+            string[] availableCommands = new string[] { "FIRSTNAME", "LASTNAME", "DATEOFBIRTH" };
 
             if (inputs.Length == 2)
             {
-                nameForSearch = inputs[1];
+                parameterForSearch = inputs[1];
 
-                if (Regex.IsMatch(nameForSearch, @"^\W{1}\w+\W{1}$"))
+                if (Regex.IsMatch(parameterForSearch, @"^\W{1}\w+\W{1}$"))
                 {
-                    nameForSearch = nameForSearch.Trim(new char[] { '"', '+', '/', '\\', '*' });
+                    parameterForSearch = parameterForSearch.Trim(new char[] { '"', '+', '/', '\\', '*' });
                 }
             }
             else
             {
-                Console.WriteLine($"Invalid command: {command}");
+                Console.WriteLine($"Invalid command: {command}. Enter parameter for search");
                 return;
             }
 
             List<FileCabinetRecord> notesInformation = new List<FileCabinetRecord>();
 
-            if (command == "firstName".ToUpperInvariant())
+            if (availableCommands.Contains(command))
             {
-                notesInformation.AddRange(Program.fileCabinetService.FindByFirstName(nameForSearch));
+                switch (command)
+                {
+                    case "FIRSTNAME":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByFirstName(parameterForSearch));
+                        break;
+                    case "LASTNAME":
+                        notesInformation.AddRange(Program.fileCabinetService.FindByLastName(parameterForSearch));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (notesInformation.Count != 0)

@@ -58,5 +58,19 @@
 
             return result.ToArray();
         }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            foreach (FileCabinetRecord currentRecord in this.list)
+            {
+                if (currentRecord.LastName != null && currentRecord.LastName.ToUpperInvariant() == lastName.ToUpperInvariant())
+                {
+                    result.Add(currentRecord);
+                }
+            }
+
+            return result.ToArray();
+        }
     }
 }
