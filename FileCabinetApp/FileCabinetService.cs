@@ -32,5 +32,17 @@
         {
             return this.list.Count;
         }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
+        {
+                int numberOfRecordForEdit = id - 1;
+                this.list[numberOfRecordForEdit].DateOfBirth = dateOfBirth;
+                this.list[numberOfRecordForEdit].FirstName = firstName;
+                this.list[numberOfRecordForEdit].LastName = lastName;
+                this.list[numberOfRecordForEdit].PassNumber = passNumber;
+                this.list[numberOfRecordForEdit].SerieOfPassNumber = serieOfPassNumber;
+                this.list[numberOfRecordForEdit].CurrentBankAccount = currentBankAccount;
+                Console.WriteLine($"Record #{id} is updated");
+        }
     }
 }
