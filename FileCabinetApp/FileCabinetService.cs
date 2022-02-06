@@ -44,5 +44,19 @@
                 this.list[numberOfRecordForEdit].CurrentBankAccount = currentBankAccount;
                 Console.WriteLine($"Record #{id} is updated");
         }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            foreach (FileCabinetRecord currentRecord in this.list)
+            {
+                if (currentRecord.FirstName != null && currentRecord.FirstName.ToUpperInvariant() == firstName.ToUpperInvariant())
+                {
+                    result.Add(currentRecord);
+                }
+            }
+
+            return result.ToArray();
+        }
     }
 }

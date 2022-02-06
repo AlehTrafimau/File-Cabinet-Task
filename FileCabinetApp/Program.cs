@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -170,9 +171,52 @@ namespace FileCabinetApp
                 Console.WriteLine("There are no records here");
             }
 
-            foreach (FileCabinetRecord i in notesInformation)
+            foreach (FileCabinetRecord currentRecord in notesInformation)
             {
-                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount: {i.CurrentBankAccount}$");
+                Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
+                    $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2);
+            string command = inputs[0].ToUpperInvariant();
+            string nameForSearch;
+
+            if (inputs.Length == 2)
+            {
+                nameForSearch = inputs[1];
+
+                if (Regex.IsMatch(nameForSearch, @"^\W{1}\w+\W{1}$"))
+                {
+                    nameForSearch = nameForSearch.Trim(new char[] { '"', '+', '/', '\\', '*' });
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid command: {command}");
+                return;
+            }
+
+            List<FileCabinetRecord> notesInformation = new List<FileCabinetRecord>();
+
+            if (command == "firstName".ToUpperInvariant())
+            {
+                notesInformation.AddRange(Program.fileCabinetService.FindByFirstName(nameForSearch));
+            }
+
+            if (notesInformation.Count != 0)
+            {
+                foreach (FileCabinetRecord currentRecord in notesInformation)
+                {
+                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
+                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Notes are not found");
             }
         }
     }
