@@ -162,10 +162,11 @@ namespace FileCabinetApp
                 return default(DateTime);
             }
 
-            Regex customBirthDateFormat = new Regex(@"[0-1]?[0-9]{1}\D\s?[0-3]?[0-9]{1}\D\s?[1-2]{1}[0-9]{3}$");
+            Regex customBirthDateFormat = new Regex(@"^((0{1}|^)[1-9]{1}|1{1}[0-2]{1})\D\s?((0{1}[1-9]{1})|([1-9]{1})|([1-2]{1}[0-9]{1})|(3{1}[0-1]{1}))\D\s?(([0-1]{1}[0-9]{3})|(2{1}0{1}[0-1]{1}[0-9]{1})|(2{1}0{1}2{1}[0-2]{1}))$");
 
             if (!customBirthDateFormat.IsMatch(source))
             {
+                Console.WriteLine("Invalid date of birth. Date format: month/ day/ year.");
                 return default(DateTime);
             }
 
