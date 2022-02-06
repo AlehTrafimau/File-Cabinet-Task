@@ -114,18 +114,27 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            string? firstNameOfUser = null;
-            while (firstNameOfUser == null)
+            Console.Write("First name: ");
+            string? firstNameOfUser = Console.ReadLine();
+            if (firstNameOfUser == null)
             {
-                Console.Write("First name: ");
-                firstNameOfUser = Console.ReadLine();
+                throw new ArgumentNullException(firstNameOfUser);
+            }
+            else if (firstNameOfUser.Length < 2 || firstNameOfUser.Length > 60 || Regex.IsMatch(firstNameOfUser, @"^\s+$"))
+            {
+                throw new ArgumentException("Entered the first name is invalid", firstNameOfUser);
             }
 
-            string? lastNameOfUser = null;
-            while (lastNameOfUser == null)
+            Console.Write("Last name: ");
+            string? lastNameOfUser = Console.ReadLine();
+            if (lastNameOfUser == null)
             {
-                Console.Write("Last name: ");
-                lastNameOfUser = Console.ReadLine();
+                throw new ArgumentNullException(lastNameOfUser);
+            }
+
+            if (lastNameOfUser.Length < 2 || lastNameOfUser.Length > 60 || Regex.IsMatch(lastNameOfUser, @"^\s+$"))
+            {
+                throw new ArgumentException("Entered last name is invalid", lastNameOfUser);
             }
 
             DateTime dateOfBirth = default;
@@ -198,7 +207,7 @@ namespace FileCabinetApp
 
             foreach (FileCabinetRecord i in notesInformation)
             {
-                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount {i.CurrentBankAccount} $");
+                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount: {i.CurrentBankAccount} $");
             }
         }
 
@@ -209,12 +218,11 @@ namespace FileCabinetApp
                 return default(DateTime);
             }
 
-            Regex customBirthDateFormat = new Regex(@"^((0{1}|^)[1-9]{1}|1{1}[0-2]{1})\D\s?((0{1}[1-9]{1})|([1-9]{1})|([1-2]{1}[0-9]{1})|(3{1}[0-1]{1}))\D\s?(([0-1]{1}[0-9]{3})|(2{1}0{1}[0-1]{1}[0-9]{1})|(2{1}0{1}2{1}[0-2]{1}))$");
+            Regex customBirthDateFormat = new Regex(@"^((0{1}|^)[1-9]{1}|1{1}[0-2]{1})\D\s?((0{1}[1-9]{1})|([1-9]{1})|([1-2]{1}[0-9]{1})|(3{1}[0-1]{1}))\D\s?((1{1}9{1}[5-9]{1}[0-9]{1})|(2{1}0{1}[0-9]{2}))$");
 
             if (!customBirthDateFormat.IsMatch(source))
             {
-                Console.WriteLine("Invalid date of birth. Date format: month/ day/ year.");
-                return default(DateTime);
+                throw new ArgumentOutOfRangeException(nameof(source));
             }
 
             char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ', '*', '-', '+' };
@@ -223,7 +231,15 @@ namespace FileCabinetApp
             int yearOfBirth = int.Parse(sourceSplit[2], CultureInfo.InvariantCulture);
             int dayOfBirth = int.Parse(sourceSplit[1], CultureInfo.InvariantCulture);
             int monthOfBirth = int.Parse(sourceSplit[0], CultureInfo.InvariantCulture);
-            DateTime birthDateOfUser = new DateTime(yearOfBirth, monthOfBirth, dayOfBirth);
+            DateTime birthDateOfUser = new DateTime(yearOfBirth, monthOfBirth, dayOfBirth, 0, 0, 0);
+            DateTime currentDate = DateTime.Now;
+
+            int resultOfCompare = birthDateOfUser.CompareTo(currentDate);
+
+            if (resultOfCompare >= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(source));
+            }
 
             return birthDateOfUser;
         }
