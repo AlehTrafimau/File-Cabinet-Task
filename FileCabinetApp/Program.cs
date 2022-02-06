@@ -114,27 +114,34 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name: ");
-            string? firstNameOfUser = Console.ReadLine();
-            if (firstNameOfUser == null)
+            string? firstNameOfUser;
+            while (true)
             {
-                throw new ArgumentNullException(firstNameOfUser);
-            }
-            else if (firstNameOfUser.Length < 2 || firstNameOfUser.Length > 60 || Regex.IsMatch(firstNameOfUser, @"^\s+$"))
-            {
-                throw new ArgumentException("Entered the first name is invalid", firstNameOfUser);
-            }
-
-            Console.Write("Last name: ");
-            string? lastNameOfUser = Console.ReadLine();
-            if (lastNameOfUser == null)
-            {
-                throw new ArgumentNullException(lastNameOfUser);
+                Console.Write("First name: ");
+                firstNameOfUser = Console.ReadLine();
+                if (firstNameOfUser != null && firstNameOfUser.Length >= 2 && firstNameOfUser.Length <= 60 && !Regex.IsMatch(firstNameOfUser, @"^\s+$"))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid format first name");
+                }
             }
 
-            if (lastNameOfUser.Length < 2 || lastNameOfUser.Length > 60 || Regex.IsMatch(lastNameOfUser, @"^\s+$"))
+            string? lastNameOfUser;
+            while (true)
             {
-                throw new ArgumentException("Entered last name is invalid", lastNameOfUser);
+                Console.Write("Last name: ");
+                lastNameOfUser = Console.ReadLine();
+                if (lastNameOfUser != null && lastNameOfUser.Length >= 2 && lastNameOfUser.Length <= 60 && !Regex.IsMatch(lastNameOfUser, @"^\s+$"))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid format last name");
+                }
             }
 
             DateTime dateOfBirth = default;
@@ -149,14 +156,14 @@ namespace FileCabinetApp
             }
 
             char serieOfPassNumber = default;
-            while (serieOfPassNumber == default)
+            while (true)
             {
                 Console.Write("Serie of your pass number: ");
                 string? source = Console.ReadLine();
-                Regex serieOfPassNumberFormat = new Regex(@"^[A-Z]{1}|[a-z]{1}$");
-                if (source != null && serieOfPassNumberFormat.IsMatch(source))
+                if (source != null && Regex.IsMatch(source, @"^[A-Z]{1}|[a-z]{1}$"))
                 {
                     serieOfPassNumber = char.Parse(source);
+                    break;
                 }
                 else
                 {
@@ -165,14 +172,14 @@ namespace FileCabinetApp
             }
 
             short passNumber = default;
-            while (passNumber == default)
+            while (true)
             {
                 Console.Write("Your pass number: ");
                 string? source = Console.ReadLine();
-                Regex passNumberFormat = new Regex(@"^(\d{4}|\d{3}|\d{2}|\d{1})$");
-                if (source != null && passNumberFormat.IsMatch(source))
+                if (source != null && Regex.IsMatch(source, @"^(\d{4}|\d{3}|\d{2}|\d{1})$"))
                 {
                     passNumber = short.Parse(source, CultureInfo.InvariantCulture);
+                    break;
                 }
                 else
                 {
@@ -181,17 +188,21 @@ namespace FileCabinetApp
             }
 
             decimal bankAccount = default;
-            while (bankAccount == default)
+            while (true)
             {
                 Console.Write("Your current bank account ($): ");
                 string? source = Console.ReadLine();
-                Regex bankAccountFormat = new Regex(@"\d+(\.?\d+)?$");
-                if (source != null && bankAccountFormat.IsMatch(source))
+                if (source != null && Regex.IsMatch(source, @"\d+(\.?\d+)?$"))
                 {
                     bool isConvertedToDecimal = decimal.TryParse(source, out decimal result);
                     if (isConvertedToDecimal)
                     {
                         bankAccount = result;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Enter valid bank account");
                     }
                 }
             }
@@ -215,17 +226,18 @@ namespace FileCabinetApp
         {
             if (source == null)
             {
-                return default(DateTime);
+                return default;
             }
 
             Regex customBirthDateFormat = new Regex(@"^((0{1}|^)[1-9]{1}|1{1}[0-2]{1})\D\s?((0{1}[1-9]{1})|([1-9]{1})|([1-2]{1}[0-9]{1})|(3{1}[0-1]{1}))\D\s?((1{1}9{1}[5-9]{1}[0-9]{1})|(2{1}0{1}[0-9]{2}))$");
 
             if (!customBirthDateFormat.IsMatch(source))
             {
-                throw new ArgumentOutOfRangeException(nameof(source));
+                Console.WriteLine("Invalid date of birth. Date format: month/ day/ year.");
+                return default;
             }
 
-            char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ', '*', '-', '+' };
+            char[] separatorsForDateOfBirth = new char[] { '/', '\\', '.', ',', ' ' };
             string[] sourceSplit = source.Split(separatorsForDateOfBirth);
 
             int yearOfBirth = int.Parse(sourceSplit[2], CultureInfo.InvariantCulture);
@@ -238,7 +250,8 @@ namespace FileCabinetApp
 
             if (resultOfCompare >= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(source));
+                Console.WriteLine("Invalid date of birth (greater than current time or same as current time)");
+                return default;
             }
 
             return birthDateOfUser;
