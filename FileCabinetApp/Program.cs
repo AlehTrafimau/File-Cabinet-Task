@@ -140,7 +140,55 @@ namespace FileCabinetApp
                 }
             }
 
-            int userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth);
+            char serieOfPassNumber = default;
+            while (serieOfPassNumber == default)
+            {
+                Console.Write("Serie of your pass number: ");
+                string? source = Console.ReadLine();
+                Regex serieOfPassNumberFormat = new Regex(@"^[A-Z]{1}|[a-z]{1}$");
+                if (source != null && serieOfPassNumberFormat.IsMatch(source))
+                {
+                    serieOfPassNumber = char.Parse(source);
+                }
+                else
+                {
+                    Console.WriteLine("Enter valid serie of number (1 letter)");
+                }
+            }
+
+            short passNumber = default;
+            while (passNumber == default)
+            {
+                Console.Write("Your pass number: ");
+                string? source = Console.ReadLine();
+                Regex passNumberFormat = new Regex(@"^(\d{4}|\d{3}|\d{2}|\d{1})$");
+                if (source != null && passNumberFormat.IsMatch(source))
+                {
+                    passNumber = short.Parse(source, CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    Console.WriteLine("Enter valid pass number (4 digits)");
+                }
+            }
+
+            decimal bankAccount = default;
+            while (bankAccount == default)
+            {
+                Console.Write("Your current bank account ($): ");
+                string? source = Console.ReadLine();
+                Regex bankAccountFormat = new Regex(@"\d+(\.?\d+)?$");
+                if (source != null && bankAccountFormat.IsMatch(source))
+                {
+                    bool isConvertedToDecimal = decimal.TryParse(source, out decimal result);
+                    if (isConvertedToDecimal)
+                    {
+                        bankAccount = result;
+                    }
+                }
+            }
+
+            int userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
             Console.WriteLine($"Record #{userId} is created.");
         }
@@ -151,7 +199,7 @@ namespace FileCabinetApp
 
             foreach (FileCabinetRecord i in notesInformation)
             {
-                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}");
+                Console.WriteLine($"#{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth:yyyy-MMM-dd}, pass number: {i.SerieOfPassNumber} {i.PassNumber}, currentBankAccount {i.CurrentBankAccount} $");
             }
         }
 

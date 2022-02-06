@@ -15,5 +15,11 @@ namespace FileCabinetApp
         public string? LastName { get; set; }
 
         public DateTime DateOfBirth { get; set; }
+
+        public char SerieOfPassNumber { get; set; }
+
+        public short PassNumber { get; set; }
+
+        public decimal CurrentBankAccount { get; set; }
     }
 }
