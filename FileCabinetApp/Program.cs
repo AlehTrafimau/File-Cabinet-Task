@@ -134,7 +134,7 @@ namespace FileCabinetApp
             }
             else
             {
-                Console.WriteLine($"Invalid parameter: {parameters}");
+                Console.WriteLine($"Parameters did not enter");
             }
         }
 

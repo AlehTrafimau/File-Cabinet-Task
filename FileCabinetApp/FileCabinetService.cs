@@ -7,6 +7,7 @@ namespace FileCabinetApp
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
         {
@@ -22,14 +23,8 @@ namespace FileCabinetApp
             };
 
             this.list.Add(record);
-            if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
-            {
-                this.firstNameDictionary[firstName.ToUpperInvariant()].Add(record);
-            }
-            else
-            {
-                this.firstNameDictionary.Add(firstName.ToUpperInvariant(), new List<FileCabinetRecord>() { record });
-            }
+            AddToDictionary(this.firstNameDictionary, firstName, record);
+            AddToDictionary(this.lastNameDictionary, lastName, record);
 
             return record.Id;
         }
@@ -52,37 +47,20 @@ namespace FileCabinetApp
             string? firstNameBeforeEdit = this.list[numberOfRecordForEdit].FirstName;
             this.list[numberOfRecordForEdit].FirstName = firstName;
 
-            if (firstNameBeforeEdit != null && firstNameBeforeEdit.ToUpperInvariant() != firstName.ToUpperInvariant())
+            if (firstNameBeforeEdit != null)
             {
-                FileCabinetRecord recordForMove = new FileCabinetRecord();
+                EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, firstName, id);
+            }
 
-                for (int i = 0; i < this.firstNameDictionary[firstNameBeforeEdit.ToUpperInvariant()].Count; i++)
-                {
-                    if (this.firstNameDictionary[firstNameBeforeEdit.ToUpperInvariant()][i].Id == id)
-                    {
-                        recordForMove = this.firstNameDictionary[firstNameBeforeEdit.ToUpperInvariant()][i];
-                        this.firstNameDictionary[firstNameBeforeEdit.ToUpperInvariant()].RemoveAt(i);
-                        if (this.firstNameDictionary[firstNameBeforeEdit.ToUpperInvariant()].Count == 0)
-                        {
-                            this.firstNameDictionary.Remove(firstNameBeforeEdit.ToUpperInvariant());
-                        }
+            string? lastNameBeforeEdit = this.list[numberOfRecordForEdit].LastName;
+            this.list[numberOfRecordForEdit].LastName = lastName;
 
-                        break;
-                    }
-                }
-
-                if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
-                {
-                    this.firstNameDictionary[firstName.ToUpperInvariant()].Add(recordForMove);
-                }
-                else
-                {
-                    this.firstNameDictionary.Add(firstName.ToUpperInvariant(), new List<FileCabinetRecord>() { recordForMove });
-                }
+            if (lastNameBeforeEdit != null)
+            {
+                EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, lastName, id);
             }
 
             this.list[numberOfRecordForEdit].DateOfBirth = dateOfBirth;
-            this.list[numberOfRecordForEdit].LastName = lastName;
             this.list[numberOfRecordForEdit].PassNumber = passNumber;
             this.list[numberOfRecordForEdit].SerieOfPassNumber = serieOfPassNumber;
             this.list[numberOfRecordForEdit].CurrentBankAccount = currentBankAccount;
@@ -136,6 +114,50 @@ namespace FileCabinetApp
 
             Console.WriteLine("Conversation error. Format date of birth parameter: \"1994 - Jul - 30\"");
             return result.ToArray();
+        }
+
+        private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
+        {
+            if (dictionary.ContainsKey(parameter.ToUpperInvariant()))
+            {
+                dictionary[parameter.ToUpperInvariant()].Add(record);
+            }
+            else
+            {
+                dictionary.Add(parameter.ToUpperInvariant(), new List<FileCabinetRecord>() { record });
+            }
+        }
+
+        private static void EditDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string oldParameter, string newParameter, int sourceId)
+        {
+            if (oldParameter != null && oldParameter.ToUpperInvariant() != newParameter.ToUpperInvariant())
+            {
+                FileCabinetRecord recordForMove = new FileCabinetRecord();
+
+                for (int i = 0; i < dictionary[oldParameter.ToUpperInvariant()].Count; i++)
+                {
+                    if (dictionary[oldParameter.ToUpperInvariant()][i].Id == sourceId)
+                    {
+                        recordForMove = dictionary[oldParameter.ToUpperInvariant()][i];
+                        dictionary[oldParameter.ToUpperInvariant()].RemoveAt(i);
+                        if (dictionary[oldParameter.ToUpperInvariant()].Count == 0)
+                        {
+                            dictionary.Remove(oldParameter.ToUpperInvariant());
+                        }
+
+                        break;
+                    }
+                }
+
+                if (dictionary.ContainsKey(newParameter.ToUpperInvariant()))
+                {
+                    dictionary[newParameter.ToUpperInvariant()].Add(recordForMove);
+                }
+                else
+                {
+                    dictionary.Add(newParameter.ToUpperInvariant(), new List<FileCabinetRecord>() { recordForMove });
+                }
+            }
         }
     }
 }
