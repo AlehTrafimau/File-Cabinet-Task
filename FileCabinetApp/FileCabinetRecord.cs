@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FileCabinetApp
+﻿namespace FileCabinetApp
 {
     public class FileCabinetRecord
     {
@@ -20,6 +14,6 @@ namespace FileCabinetApp
 
         public short PassNumber { get; set; }
 
-        public decimal CurrentBankAccount { get; set; }
+        public decimal BankAccount { get; set; }
     }
 }

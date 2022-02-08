@@ -10,7 +10,17 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static readonly FileCabinetService FileCabinetService = new ();
+
+        private static readonly Dictionary<string, Tuple<string, string>> InputHelpMessages = new Dictionary<string, Tuple<string, string>>
+        {
+            ["FirstName"] = new Tuple<string, string>("First name: ", "Invalid first name parameter"),
+            ["LastName"] = new Tuple<string, string>("Last name: ", "Invalid last name parameter"),
+            ["BirthDate"] = new Tuple<string, string>("Birth date: ", "Invalid birth date parameter. Correct format: \"1999-12-12\""),
+            ["SeriePassNumber"] = new Tuple<string, string>("Serie of pass number: ", "Invalid Serie of pass number parameter. Correct format: \"A\" (one letter)"),
+            ["PassNumber"] = new Tuple<string, string>("Pass number: ", "Invalid Serie of pass number parameter. Correct format: \"1111\" (1-4 digits)"),
+            ["BankAccount"] = new Tuple<string, string>("Bank account: ", "Invalid bank account parameter"),
+        };
 
         private static bool isRunning = true;
 
@@ -30,15 +40,15 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "prints notes statistics", "The 'stat' command prints notes' statistics." },
-            new string[] { "create", "saves user's dates and returns user's ID", "The 'create' command saves user's dates and returns user's ID." },
-            new string[] { "list", "prints all notes of this service", "The 'help' command prints all notes of this service." },
-            new string[] { "edit", "edits note in sevice according input ID", "The 'edit' command edits note in sevice according input ID" },
+            new string[] { "create", "saves user's date and returns user's ID", "The 'create' command saves user's date and returns user's ID." },
+            new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
+            new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
         };
 
         public static void Main(string[] args)
         {
-            Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            Console.WriteLine(Program.HintMessage);
+            Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
+            Console.WriteLine(HintMessage);
             Console.WriteLine();
 
             do
@@ -51,7 +61,7 @@ namespace FileCabinetApp
 
                 if (string.IsNullOrEmpty(command))
                 {
-                    Console.WriteLine(Program.HintMessage);
+                    Console.WriteLine(HintMessage);
                     continue;
                 }
 
@@ -80,10 +90,10 @@ namespace FileCabinetApp
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[Program.CommandHelpIndex], parameters, StringComparison.Ordinal));
+                var index = Array.FindIndex(helpMessages, 0, helpMessages.Length, i => string.Equals(i[CommandHelpIndex], parameters, StringComparison.Ordinal));
                 if (index >= 0)
                 {
-                    Console.WriteLine(helpMessages[index][Program.ExplanationHelpIndex]);
+                    Console.WriteLine(helpMessages[index][ExplanationHelpIndex]);
                 }
                 else
                 {
@@ -96,7 +106,7 @@ namespace FileCabinetApp
 
                 foreach (var helpMessage in helpMessages)
                 {
-                    Console.WriteLine("\t{0}\t- {1}", helpMessage[Program.CommandHelpIndex], helpMessage[Program.DescriptionHelpIndex]);
+                    Console.WriteLine("\t{0}\t- {1}", helpMessage[CommandHelpIndex], helpMessage[DescriptionHelpIndex]);
                 }
             }
 
@@ -111,26 +121,23 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            if (parameters != string.Empty && Regex.IsMatch(parameters, @"^([1-9]{1}(\d*))|(0+[1-9]{1}\d*)$"))
+            if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (Program.fileCabinetService.GetStat() < requestedID)
+                if (Program.FileCabinetService.GetStat() < requestedID)
                 {
                     Console.WriteLine($"#{requestedID} record is not found");
                     return;
                 }
 
-                string? firstNameOfUser = VerifyEntryData.FirstNameCheck();
-                string? lastNamуOfUser = VerifyEntryData.LastNameCheck();
-                DateTime dateOfBirth = VerifyEntryData.DateOfBirthCheck();
-                char serieOfPassNumber = VerifyEntryData.SerieOfPassNumberCheck();
-                short passNumber = VerifyEntryData.PassNumberCheck();
-                decimal summOnBankAccount = VerifyEntryData.BankAccountCheck();
+                string firstNameOfUser = ConsoleExtension.ReadTillSuccess(InputHelpMessages["FirstName"].Item1, InputHelpMessages["FirstName"].Item2, UserValidation.CheckName);
+                string lastNameOfUser = ConsoleExtension.ReadTillSuccess(InputHelpMessages["LastName"].Item1, InputHelpMessages["LastName"].Item2, UserValidation.CheckName);
+                DateTime dateOfBirth = DateTime.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BirthDate"].Item1, InputHelpMessages["BirthDate"].Item2, UserValidation.CheckBirthDate), CultureInfo.InvariantCulture);
+                char serieOfPassNumber = char.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["SeriePassNumber"].Item1, InputHelpMessages["SeriePassNumber"].Item2, UserValidation.CheckSerieOfPassNumber));
+                short passNumber = short.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["PassNumber"].Item1, InputHelpMessages["PassNumber"].Item2, UserValidation.CheckPassNumber), CultureInfo.InvariantCulture);
+                decimal summOnBankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
 
-                if (firstNameOfUser != null && lastNamуOfUser != null)
-                {
-                    Program.fileCabinetService.EditRecord(requestedID, firstNameOfUser, lastNamуOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
-                }
+                Program.FileCabinetService.EditRecord(requestedID, firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
             }
             else
             {
@@ -140,41 +147,35 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = Program.FileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
         private static void Create(string parameters)
         {
-            string? firstNameOfUser = VerifyEntryData.FirstNameCheck();
-            string? lastNamуOfUser = VerifyEntryData.LastNameCheck();
-            DateTime dateOfBirth = VerifyEntryData.DateOfBirthCheck();
-            char serieOfPassNumber = VerifyEntryData.SerieOfPassNumberCheck();
-            short passNumber = VerifyEntryData.PassNumberCheck();
-            decimal summOnBankAccount = VerifyEntryData.BankAccountCheck();
+            string firstNameOfUser = ConsoleExtension.ReadTillSuccess(InputHelpMessages["FirstName"].Item1, InputHelpMessages["FirstName"].Item2, UserValidation.CheckName);
+            string lastNameOfUser = ConsoleExtension.ReadTillSuccess(InputHelpMessages["LastName"].Item1, InputHelpMessages["LastName"].Item2, UserValidation.CheckName);
+            DateTime dateOfBirth = DateTime.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BirthDate"].Item1, InputHelpMessages["BirthDate"].Item2, UserValidation.CheckBirthDate), CultureInfo.InvariantCulture);
+            char serieOfPassNumber = char.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["SeriePassNumber"].Item1, InputHelpMessages["SeriePassNumber"].Item2, UserValidation.CheckSerieOfPassNumber));
+            short passNumber = short.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["PassNumber"].Item1, InputHelpMessages["PassNumber"].Item2, UserValidation.CheckPassNumber), CultureInfo.InvariantCulture);
+            decimal summOnBankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
 
-            int userId = 0;
-            if (firstNameOfUser != null && lastNamуOfUser != null)
-            {
-                userId = Program.fileCabinetService.CreateRecord(firstNameOfUser, lastNamуOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
-            }
-
+            int userId = FileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
             Console.WriteLine($"Record #{userId} is created.");
         }
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] notesInformation = Program.fileCabinetService.GetRecords();
+            FileCabinetRecord[] cabinetRecords = FileCabinetService.GetRecords();
 
-            if (notesInformation.Length == 0)
+            if (cabinetRecords.Length == 0)
             {
                 Console.WriteLine("There are no records here");
             }
 
-            foreach (FileCabinetRecord currentRecord in notesInformation)
+            foreach (FileCabinetRecord record in cabinetRecords)
             {
-                Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
-                    $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+                Console.WriteLine(@$"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth:yyyy-MMM-dd}, pass number: {record.SerieOfPassNumber} {record.PassNumber}, currentBankAccount: {record.BankAccount}$");
             }
         }
 
@@ -183,7 +184,6 @@ namespace FileCabinetApp
             string[] inputs = parameters.Split(' ', 2);
             string command = inputs[0].ToUpperInvariant();
             string parameterForSearch;
-            string[] availableCommands = new string[] { "FIRSTNAME", "LASTNAME", "DATEOFBIRTH" };
 
             if (inputs.Length == 2)
             {
@@ -200,37 +200,30 @@ namespace FileCabinetApp
                 return;
             }
 
-            List<FileCabinetRecord> notesInformation = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> cabinetRecords = new ();
 
-            if (availableCommands.Contains(command))
+            switch (command)
             {
-                switch (command)
-                {
-                    case "FIRSTNAME":
-                        notesInformation.AddRange(Program.fileCabinetService.FindByFirstName(parameterForSearch));
-                        break;
-                    case "LASTNAME":
-                        notesInformation.AddRange(Program.fileCabinetService.FindByLastName(parameterForSearch));
-                        break;
-                    case "DATEOFBIRTH":
-                        notesInformation.AddRange(Program.fileCabinetService.FindByDayOfBirth(parameterForSearch));
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Invalid command: {command}.");
-                return;
+                case "FIRSTNAME":
+                    cabinetRecords.AddRange(FileCabinetService.FindByFirstName(parameterForSearch));
+                    break;
+                case "LASTNAME":
+                    cabinetRecords.AddRange(FileCabinetService.FindByLastName(parameterForSearch));
+                    break;
+                case "DATEOFBIRTH":
+                    cabinetRecords.AddRange(FileCabinetService.FindByDayOfBirth(parameterForSearch));
+                    break;
+                default:
+                    Console.WriteLine($"Invalid command: {command}.");
+                    return;
             }
 
-            if (notesInformation.Count != 0)
+            if (cabinetRecords.Count != 0)
             {
-                foreach (FileCabinetRecord currentRecord in notesInformation)
+                foreach (FileCabinetRecord currentRecord in cabinetRecords)
                 {
                     Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
-                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.CurrentBankAccount}$");
+                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.BankAccount}$");
                 }
             }
             else
