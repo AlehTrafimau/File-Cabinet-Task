@@ -15,7 +15,7 @@ namespace FileCabinetApp
         private const int ExplanationHelpIndex = 2;
         private static readonly FileCabinetService FileCabinetService = new ();
 
-        private static readonly Dictionary<string, Tuple<string, string>> InputHelpMessages = new Dictionary<string, Tuple<string, string>>
+        private static readonly Dictionary<string, Tuple<string, string>> InputHelpMessages = new ()
         {
             ["FirstName"] = new Tuple<string, string>("First name: ", "Invalid first name parameter"),
             ["LastName"] = new Tuple<string, string>("Last name: ", "Invalid last name parameter"),
@@ -140,9 +140,9 @@ namespace FileCabinetApp
                 DateTime dateOfBirth = DateTime.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BirthDate"].Item1, InputHelpMessages["BirthDate"].Item2, UserValidation.CheckBirthDate), CultureInfo.InvariantCulture);
                 char serieOfPassNumber = char.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["SeriePassNumber"].Item1, InputHelpMessages["SeriePassNumber"].Item2, UserValidation.CheckSerieOfPassNumber));
                 short passNumber = short.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["PassNumber"].Item1, InputHelpMessages["PassNumber"].Item2, UserValidation.CheckPassNumber), CultureInfo.InvariantCulture);
-                decimal summOnBankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
-
-                Program.FileCabinetService.EditRecord(requestedID, firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
+                decimal bankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
+                FileCabinetRecord editedRecord = new () { Id = requestedID, FirstName = firstNameOfUser, LastName = lastNameOfUser, DateOfBirth = dateOfBirth, SerieOfPassNumber = serieOfPassNumber, PassNumber = passNumber, BankAccount = bankAccount };
+                FileCabinetService.EditRecord(editedRecord);
             }
             else
             {
@@ -163,9 +163,10 @@ namespace FileCabinetApp
             DateTime dateOfBirth = DateTime.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BirthDate"].Item1, InputHelpMessages["BirthDate"].Item2, UserValidation.CheckBirthDate), CultureInfo.InvariantCulture);
             char serieOfPassNumber = char.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["SeriePassNumber"].Item1, InputHelpMessages["SeriePassNumber"].Item2, UserValidation.CheckSerieOfPassNumber));
             short passNumber = short.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["PassNumber"].Item1, InputHelpMessages["PassNumber"].Item2, UserValidation.CheckPassNumber), CultureInfo.InvariantCulture);
-            decimal summOnBankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
+            decimal bankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess(InputHelpMessages["BankAccount"].Item1, InputHelpMessages["BankAccount"].Item2, UserValidation.CheckBankAccount), CultureInfo.InvariantCulture);
 
-            int userId = FileCabinetService.CreateRecord(firstNameOfUser, lastNameOfUser, dateOfBirth, serieOfPassNumber, passNumber, summOnBankAccount);
+            FileCabinetRecord newRecord = new () { FirstName = firstNameOfUser, LastName = lastNameOfUser, DateOfBirth = dateOfBirth, SerieOfPassNumber = serieOfPassNumber, PassNumber = passNumber, BankAccount = bankAccount };
+            int userId = FileCabinetService.CreateRecord(newRecord);
             Console.WriteLine($"Record #{userId} is created.");
         }
 

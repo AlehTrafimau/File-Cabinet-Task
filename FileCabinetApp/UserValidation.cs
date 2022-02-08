@@ -41,7 +41,7 @@ namespace FileCabinetApp
 
             bool convertToDateTime = DateTime.TryParse(birthDate, out DateTime dayOfBirth);
             DateTime currentDate = DateTime.Now;
-            DateTime minValueDateOfBirth = new DateTime(1950, 1, 1);
+            DateTime minValueDateOfBirth = new (1950, 1, 1);
 
             if (convertToDateTime && dayOfBirth.CompareTo(currentDate) < 0 && dayOfBirth.CompareTo(minValueDateOfBirth) >= 0)
             {

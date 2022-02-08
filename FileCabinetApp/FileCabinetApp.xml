@@ -58,14 +58,9 @@
             Service to create, storage, edit, find and display records about users.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>Creates the record.</summary>
-            <param name="firstName">The first name.</param>
-            <param name="lastName">The last name.</param>
-            <param name="dateOfBirth">The date of birth.</param>
-            <param name="serieOfPassNumber">The serie of pass number.</param>
-            <param name="passNumber">The pass number.</param>
-            <param name="currentBankAccount">The current bank account.</param>
+            <param name="newRecord">The new record.</param>
             <returns>
             The special ID number which conform created records.
             </returns>
@@ -82,15 +77,9 @@
             The count of created records.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
-            <summary>Edits the exist record.</summary>
-            <param name="id">The current identifier.</param>
-            <param name="firstName">The new first name.</param>
-            <param name="lastName">The new last name.</param>
-            <param name="dateOfBirth">The new date of birth.</param>
-            <param name="serieOfPassNumber">The new serie of pass number.</param>
-            <param name="passNumber">The new pass number.</param>
-            <param name="currentBankAccount">The new current bank account.</param>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>Edits the exist record by Id number.</summary>
+            <param name="newRecord">The new record.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
             <summary>Finds the records by first name.</summary>
