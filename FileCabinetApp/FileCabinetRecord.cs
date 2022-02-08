@@ -20,6 +20,6 @@ namespace FileCabinetApp
 
         public short PassNumber { get; set; }
 
-        public decimal CurrentBankAccount { get; set; }
+        public decimal BankAccount { get; set; }
     }
 }
