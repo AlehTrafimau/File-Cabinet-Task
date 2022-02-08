@@ -2,6 +2,9 @@
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Service to create, storage, edit, find and display records about users.
+    /// </summary>
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> usersRecords = new ();
@@ -10,6 +13,16 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
 
+        /// <summary>Creates the record.</summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName">The last name.</param>
+        /// <param name="dateOfBirth">The date of birth.</param>
+        /// <param name="serieOfPassNumber">The serie of pass number.</param>
+        /// <param name="passNumber">The pass number.</param>
+        /// <param name="currentBankAccount">The current bank account.</param>
+        /// <returns>
+        /// The special ID number which conform created records.
+        /// </returns>
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
         {
             var record = new FileCabinetRecord
@@ -31,6 +44,10 @@ namespace FileCabinetApp
             return record.Id;
         }
 
+        /// <summary>Gets all records which created.</summary>
+        /// <returns>
+        /// The list of created records at the present time.
+        /// </returns>
         public FileCabinetRecord[] GetRecords()
         {
             FileCabinetRecord[] usersRecordsCopy = new FileCabinetRecord[this.usersRecords.Count];
@@ -44,11 +61,23 @@ namespace FileCabinetApp
             return usersRecordsCopy;
         }
 
+        /// <summary>Gets the count of created records.</summary>
+        /// <returns>
+        /// The count of created records.
+        /// </returns>
         public int GetStat()
         {
             return this.usersRecords.Count;
         }
 
+        /// <summary>Edits the exist record.</summary>
+        /// <param name="id">The current identifier.</param>
+        /// <param name="firstName">The new first name.</param>
+        /// <param name="lastName">The new last name.</param>
+        /// <param name="dateOfBirth">The new date of birth.</param>
+        /// <param name="serieOfPassNumber">The new serie of pass number.</param>
+        /// <param name="passNumber">The new pass number.</param>
+        /// <param name="currentBankAccount">The new current bank account.</param>
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
         {
             int recordIndex = id - 1;
@@ -79,6 +108,11 @@ namespace FileCabinetApp
             Console.WriteLine($"Record #{id} is updated");
         }
 
+        /// <summary>Finds the records by first name.</summary>
+        /// <param name="firstName">The first name.</param>
+        /// <returns>
+        /// The list of records which consist of this first name.
+        /// </returns>
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
             List<FileCabinetRecord> result = new ();
@@ -91,6 +125,11 @@ namespace FileCabinetApp
             return result.ToArray();
         }
 
+        /// <summary>Finds the records by last name.</summary>
+        /// <param name="lastName">The last name.</param>
+        /// <returns>
+        /// The list of records which consist of this last name.
+        /// </returns>
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             List<FileCabinetRecord> result = new List<FileCabinetRecord>();
@@ -105,10 +144,15 @@ namespace FileCabinetApp
             return result.ToArray();
         }
 
-        public FileCabinetRecord[] FindByDayOfBirth(string dateParameter)
+        /// <summary>Finds the records by birth day.</summary>
+        /// <param name="birthDayParameter">The date parameter.</param>
+        /// <returns>
+        /// The list of records which consist of this birth date.
+        /// </returns>
+        public FileCabinetRecord[] FindByDayOfBirth(string birthDayParameter)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            bool isDateTime = DateTime.TryParse(dateParameter, out DateTime dayOfBirth);
+            List<FileCabinetRecord> result = new ();
+            bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
             if (isDateTime)
             {

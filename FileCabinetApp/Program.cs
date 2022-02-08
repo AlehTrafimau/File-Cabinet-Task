@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// The program for work with file cabinet service to create, storage, edit, find and display records about users.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Aleh Trafimau";
@@ -16,7 +19,7 @@ namespace FileCabinetApp
         {
             ["FirstName"] = new Tuple<string, string>("First name: ", "Invalid first name parameter"),
             ["LastName"] = new Tuple<string, string>("Last name: ", "Invalid last name parameter"),
-            ["BirthDate"] = new Tuple<string, string>("Birth date: ", "Invalid birth date parameter. Correct format: \"1999-12-12\""),
+            ["BirthDate"] = new Tuple<string, string>("Birth date: ", "Invalid birth date parameter. Correct format: \"Year - Month - Day\""),
             ["SeriePassNumber"] = new Tuple<string, string>("Serie of pass number: ", "Invalid Serie of pass number parameter. Correct format: \"A\" (one letter)"),
             ["PassNumber"] = new Tuple<string, string>("Pass number: ", "Invalid Serie of pass number parameter. Correct format: \"1111\" (1-4 digits)"),
             ["BankAccount"] = new Tuple<string, string>("Bank account: ", "Invalid bank account parameter"),
@@ -45,6 +48,8 @@ namespace FileCabinetApp
             new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
         };
 
+        /// <summary>Defines the entry point of the application.</summary>
+        /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
