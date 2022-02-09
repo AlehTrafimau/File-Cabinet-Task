@@ -9,11 +9,13 @@ namespace FileCabinetApp
     public static class Program
     {
         private const string DeveloperName = "Aleh Trafimau";
+        private const string DefaultValidationsMessages = "Using default validation rules.";
+        private const string CustomValidationsMessages = "Using custom validation rules.";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private static readonly FileCabinetCustomService FileCabinetCustomService = new ();
+        private static FileCabinetService fileCabinetService = new FileCabinetDefaultService();
 
         private static bool isRunning = true;
 
@@ -43,6 +45,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
+            SetFileCabinetServiceMode(args);
             Console.WriteLine(HintMessage);
             Console.WriteLine();
 
@@ -79,6 +82,24 @@ namespace FileCabinetApp
         {
             Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
+        }
+
+        private static void SetFileCabinetServiceMode(string[] args)
+        {
+            if (args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM")
+            {
+                fileCabinetService = new FileCabinetCustomService();
+                Console.WriteLine(CustomValidationsMessages);
+            }
+            else if (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM")
+            {
+                fileCabinetService = new FileCabinetCustomService();
+                Console.WriteLine(CustomValidationsMessages);
+            }
+            else
+            {
+                Console.WriteLine(DefaultValidationsMessages);
+            }
         }
 
         private static void PrintHelp(string parameters)
@@ -119,13 +140,13 @@ namespace FileCabinetApp
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (Program.FileCabinetCustomService.GetStat() < requestedID)
+                if (Program.fileCabinetService.GetStat() < requestedID)
                 {
                     Console.WriteLine($"#{requestedID} record is not found");
                     return;
                 }
 
-                FileCabinetCustomService.EditRecord(requestedID);
+                fileCabinetService.EditRecord(requestedID);
             }
             else
             {
@@ -135,19 +156,19 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.FileCabinetCustomService.GetStat();
+            var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
         private static void Create(string parameters)
         {
-            int userId = FileCabinetCustomService.CreateRecord();
+            int userId = fileCabinetService.CreateRecord();
             Console.WriteLine($"Record #{userId} is created.");
         }
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] cabinetRecords = FileCabinetCustomService.GetRecords();
+            FileCabinetRecord[] cabinetRecords = fileCabinetService.GetRecords();
 
             if (cabinetRecords.Length == 0)
             {
@@ -186,13 +207,13 @@ namespace FileCabinetApp
             switch (command)
             {
                 case "FIRSTNAME":
-                    cabinetRecords.AddRange(FileCabinetCustomService.FindByFirstName(parameterForSearch));
+                    cabinetRecords.AddRange(fileCabinetService.FindByFirstName(parameterForSearch));
                     break;
                 case "LASTNAME":
-                    cabinetRecords.AddRange(FileCabinetCustomService.FindByLastName(parameterForSearch));
+                    cabinetRecords.AddRange(fileCabinetService.FindByLastName(parameterForSearch));
                     break;
                 case "DATEOFBIRTH":
-                    cabinetRecords.AddRange(FileCabinetCustomService.FindByDayOfBirth(parameterForSearch));
+                    cabinetRecords.AddRange(fileCabinetService.FindByDayOfBirth(parameterForSearch));
                     break;
                 default:
                     Console.WriteLine($"Invalid command: {command}.");
