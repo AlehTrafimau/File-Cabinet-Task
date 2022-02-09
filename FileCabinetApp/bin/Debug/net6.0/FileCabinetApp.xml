@@ -20,9 +20,48 @@
             Source string which conform special conditionals.
             </returns>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            Service to create, storage, edit, find and display records about users. It uses dafault conditional to create new record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters">
+            <summary>
+            Validates the parameters.
+            </summary>
+            <returns>The record which conform default comditionals.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            Service to create, storage, edit, find and display records about users. It uses dafault conditional to create new record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters">
+            <summary>
+            Validates the parameters.
+            </summary>
+            <returns>The record which conform default conditionals.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Description properties of record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="firstName">The first name.</param>
+            <param name="lastName">The last name.</param>
+            <param name="birthDate">The birth date.</param>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <param name="passNumber">The pass number.</param>
+            <param name="bankAccount">The bank account.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
             </summary>
         </member>
         <member name="P:FileCabinetApp.FileCabinetRecord.Id">
@@ -58,11 +97,16 @@
             Service to create, storage, edit, find and display records about users.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
-            <summary>Creates the record.</summary>
-            <param name="newRecord">The new record.</param>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters">
+            <summary>Validates the parameters.</summary>
             <returns>
-            The special ID number which conform created records.
+            The record which conform default comditionals.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord">
+            <summary>Creates the new record and add to list.</summary>
+            <returns>
+            The Id number of the new record.
             </returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
@@ -77,9 +121,9 @@
             The count of created records.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32)">
             <summary>Edits the exist record by Id number.</summary>
-            <param name="newRecord">The new record.</param>
+            <param name="editRecordId">The id of record for edit.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
             <summary>Finds the records by first name.</summary>
@@ -110,46 +154,6 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
-        </member>
-        <member name="T:FileCabinetApp.UserValidation">
-            <summary>
-            The set of functions for validation user data.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.UserValidation.CheckName(System.String)">
-            <summary>Checks the name.</summary>
-            <param name="name">The name.</param>
-            <returns>
-            "True", if source conform to cpecial conditionals, and "False" otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.UserValidation.CheckBirthDate(System.String)">
-            <summary>Checks the birth date.</summary>
-            <param name="birthDate">The birth date.</param>
-            <returns>
-            "True", if source conform to cpecial conditionals, and "False" otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.UserValidation.CheckSerieOfPassNumber(System.String)">
-            <summary>Checks the serie of pass number.</summary>
-            <param name="serieOfPassNumber">The serie of pass number.</param>
-            <returns>
-            "True", if source conform to special conditionals, and "False" otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.UserValidation.CheckPassNumber(System.String)">
-            <summary>Checks the pass number.</summary>
-            <param name="passNumber">The pass number.</param>
-            <returns>
-            "True", if source conform to cpecial conditionals, and "False" otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.UserValidation.CheckBankAccount(System.String)">
-            <summary>Checks the bank account.</summary>
-            <param name="bankAccount">The bank account.</param>
-            <returns>
-            "True", if source conform to cpecial conditionals, and "False" otherwise.
-            </returns>
         </member>
     </members>
 </doc>

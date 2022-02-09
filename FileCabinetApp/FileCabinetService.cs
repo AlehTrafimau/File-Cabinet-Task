@@ -5,47 +5,44 @@ namespace FileCabinetApp
     /// <summary>
     /// Service to create, storage, edit, find and display records about users.
     /// </summary>
-    public class FileCabinetService
+    public abstract class FileCabinetService
     {
         private readonly List<FileCabinetRecord> usersRecords = new ();
-
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
 
-        /// <summary>Creates the record.</summary>
-        /// <param name="newRecord">The new record.</param>
+        /// <summary>Validates the parameters.</summary>
         /// <returns>
-        /// The special ID number which conform created records.
+        /// The record which conform default comditionals.
         /// </returns>
-        public int CreateRecord(FileCabinetRecord newRecord)
-        {
-            var record = new FileCabinetRecord
-            {
-                Id = this.usersRecords.Count + 1,
-                FirstName = newRecord.FirstName,
-                LastName = newRecord.LastName,
-                DateOfBirth = newRecord.DateOfBirth,
-                BankAccount = newRecord.BankAccount,
-                PassNumber = newRecord.PassNumber,
-                SerieOfPassNumber = newRecord.SerieOfPassNumber,
-            };
+        public abstract FileCabinetRecord ValidateParameters();
 
-            this.usersRecords.Add(record);
+        /// <summary>Creates the new record and add to list.</summary>
+        /// <returns>
+        /// The Id number of the new record.
+        /// </returns>
+        public int CreateRecord()
+        {
+            FileCabinetRecord newRecord = this.ValidateParameters();
+
+            newRecord.Id = this.usersRecords.Count + 1;
+
+            this.usersRecords.Add(newRecord);
 
             if (newRecord.FirstName != null)
             {
-                AddToDictionary(this.firstNameDictionary, newRecord.FirstName, record);
+                AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
             }
 
             if (newRecord.LastName != null)
             {
-                AddToDictionary(this.lastNameDictionary, newRecord.LastName, record);
+                AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
             }
 
-            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), record);
+            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord);
 
-            return record.Id;
+            return newRecord.Id;
         }
 
         /// <summary>Gets all records which created.</summary>
@@ -58,7 +55,7 @@ namespace FileCabinetApp
 
             for (int i = 0; i < this.usersRecords.Count; i++)
             {
-                FileCabinetRecord recordCopy = new () { Id = this.usersRecords[i].Id, FirstName = this.usersRecords[i].FirstName, LastName = this.usersRecords[i].LastName, DateOfBirth = this.usersRecords[i].DateOfBirth, SerieOfPassNumber = this.usersRecords[i].SerieOfPassNumber, PassNumber = this.usersRecords[i].PassNumber, BankAccount = this.usersRecords[i].BankAccount };
+                FileCabinetRecord recordCopy = new (this.usersRecords[i].Id, this.usersRecords[i].FirstName, this.usersRecords[i].LastName, this.usersRecords[i].DateOfBirth, this.usersRecords[i].SerieOfPassNumber, this.usersRecords[i].PassNumber, this.usersRecords[i].BankAccount);
                 usersRecordsCopy[i] = recordCopy;
             }
 
@@ -75,35 +72,29 @@ namespace FileCabinetApp
         }
 
         /// <summary>Edits the exist record by Id number.</summary>
-        /// <param name="newRecord">The new record.</param>
-        public void EditRecord(FileCabinetRecord newRecord)
+        /// <param name="editRecordId">The id of record for edit.</param>
+        public void EditRecord(int editRecordId)
         {
-            int recordIndex = newRecord.Id - 1;
+            int recordIndex = editRecordId - 1;
+            FileCabinetRecord editRecord = this.ValidateParameters();
+            editRecord.Id = editRecordId;
 
-            string? firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;
-            this.usersRecords[recordIndex].FirstName = newRecord.FirstName;
-
-            if (firstNameBeforeEdit != null && newRecord.FirstName != null)
-            {
-                EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, newRecord.FirstName, newRecord.Id);
-            }
+            string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;
+            this.usersRecords[recordIndex].FirstName = editRecord.FirstName;
+            EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, editRecord.FirstName, editRecord.Id);
 
             string? lastNameBeforeEdit = this.usersRecords[recordIndex].LastName;
-            this.usersRecords[recordIndex].LastName = newRecord.LastName;
-
-            if (lastNameBeforeEdit != null && newRecord.LastName != null)
-            {
-                EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, newRecord.LastName, newRecord.Id);
-            }
+            this.usersRecords[recordIndex].LastName = editRecord.LastName;
+            EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, editRecord.LastName, editRecord.Id);
 
             DateTime dateOfBirthBeforeEdit = this.usersRecords[recordIndex].DateOfBirth;
-            this.usersRecords[recordIndex].DateOfBirth = newRecord.DateOfBirth;
-            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord.Id);
+            this.usersRecords[recordIndex].DateOfBirth = editRecord.DateOfBirth;
+            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editRecord.Id);
 
-            this.usersRecords[recordIndex].PassNumber = newRecord.PassNumber;
-            this.usersRecords[recordIndex].SerieOfPassNumber = newRecord.SerieOfPassNumber;
-            this.usersRecords[recordIndex].BankAccount = newRecord.BankAccount;
-            Console.WriteLine($"Record #{newRecord.Id} is updated");
+            this.usersRecords[recordIndex].PassNumber = editRecord.PassNumber;
+            this.usersRecords[recordIndex].SerieOfPassNumber = editRecord.SerieOfPassNumber;
+            this.usersRecords[recordIndex].BankAccount = editRecord.BankAccount;
+            Console.WriteLine($"Record #{editRecord.Id} is updated");
         }
 
         /// <summary>Finds the records by first name.</summary>
