@@ -143,26 +143,20 @@
             Service to create, storage, edit, find and display records about users. It uses custom conditional to create new record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
             <summary>
-            Creates dafault validator for check user's parameters.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.
             </summary>
-            <returns>
-            The new custom record validator for user's parameters.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             Service to create, storage, edit, find and display records about users. It uses dafault conditional to create new record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
             <summary>
-            Creates dafault validator for check user's parameters.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.
             </summary>
-            <returns>
-            The new  default record validator for user's parameters.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -219,13 +213,9 @@
             Service to create, storage, edit, find and display records about users.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            Creates validator for check user's parameters.
-            </summary>
-            <returns>
-            The new record validator for user's parameters.
-            </returns>
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService" /> class.</summary>
+            <param name="recordValidator">The record validator.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord">
             <summary>Creates the new record and adds to list.</summary>
@@ -277,7 +267,7 @@
         </member>
         <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters">
             <summary>
-            Gets record parameters from console and validate them using check functions of this class
+            Gets record parameters from console and validate them using check functions of this class.
             </summary>
             <returns>
             The new correct record.

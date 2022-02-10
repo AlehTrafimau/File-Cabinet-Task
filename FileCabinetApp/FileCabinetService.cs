@@ -11,14 +11,14 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
+        private readonly IRecordValidator recordValidator;
 
-        /// <summary>
-        /// Creates validator for check user's parameters.
-        /// </summary>
-        /// <returns>
-        /// The new record validator for user's parameters.
-        /// </returns>
-        public abstract IRecordValidator CreateValidator();
+        /// <summary>Initializes a new instance of the <see cref="FileCabinetService" /> class.</summary>
+        /// <param name="recordValidator">The record validator.</param>
+        protected FileCabinetService(IRecordValidator recordValidator)
+        {
+            this.recordValidator = recordValidator;
+        }
 
         /// <summary>Creates the new record and adds to list.</summary>
         /// <returns>
@@ -26,8 +26,7 @@ namespace FileCabinetApp
         /// </returns>
         public int CreateRecord()
         {
-            IRecordValidator recordValidator = this.CreateValidator();
-            FileCabinetRecord newRecord = recordValidator.ValidateParameters();
+            FileCabinetRecord newRecord = this.recordValidator.ValidateParameters();
 
             newRecord.Id = this.usersRecords.Count + 1;
 
@@ -79,8 +78,7 @@ namespace FileCabinetApp
         public void EditRecord(int editRecordId)
         {
             int recordIndex = editRecordId - 1;
-            IRecordValidator recordValidator = this.CreateValidator();
-            FileCabinetRecord editRecord = recordValidator.ValidateParameters();
+            FileCabinetRecord editRecord = this.recordValidator.ValidateParameters();
             editRecord.Id = editRecordId;
 
             string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;

@@ -12,7 +12,7 @@ namespace FileCabinetApp
     public interface IRecordValidator
     {
         /// <summary>
-        /// Gets record parameters from console and validate them using check functions of this class
+        /// Gets record parameters from console and validate them using check functions of this class.
         /// </summary>
         /// <returns>
         /// The new correct record.

@@ -11,17 +11,14 @@ namespace FileCabinetApp
     /// <summary>
     /// Service to create, storage, edit, find and display records about users. It uses custom conditional to create new record.
     /// </summary>
-    internal class FileCabinetCustomService : FileCabinetService
+    public class FileCabinetCustomService : FileCabinetService
     {
         /// <summary>
-        /// Creates dafault validator for check user's parameters.
+        /// Initializes a new instance of the <see cref="FileCabinetCustomService"/> class.
         /// </summary>
-        /// <returns>
-        /// The new custom record validator for user's parameters.
-        /// </returns>
-        public override IRecordValidator CreateValidator()
+        public FileCabinetCustomService()
+            : base(new CustomValidator())
         {
-            return new CustomValidator();
         }
     }
 }
