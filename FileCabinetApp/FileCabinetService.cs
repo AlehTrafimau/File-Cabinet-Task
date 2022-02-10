@@ -6,7 +6,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service to create, storage, edit, find and display records about users.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> usersRecords = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();

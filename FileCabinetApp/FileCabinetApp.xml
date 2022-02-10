@@ -240,6 +240,54 @@
             The list of records which consist of this birth date.
             </returns>
         </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord">
+            <summary>Creates the new record and adds to list.</summary>
+            <returns>
+            The Id number of the new record.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>Gets all records which created.</summary>
+            <returns>
+            The list of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>Gets the count of created records.</summary>
+            <returns>
+            The count of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32)">
+            <summary>Edits the exist record by Id number.</summary>
+            <param name="editRecordId">The id of record for edit.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>Finds the records by first name.</summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The list of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>Finds the records by last name.</summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The list of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDayOfBirth(System.String)">
+            <summary>Finds the records by birth day.</summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The list of records which consist of this birth date.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             Consist of a set of functions to record validate.
