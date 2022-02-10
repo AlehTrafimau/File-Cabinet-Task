@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -51,17 +52,17 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of created records at the present time.
         /// </returns>
-        public FileCabinetRecord[] GetRecords()
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            FileCabinetRecord[] usersRecordsCopy = new FileCabinetRecord[this.usersRecords.Count];
+            List<FileCabinetRecord> usersRecordsCopy = new ();
 
             for (int i = 0; i < this.usersRecords.Count; i++)
             {
                 FileCabinetRecord recordCopy = new (this.usersRecords[i].Id, this.usersRecords[i].FirstName, this.usersRecords[i].LastName, this.usersRecords[i].DateOfBirth, this.usersRecords[i].SerieOfPassNumber, this.usersRecords[i].PassNumber, this.usersRecords[i].BankAccount);
-                usersRecordsCopy[i] = recordCopy;
+                usersRecordsCopy.Add(recordCopy);
             }
 
-            return usersRecordsCopy;
+            return new ReadOnlyCollection<FileCabinetRecord>(usersRecordsCopy);
         }
 
         /// <summary>Gets the count of created records.</summary>
@@ -104,7 +105,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             List<FileCabinetRecord> result = new ();
 
@@ -113,7 +114,7 @@ namespace FileCabinetApp
                 result = this.firstNameDictionary[firstName.ToUpperInvariant()];
             }
 
-            return result.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
         /// <summary>Finds the records by last name.</summary>
@@ -121,7 +122,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             List<FileCabinetRecord> result = new ();
             foreach (FileCabinetRecord currentRecord in this.usersRecords)
@@ -132,7 +133,7 @@ namespace FileCabinetApp
                 }
             }
 
-            return result.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
         /// <summary>Finds the records by birth day.</summary>
@@ -140,7 +141,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public FileCabinetRecord[] FindByDayOfBirth(string birthDayParameter)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
             List<FileCabinetRecord> result = new ();
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
@@ -155,11 +156,11 @@ namespace FileCabinetApp
                     }
                 }
 
-                return result.ToArray();
+                return new ReadOnlyCollection<FileCabinetRecord>(result);
             }
 
             Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-            return result.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)

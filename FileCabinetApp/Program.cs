@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace FileCabinetApp
@@ -168,9 +169,9 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] cabinetRecords = fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> cabinetRecords = fileCabinetService.GetRecords();
 
-            if (cabinetRecords.Length == 0)
+            if (cabinetRecords.Count == 0)
             {
                 Console.WriteLine("There are no records here");
             }
