@@ -15,7 +15,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private static FileCabinetService fileCabinetService = new FileCabinetDefaultService();
+        private static FileCabinetService fileCabinetService = new (new DefaultValidator());
 
         private static bool isRunning = true;
 
@@ -88,12 +88,12 @@ namespace FileCabinetApp
         {
             if (args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM")
             {
-                fileCabinetService = new FileCabinetCustomService();
+                fileCabinetService = new (new CustomValidator());
                 Console.WriteLine(CustomValidationsMessages);
             }
             else if (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM")
             {
-                fileCabinetService = new FileCabinetCustomService();
+                fileCabinetService = new (new CustomValidator());
                 Console.WriteLine(CustomValidationsMessages);
             }
             else

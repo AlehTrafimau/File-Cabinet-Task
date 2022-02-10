@@ -5,7 +5,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service to create, storage, edit, find and display records about users.
     /// </summary>
-    public abstract class FileCabinetService
+    public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> usersRecords = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
@@ -15,7 +15,7 @@ namespace FileCabinetApp
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetService" /> class.</summary>
         /// <param name="recordValidator">The record validator.</param>
-        protected FileCabinetService(IRecordValidator recordValidator)
+        public FileCabinetService(IRecordValidator recordValidator)
         {
             this.recordValidator = recordValidator;
         }
