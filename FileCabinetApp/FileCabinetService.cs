@@ -12,19 +12,22 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
 
-        /// <summary>Validates the parameters.</summary>
+        /// <summary>
+        /// Creates validator for check user's parameters.
+        /// </summary>
         /// <returns>
-        /// The record which conform default comditionals.
+        /// The new record validator for user's parameters.
         /// </returns>
-        public abstract FileCabinetRecord ValidateParameters();
+        public abstract IRecordValidator CreateValidator();
 
-        /// <summary>Creates the new record and add to list.</summary>
+        /// <summary>Creates the new record and adds to list.</summary>
         /// <returns>
         /// The Id number of the new record.
         /// </returns>
         public int CreateRecord()
         {
-            FileCabinetRecord newRecord = this.ValidateParameters();
+            IRecordValidator recordValidator = this.CreateValidator();
+            FileCabinetRecord newRecord = recordValidator.ValidateParameters();
 
             newRecord.Id = this.usersRecords.Count + 1;
 
@@ -76,7 +79,8 @@ namespace FileCabinetApp
         public void EditRecord(int editRecordId)
         {
             int recordIndex = editRecordId - 1;
-            FileCabinetRecord editRecord = this.ValidateParameters();
+            IRecordValidator recordValidator = this.CreateValidator();
+            FileCabinetRecord editRecord = recordValidator.ValidateParameters();
             editRecord.Id = editRecordId;
 
             string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;

@@ -20,27 +20,149 @@
             Source string which conform special conditionals.
             </returns>
         </member>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Consist of a set of function for record validation according custom conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters">
+            <summary>
+            Gets record parameters from console and validate them using check functions of this class.
+            </summary>
+            <returns>
+            The new record with valid parameters.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckName(System.String)">
+            <summary>
+            Checks the name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckBirthDate(System.String)">
+            <summary>
+            Checks the birth date.
+            </summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckSerieOfPassNumber(System.String)">
+            <summary>
+            Checks the serie of pass number.
+            </summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckPassNumber(System.String)">
+            <summary>
+            Checks the pass number.
+            </summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckBankAccount(System.String)">
+            <summary>
+            Checks the bank account.
+            </summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Consist of a set of function for record validation according dafault conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters">
+            <summary>
+            Gets record parameters from console and validate them. It uses default conditionals.
+            </summary>
+            <returns>
+            The new record with valid parameters.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckName(System.String)">
+            <summary>
+            Checks the name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckBirthDate(System.String)">
+            <summary>
+            Checks the birth date.
+            </summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckSerieOfPassNumber(System.String)">
+            <summary>
+            Checks the serie of pass number.
+            </summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckPassNumber(System.String)">
+            <summary>
+            Checks the pass number.
+            </summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckBankAccount(System.String)">
+            <summary>
+            Checks the bank account.
+            </summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetCustomService">
             <summary>
-            Service to create, storage, edit, find and display records about users. It uses dafault conditional to create new record.
+            Service to create, storage, edit, find and display records about users. It uses custom conditional to create new record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
             <summary>
-            Validates the parameters.
+            Creates dafault validator for check user's parameters.
             </summary>
-            <returns>The record which conform default comditionals.</returns>
+            <returns>
+            The new custom record validator for user's parameters.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             Service to create, storage, edit, find and display records about users. It uses dafault conditional to create new record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <summary>
-            Validates the parameters.
+            Creates dafault validator for check user's parameters.
             </summary>
-            <returns>The record which conform default conditionals.</returns>
+            <returns>
+            The new  default record validator for user's parameters.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -97,14 +219,16 @@
             Service to create, storage, edit, find and display records about users.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters">
-            <summary>Validates the parameters.</summary>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>
+            Creates validator for check user's parameters.
+            </summary>
             <returns>
-            The record which conform default comditionals.
+            The new record validator for user's parameters.
             </returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord">
-            <summary>Creates the new record and add to list.</summary>
+            <summary>Creates the new record and adds to list.</summary>
             <returns>
             The Id number of the new record.
             </returns>
@@ -144,6 +268,64 @@
             <param name="birthDayParameter">The date parameter.</param>
             <returns>
             The list of records which consist of this birth date.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Consist of a set of functions to record validate.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters">
+            <summary>
+            Gets record parameters from console and validate them using check functions of this class
+            </summary>
+            <returns>
+            The new correct record.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckName(System.String)">
+            <summary>
+            Checks the name parameter.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckBirthDate(System.String)">
+            <summary>
+            Checks the birth date.
+            </summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckSerieOfPassNumber(System.String)">
+            <summary>
+            Checks the serie of pass number.
+            </summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckPassNumber(System.String)">
+            <summary>
+            Checks the pass number.
+            </summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckBankAccount(System.String)">
+            <summary>
+            Checks the bank account.
+            </summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false, otherwise.
             </returns>
         </member>
         <member name="T:FileCabinetApp.Program">
