@@ -1,95 +1,112 @@
-﻿using System.Globalization;
+﻿using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
-    public class FileCabinetService
+    /// <summary>
+    /// Service to create, storage, edit, find and display records about users.
+    /// </summary>
+    public class FileCabinetService : IFileCabinetService
     {
-        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly List<FileCabinetRecord> usersRecords = new ();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
+        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
 
-        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
+        /// <summary>Creates the new record and adds to list.</summary>
+        /// <param name="newRecord">The new record.</param>
+        /// <returns>The Id number of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord newRecord)
         {
-            var record = new FileCabinetRecord
+            newRecord.Id = this.usersRecords.Count + 1;
+
+            this.usersRecords.Add(newRecord);
+
+            AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
+            AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
+            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord);
+
+            return newRecord.Id;
+        }
+
+        /// <summary>Gets all records which created.</summary>
+        /// <returns>
+        /// The list of created records at the present time.
+        /// </returns>
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        {
+            List<FileCabinetRecord> usersRecordsCopy = new ();
+
+            for (int i = 0; i < this.usersRecords.Count; i++)
             {
-                Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                CurrentBankAccount = currentBankAccount,
-                PassNumber = passNumber,
-                SerieOfPassNumber = serieOfPassNumber,
-            };
+                FileCabinetRecord recordCopy = new (this.usersRecords[i].Id, this.usersRecords[i].FirstName, this.usersRecords[i].LastName, this.usersRecords[i].DateOfBirth, this.usersRecords[i].SerieOfPassNumber, this.usersRecords[i].PassNumber, this.usersRecords[i].BankAccount);
+                usersRecordsCopy.Add(recordCopy);
+            }
 
-            this.list.Add(record);
-            AddToDictionary(this.firstNameDictionary, firstName, record);
-            AddToDictionary(this.lastNameDictionary, lastName, record);
-            AddToDictionary(this.dateOfBirthDictionary, dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), record);
-
-            return record.Id;
+            return new ReadOnlyCollection<FileCabinetRecord>(usersRecordsCopy);
         }
 
-        public FileCabinetRecord[] GetRecords()
-        {
-            List<FileCabinetRecord> copyInnerListOfService = new List<FileCabinetRecord>(this.list);
-            return copyInnerListOfService.ToArray();
-        }
-
+        /// <summary>Gets the count of created records.</summary>
+        /// <returns>
+        /// The count of created records.
+        /// </returns>
         public int GetStat()
         {
-            return this.list.Count;
+            return this.usersRecords.Count;
         }
 
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char serieOfPassNumber, short passNumber, decimal currentBankAccount)
+        /// <summary>Edits the exist record by Id number.</summary>
+        /// <param name="editRecordId">The id of record for edit.</param>
+        /// <param name="editedRecord">The edited paremeters of record.</param>
+        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
-            int numberOfRecordForEdit = id - 1;
+            int recordIndex = editRecordId - 1;
+            editedRecord.Id = editRecordId;
 
-            string? firstNameBeforeEdit = this.list[numberOfRecordForEdit].FirstName;
-            this.list[numberOfRecordForEdit].FirstName = firstName;
+            string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;
+            this.usersRecords[recordIndex].FirstName = editedRecord.FirstName;
+            EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, editedRecord.FirstName, editedRecord.Id);
 
-            if (firstNameBeforeEdit != null)
-            {
-                EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, firstName, id);
-            }
+            string? lastNameBeforeEdit = this.usersRecords[recordIndex].LastName;
+            this.usersRecords[recordIndex].LastName = editedRecord.LastName;
+            EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, editedRecord.LastName, editedRecord.Id);
 
-            string? lastNameBeforeEdit = this.list[numberOfRecordForEdit].LastName;
-            this.list[numberOfRecordForEdit].LastName = lastName;
+            DateTime dateOfBirthBeforeEdit = this.usersRecords[recordIndex].DateOfBirth;
+            this.usersRecords[recordIndex].DateOfBirth = editedRecord.DateOfBirth;
+            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.Id);
 
-            if (lastNameBeforeEdit != null)
-            {
-                EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, lastName, id);
-            }
-
-            DateTime dateOfBirthBeforeEdit = this.list[numberOfRecordForEdit].DateOfBirth;
-            this.list[numberOfRecordForEdit].DateOfBirth = dateOfBirth;
-
-            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), id);
-
-            this.list[numberOfRecordForEdit].PassNumber = passNumber;
-            this.list[numberOfRecordForEdit].SerieOfPassNumber = serieOfPassNumber;
-            this.list[numberOfRecordForEdit].CurrentBankAccount = currentBankAccount;
-
-            Console.WriteLine($"Record #{id} is updated");
+            this.usersRecords[recordIndex].PassNumber = editedRecord.PassNumber;
+            this.usersRecords[recordIndex].SerieOfPassNumber = editedRecord.SerieOfPassNumber;
+            this.usersRecords[recordIndex].BankAccount = editedRecord.BankAccount;
+            Console.WriteLine($"Record #{editedRecord.Id} is updated");
         }
 
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        /// <summary>Finds the records by first name.</summary>
+        /// <param name="firstName">The first name.</param>
+        /// <returns>
+        /// The list of records which consist of this first name.
+        /// </returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> result = new ();
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
                 result = this.firstNameDictionary[firstName.ToUpperInvariant()];
             }
 
-            return result.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        /// <summary>Finds the records by last name.</summary>
+        /// <param name="lastName">The last name.</param>
+        /// <returns>
+        /// The list of records which consist of this last name.
+        /// </returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            foreach (FileCabinetRecord currentRecord in this.list)
+            List<FileCabinetRecord> result = new ();
+            foreach (FileCabinetRecord currentRecord in this.usersRecords)
             {
                 if (currentRecord.LastName != null && currentRecord.LastName.ToUpperInvariant() == lastName.ToUpperInvariant())
                 {
@@ -97,17 +114,22 @@ namespace FileCabinetApp
                 }
             }
 
-            return result.ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
-        public FileCabinetRecord[] FindByDayOfBirth(string dateParameter)
+        /// <summary>Finds the records by birth day.</summary>
+        /// <param name="birthDayParameter">The date parameter.</param>
+        /// <returns>
+        /// The list of records which consist of this birth date.
+        /// </returns>
+        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            List<FileCabinetRecord> result = new List<FileCabinetRecord>();
-            bool isConversation = DateTime.TryParse(dateParameter, out DateTime dayOfBirth);
+            List<FileCabinetRecord> result = new ();
+            bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
-            if (isConversation)
+            if (isDateTime)
             {
-                foreach (FileCabinetRecord currentRecord in this.list)
+                foreach (FileCabinetRecord currentRecord in this.usersRecords)
                 {
                     if (currentRecord.DateOfBirth == dayOfBirth)
                     {
@@ -115,11 +137,11 @@ namespace FileCabinetApp
                     }
                 }
 
-                return result.ToArray();
+                return new ReadOnlyCollection<FileCabinetRecord>(result);
             }
 
-            Console.WriteLine("Conversation error. Format date of birth parameter: \"1994 - Jul - 30\"");
-            return result.ToArray();
+            Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
+            return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
@@ -136,33 +158,33 @@ namespace FileCabinetApp
 
         private static void EditDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string oldParameter, string newParameter, int sourceId)
         {
-            if (oldParameter != null && oldParameter.ToUpperInvariant() != newParameter.ToUpperInvariant())
+            oldParameter = oldParameter.ToUpperInvariant();
+            newParameter = newParameter.ToUpperInvariant();
+
+            FileCabinetRecord recordForMove = new ();
+
+            for (int i = 0; i < dictionary[oldParameter].Count; i++)
             {
-                FileCabinetRecord recordForMove = new FileCabinetRecord();
-
-                for (int i = 0; i < dictionary[oldParameter.ToUpperInvariant()].Count; i++)
+                if (dictionary[oldParameter][i].Id == sourceId)
                 {
-                    if (dictionary[oldParameter.ToUpperInvariant()][i].Id == sourceId)
+                    recordForMove = dictionary[oldParameter][i];
+                    dictionary[oldParameter].RemoveAt(i);
+                    if (dictionary[oldParameter].Count == 0)
                     {
-                        recordForMove = dictionary[oldParameter.ToUpperInvariant()][i];
-                        dictionary[oldParameter.ToUpperInvariant()].RemoveAt(i);
-                        if (dictionary[oldParameter.ToUpperInvariant()].Count == 0)
-                        {
-                            dictionary.Remove(oldParameter.ToUpperInvariant());
-                        }
-
-                        break;
+                        dictionary.Remove(oldParameter);
                     }
-                }
 
-                if (dictionary.ContainsKey(newParameter.ToUpperInvariant()))
-                {
-                    dictionary[newParameter.ToUpperInvariant()].Add(recordForMove);
+                    break;
                 }
-                else
-                {
-                    dictionary.Add(newParameter.ToUpperInvariant(), new List<FileCabinetRecord>() { recordForMove });
-                }
+            }
+
+            if (dictionary.ContainsKey(newParameter))
+            {
+                dictionary[newParameter].Add(recordForMove);
+            }
+            else
+            {
+                dictionary.Add(newParameter, new List<FileCabinetRecord>() { recordForMove });
             }
         }
     }

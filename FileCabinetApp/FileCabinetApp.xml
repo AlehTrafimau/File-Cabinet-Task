@@ -4,5 +4,321 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Consists a set of function for record validation according custom conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckName(System.String)">
+            <summary>Checks the name.</summary>
+            <param name="name">The name.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckBirthDate(System.DateTime)">
+            <summary>Checks the birth date.</summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckSerieOfPassNumber(System.Char)">
+            <summary>Checks the serie of pass number.</summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckPassNumber(System.Int16)">
+            <summary>Checks the pass number.</summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.CheckBankAccount(System.Decimal)">
+            <summary>Checks the bank account.</summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Consists a set of function for record validation according dafault conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckName(System.String)">
+            <summary>Checks the name.</summary>
+            <param name="name">The name.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckBirthDate(System.DateTime)">
+            <summary>Checks the birth date.</summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckSerieOfPassNumber(System.Char)">
+            <summary>Checks the serie of pass number.</summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckPassNumber(System.Int16)">
+            <summary>Checks the pass number.</summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.CheckBankAccount(System.Decimal)">
+            <summary>Checks the bank account.</summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            Description properties of record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="firstName">The first name.</param>
+            <param name="lastName">The last name.</param>
+            <param name="birthDate">The birth date.</param>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <param name="passNumber">The pass number.</param>
+            <param name="bankAccount">The bank account.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>Gets or sets the identifier.</summary>
+            <value>The identifier.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>Gets or sets the first name.</summary>
+            <value>The first name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>Gets or sets the last name.</summary>
+            <value>The last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>Gets or sets the date of birth.</summary>
+            <value>The date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.SerieOfPassNumber">
+            <summary>Gets or sets the serie of pass number.</summary>
+            <value>The serie of pass number.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.PassNumber">
+            <summary>Gets or sets the pass number.</summary>
+            <value>The pass number.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.BankAccount">
+            <summary>Gets or sets the bank account.</summary>
+            <value>The bank account.</value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            Service to create, storage, edit, find and display records about users.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>Creates the new record and adds to list.</summary>
+            <param name="newRecord">The new record.</param>
+            <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>Gets all records which created.</summary>
+            <returns>
+            The list of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>Gets the count of created records.</summary>
+            <returns>
+            The count of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+            <summary>Edits the exist record by Id number.</summary>
+            <param name="editRecordId">The id of record for edit.</param>
+            <param name="editedRecord">The edited paremeters of record.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>Finds the records by first name.</summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The list of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>Finds the records by last name.</summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The list of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDayOfBirth(System.String)">
+            <summary>Finds the records by birth day.</summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The list of records which consist of this birth date.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>Creates the new record.</summary>
+            <param name="newRecord"> The new record.</param>
+            <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>Gets all records which created.</summary>
+            <returns>
+            The read only collection of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>Gets the count of created records.</summary>
+            <returns>
+            The number of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+            <summary>Edits the exist record by Id number.</summary>
+            <param name="editRecordId">The id of record for edit.</param>
+            <param name="editedRecord">The edited record.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>Finds the records by first name.</summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The read only collection of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>Finds the records by last name.</summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The read only collection of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDayOfBirth(System.String)">
+            <summary>Finds the records by birth day.</summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The read only collection of records which consist of this birth date.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            Consists a set of functions to record validate.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckName(System.String)">
+            <summary>
+            Checks the name parameter.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false and error message, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckBirthDate(System.DateTime)">
+            <summary>
+            Checks the birth date.
+            </summary>
+            <param name="birthDate">The birth date.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false and error message, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckSerieOfPassNumber(System.Char)">
+            <summary>
+            Checks the serie of pass number.
+            </summary>
+            <param name="serieOfPassNumber">The serie of pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false and error message, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckPassNumber(System.Int16)">
+            <summary>
+            Checks the pass number.
+            </summary>
+            <param name="passNumber">The pass number.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false and error message, otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.CheckBankAccount(System.Decimal)">
+            <summary>
+            Checks the bank account.
+            </summary>
+            <param name="bankAccount">The bank account.</param>
+            <returns>
+            True, if the parameter conform special conditionals, or false and error message, otherwise.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            The program for work with file cabinet service to create, storage, edit, find and display records about users.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>Defines the entry point of the application.</summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:FileCabinetApp.Program.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
+            <summary>
+            Reads the input.
+            </summary>
+            <typeparam name="T">fdfdfdfdf.</typeparam>
+            <param name="converter">The converter.</param>
+            <param name="validator">The validator.</param>
+            <returns>fdfdfdfdfd.</returns>
+        </member>
+        <member name="T:FileCabinetApp.StringConverter">
+            <summary>
+            Consists a set of functions to convert string source to special types.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.StringConvert(System.String)">
+            <summary>
+            Converts string source.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to string type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.DateTimeConvert(System.String)">
+            <summary>
+            Converts string source to DateTime type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to DateTime type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.CharConvert(System.String)">
+            <summary>
+            Converts string source to char type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to char type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.ShortConvert(System.String)">
+            <summary>
+            Converts string source to short type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to short type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.DecimalConvert(System.String)">
+            <summary>
+            Convert string source to decimal type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to decimal type.</returns>
+        </member>
     </members>
 </doc>
