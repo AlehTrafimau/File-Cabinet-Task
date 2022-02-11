@@ -9,135 +9,106 @@ using System.Threading.Tasks;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Consist of a set of function for record validation according dafault conditionals.
+    /// Consists a set of function for record validation according dafault conditionals.
     /// </summary>
     /// <seealso cref="FileCabinetApp.IRecordValidator"/>
     internal class DefaultValidator : IRecordValidator
     {
-        /// <summary>
-        /// Gets record parameters from console and validate them. It uses default conditionals.
-        /// </summary>
-        /// <returns>
-        /// The new record with valid parameters.
-        /// </returns>
-        public FileCabinetRecord ValidateParameters()
-        {
-            var record = new FileCabinetRecord
-            {
-                FirstName = ConsoleExtension.ReadTillSuccess("First name: ", "Invalid first name parameter", this.CheckName),
-                LastName = ConsoleExtension.ReadTillSuccess("Last name: ", "Invalid last name parameter", this.CheckName),
-                DateOfBirth = DateTime.Parse(ConsoleExtension.ReadTillSuccess("Birth date: ", "Invalid birth date parameter. Correct format: \"Year - Month - Day\"", this.CheckBirthDate), CultureInfo.InvariantCulture),
-                SerieOfPassNumber = char.Parse(ConsoleExtension.ReadTillSuccess("Serie of pass number: ", "Invalid Serie of pass number parameter. Correct format: \"A\" (one letter)", this.CheckSerieOfPassNumber)),
-                PassNumber = short.Parse(ConsoleExtension.ReadTillSuccess("Pass number: ", "Invalid pass number parameter. Correct format: \"1111\" (1-4 digits)", this.CheckPassNumber), CultureInfo.InvariantCulture),
-                BankAccount = decimal.Parse(ConsoleExtension.ReadTillSuccess("Bank account: ", "Invalid bank account parameter", this.CheckBankAccount), CultureInfo.InvariantCulture),
-            };
-
-            return record;
-        }
-
-        /// <summary>
-        /// Checks the name.
-        /// </summary>
+        /// <summary>Checks the name.</summary>
         /// <param name="name">The name.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false, otherwise.
-        /// </returns>
-        public bool CheckName(string name)
+        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        public Tuple<bool, string> CheckName(string name)
         {
-            bool result = false;
+            Tuple<bool, string> result;
 
             if (name != null && Regex.IsMatch(name, @"^\S{2,60}$"))
             {
-                result = true;
+                result = new (true, string.Empty);
+            }
+            else
+            {
+                result = new (false, "The length of name: from 2 to 60 symbols");
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Checks the birth date.
-        /// </summary>
+        /// <summary>Checks the birth date.</summary>
         /// <param name="birthDate">The birth date.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false, otherwise.
-        /// </returns>
-        public bool CheckBirthDate(string birthDate)
+        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        public Tuple<bool, string> CheckBirthDate(DateTime birthDate)
         {
-            bool result = false;
-
-            if (birthDate == null)
-            {
-                return false;
-            }
-
-            bool convertToDateTime = DateTime.TryParse(birthDate, out DateTime dayOfBirth);
+            Tuple<bool, string> result;
             DateTime currentDate = DateTime.Now;
             DateTime minValueDateOfBirth = new (1950, 1, 1);
 
-            if (convertToDateTime && dayOfBirth.CompareTo(currentDate) < 0 && dayOfBirth.CompareTo(minValueDateOfBirth) >= 0)
+            if (birthDate.CompareTo(currentDate) < 0 && birthDate.CompareTo(minValueDateOfBirth) >= 0)
             {
-                result = true;
+                result = new (true, string.Empty);
+            }
+            else
+            {
+                result = new (false, "Correct format: \"Year - Month - Day\". This parameter is from \"1950-1-1\" to current date.");
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Checks the serie of pass number.
-        /// </summary>
+        /// <summary>Checks the serie of pass number.</summary>
         /// <param name="serieOfPassNumber">The serie of pass number.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false, otherwise.
-        /// </returns>
-        public bool CheckSerieOfPassNumber(string serieOfPassNumber)
+        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        public Tuple<bool, string> CheckSerieOfPassNumber(char serieOfPassNumber)
         {
-            bool result = false;
+            Tuple<bool, string> result;
 
-            if (serieOfPassNumber != null && Regex.IsMatch(serieOfPassNumber, @"^([A-Z]{1}|[a-z]{1})$"))
+            if (Regex.IsMatch(serieOfPassNumber.ToString(), @"^([A-Z]{1}|[a-z]{1})$"))
             {
-                result = true;
+                result = new (true, string.Empty);
+            }
+            else
+            {
+                result = new (false, "Correct format: \"A\" (one letter)");
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Checks the pass number.
-        /// </summary>
+        /// <summary>Checks the pass number.</summary>
         /// <param name="passNumber">The pass number.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false, otherwise.
-        /// </returns>
-        public bool CheckPassNumber(string passNumber)
+        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        public Tuple<bool, string> CheckPassNumber(short passNumber)
         {
-            bool result = false;
+            Tuple<bool, string> result;
 
-            if (passNumber != null && Regex.IsMatch(passNumber, @"^\d{1,4}$"))
+            if (Regex.IsMatch(passNumber.ToString(CultureInfo.InvariantCulture), @"^\d{1,4}$"))
             {
-                result = true;
+                result = new (true, string.Empty);
+            }
+            else
+            {
+                result = new (false, "Correct format: (1-4 digits only)");
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Checks the bank account.
-        /// </summary>
+        /// <summary>Checks the bank account.</summary>
         /// <param name="bankAccount">The bank account.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false, otherwise.
-        /// </returns>
-        public bool CheckBankAccount(string bankAccount)
+        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        public Tuple<bool, string> CheckBankAccount(decimal bankAccount)
         {
-            try
+            Tuple<bool, string> result;
+
+            if (bankAccount >= 0)
             {
-                decimal convertToDecimal = decimal.Parse(bankAccount, CultureInfo.InvariantCulture);
-                return true;
+                result = new (true, string.Empty);
             }
-            catch
+            else
             {
-                return false;
+                result = new (false, "The bank account must be more than zero or equal zero");
             }
+
+            return result;
         }
     }
 }

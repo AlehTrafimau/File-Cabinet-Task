@@ -12,37 +12,18 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
-        private readonly IRecordValidator recordValidator;
-
-        /// <summary>Initializes a new instance of the <see cref="FileCabinetService" /> class.</summary>
-        /// <param name="recordValidator">The record validator.</param>
-        public FileCabinetService(IRecordValidator recordValidator)
-        {
-            this.recordValidator = recordValidator;
-        }
 
         /// <summary>Creates the new record and adds to list.</summary>
-        /// <returns>
-        /// The Id number of the new record.
-        /// </returns>
-        public int CreateRecord()
+        /// <param name="newRecord">The new record.</param>
+        /// <returns>The Id number of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord newRecord)
         {
-            FileCabinetRecord newRecord = this.recordValidator.ValidateParameters();
-
             newRecord.Id = this.usersRecords.Count + 1;
 
             this.usersRecords.Add(newRecord);
 
-            if (newRecord.FirstName != null)
-            {
-                AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
-            }
-
-            if (newRecord.LastName != null)
-            {
-                AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
-            }
-
+            AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
+            AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
             AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord);
 
             return newRecord.Id;
@@ -76,28 +57,28 @@ namespace FileCabinetApp
 
         /// <summary>Edits the exist record by Id number.</summary>
         /// <param name="editRecordId">The id of record for edit.</param>
-        public void EditRecord(int editRecordId)
+        /// <param name="editedRecord">The edited paremeters of record.</param>
+        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
             int recordIndex = editRecordId - 1;
-            FileCabinetRecord editRecord = this.recordValidator.ValidateParameters();
-            editRecord.Id = editRecordId;
+            editedRecord.Id = editRecordId;
 
             string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;
-            this.usersRecords[recordIndex].FirstName = editRecord.FirstName;
-            EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, editRecord.FirstName, editRecord.Id);
+            this.usersRecords[recordIndex].FirstName = editedRecord.FirstName;
+            EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, editedRecord.FirstName, editedRecord.Id);
 
             string? lastNameBeforeEdit = this.usersRecords[recordIndex].LastName;
-            this.usersRecords[recordIndex].LastName = editRecord.LastName;
-            EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, editRecord.LastName, editRecord.Id);
+            this.usersRecords[recordIndex].LastName = editedRecord.LastName;
+            EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, editedRecord.LastName, editedRecord.Id);
 
             DateTime dateOfBirthBeforeEdit = this.usersRecords[recordIndex].DateOfBirth;
-            this.usersRecords[recordIndex].DateOfBirth = editRecord.DateOfBirth;
-            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editRecord.Id);
+            this.usersRecords[recordIndex].DateOfBirth = editedRecord.DateOfBirth;
+            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.Id);
 
-            this.usersRecords[recordIndex].PassNumber = editRecord.PassNumber;
-            this.usersRecords[recordIndex].SerieOfPassNumber = editRecord.SerieOfPassNumber;
-            this.usersRecords[recordIndex].BankAccount = editRecord.BankAccount;
-            Console.WriteLine($"Record #{editRecord.Id} is updated");
+            this.usersRecords[recordIndex].PassNumber = editedRecord.PassNumber;
+            this.usersRecords[recordIndex].SerieOfPassNumber = editedRecord.SerieOfPassNumber;
+            this.usersRecords[recordIndex].BankAccount = editedRecord.BankAccount;
+            Console.WriteLine($"Record #{editedRecord.Id} is updated");
         }
 
         /// <summary>Finds the records by first name.</summary>
@@ -180,33 +161,30 @@ namespace FileCabinetApp
             oldParameter = oldParameter.ToUpperInvariant();
             newParameter = newParameter.ToUpperInvariant();
 
-            if (newParameter != null && oldParameter != newParameter)
+            FileCabinetRecord recordForMove = new ();
+
+            for (int i = 0; i < dictionary[oldParameter].Count; i++)
             {
-                FileCabinetRecord recordForMove = new ();
-
-                for (int i = 0; i < dictionary[oldParameter].Count; i++)
+                if (dictionary[oldParameter][i].Id == sourceId)
                 {
-                    if (dictionary[oldParameter][i].Id == sourceId)
+                    recordForMove = dictionary[oldParameter][i];
+                    dictionary[oldParameter].RemoveAt(i);
+                    if (dictionary[oldParameter].Count == 0)
                     {
-                        recordForMove = dictionary[oldParameter][i];
-                        dictionary[oldParameter].RemoveAt(i);
-                        if (dictionary[oldParameter].Count == 0)
-                        {
-                            dictionary.Remove(oldParameter);
-                        }
-
-                        break;
+                        dictionary.Remove(oldParameter);
                     }
-                }
 
-                if (dictionary.ContainsKey(newParameter))
-                {
-                    dictionary[newParameter].Add(recordForMove);
+                    break;
                 }
-                else
-                {
-                    dictionary.Add(newParameter, new List<FileCabinetRecord>() { recordForMove });
-                }
+            }
+
+            if (dictionary.ContainsKey(newParameter))
+            {
+                dictionary[newParameter].Add(recordForMove);
+            }
+            else
+            {
+                dictionary.Add(newParameter, new List<FileCabinetRecord>() { recordForMove });
             }
         }
     }

@@ -16,7 +16,8 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private static IFileCabinetService fileCabinetService = new FileCabinetService(new DefaultValidator());
+        private static IFileCabinetService fileCabinetService = new FileCabinetService();
+        private static IRecordValidator recordValidator = new DefaultValidator();
 
         private static bool isRunning = true;
 
@@ -89,12 +90,12 @@ namespace FileCabinetApp
         {
             if (args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM")
             {
-                fileCabinetService = new FileCabinetService(new CustomValidator());
+                recordValidator = new CustomValidator();
                 Console.WriteLine(CustomValidationsMessages);
             }
             else if (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM")
             {
-                fileCabinetService = new FileCabinetService(new CustomValidator());
+                recordValidator = new CustomValidator();
                 Console.WriteLine(CustomValidationsMessages);
             }
             else
@@ -147,7 +148,27 @@ namespace FileCabinetApp
                     return;
                 }
 
-                fileCabinetService.EditRecord(requestedID);
+                Console.Write("First name: ");
+                var firstName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+
+                Console.Write("Last name: ");
+                var lastName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+
+                Console.Write("Birth date: ");
+                var dateOfBirth = ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
+
+                Console.Write("Serie of pass number: ");
+                var serieOfPassNumber = ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
+
+                Console.Write("Pass number: ");
+                var passNumber = ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
+
+                Console.Write("Bank account: ");
+                var bankAccount = ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
+
+                FileCabinetRecord editedRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+
+                fileCabinetService.EditRecord(requestedID, editedRecord);
             }
             else
             {
@@ -163,8 +184,65 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            int userId = fileCabinetService.CreateRecord();
+            Console.Write("First name: ");
+            var firstName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+
+            Console.Write("Last name: ");
+            var lastName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+
+            Console.Write("Birth date: ");
+            var dateOfBirth = ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
+
+            Console.Write("Serie of pass number: ");
+            var serieOfPassNumber = ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
+
+            Console.Write("Pass number: ");
+            var passNumber = ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
+
+            Console.Write("Bank account: ");
+            var bankAccount = ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
+
+            FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+            int userId = fileCabinetService.CreateRecord(newRecord);
             Console.WriteLine($"Record #{userId} is created.");
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                string? input = Console.ReadLine();
+                Tuple<bool, string, T> conversionResult;
+
+                if (input != null)
+                {
+                    conversionResult = converter(input);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
 
         private static void List(string parameters)

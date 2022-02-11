@@ -13,10 +13,9 @@ namespace FileCabinetApp
     internal interface IFileCabinetService
     {
         /// <summary>Creates the new record.</summary>
-        /// <returns>
-        /// The Id number of the new record.
-        /// </returns>
-        public int CreateRecord();
+        /// <param name="newRecord"> The new record.</param>
+        /// <returns>The Id number of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord newRecord);
 
         /// <summary>Gets all records which created.</summary>
         /// <returns>
@@ -32,7 +31,8 @@ namespace FileCabinetApp
 
         /// <summary>Edits the exist record by Id number.</summary>
         /// <param name="editRecordId">The id of record for edit.</param>
-        public void EditRecord(int editRecordId);
+        /// <param name="editedRecord">The edited record.</param>
+        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord);
 
         /// <summary>Finds the records by first name.</summary>
         /// <param name="firstName">The first name.</param>
