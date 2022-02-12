@@ -55,6 +55,18 @@ namespace FileCabinetApp
             return this.usersRecords.Count;
         }
 
+        /// <summary>
+        /// Makes the snapshot.
+        /// </summary>
+        /// <returns>
+        /// The snapshot of current state of the cabinet service.
+        /// </returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            FileCabinetServiceSnapshot newSnapshot = new (this.usersRecords.ToArray());
+            return newSnapshot;
+        }
+
         /// <summary>Edits the exist record by Id number.</summary>
         /// <param name="editRecordId">The id of record for edit.</param>
         /// <param name="editedRecord">The edited paremeters of record.</param>

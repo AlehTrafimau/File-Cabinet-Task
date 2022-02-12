@@ -30,6 +30,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -40,6 +41,7 @@ namespace FileCabinetApp
             new string[] { "create", "saves user's date and returns user's ID", "The 'create' command saves user's date and returns user's ID." },
             new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
             new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
+            new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
         };
 
         /// <summary>Defines the entry point of the application.</summary>
@@ -135,6 +137,56 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void Export(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2);
+            string exportFormat = inputs[0];
+            string pathToFile = inputs[1];
+
+            if ((exportFormat.ToUpperInvariant() != "CSV" && exportFormat.ToUpperInvariant() != "XML") || !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
+            {
+                Console.WriteLine($"Invalid command: \"{exportFormat}\" or file format: \"{pathToFile}\"");
+                return;
+            }
+
+            bool retriveExistsFile = false;
+            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() != "XML")
+            {
+                Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
+                string? retrivePermission = Console.ReadLine();
+                if (retrivePermission != null && retrivePermission.ToUpperInvariant() == "NO")
+                {
+                    retriveExistsFile = true;
+                }
+            }
+            else if (!Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^[A-Z]*(.CSV|.XML)$"))
+            {
+                Console.WriteLine($"Export failed: can't open file {pathToFile}.");
+                return;
+            }
+
+            FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
+            using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
+            {
+                switch (exportFormat.ToUpperInvariant())
+                {
+                    case "CSV":
+                        if (retriveExistsFile == false)
+                        {
+                            streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                        }
+
+                        snapShot.SaveToCsv(streamWriter);
+                        break;
+                    case "XML":
+                        snapShot.SaveToXml(streamWriter);
+                        break;
+                }
+
+                Console.WriteLine($"All records are exported to file {pathToFile}");
+            }
         }
 
         private static void Edit(string parameters)

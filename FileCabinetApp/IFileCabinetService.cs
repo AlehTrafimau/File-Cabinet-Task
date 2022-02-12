@@ -17,6 +17,12 @@ namespace FileCabinetApp
         /// <returns>The Id number of the new record.</returns>
         public int CreateRecord(FileCabinetRecord newRecord);
 
+        /// <summary>
+        /// Makes the snapshot.
+        /// </summary>
+        /// <returns>The snapshot of current state of the cabinet service.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot();
+
         /// <summary>Gets all records which created.</summary>
         /// <returns>
         /// The read only collection of created records at the present time.
