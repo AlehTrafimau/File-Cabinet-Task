@@ -16,7 +16,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private static IFileCabinetService fileCabinetService = new FileCabinetService();
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new DefaultValidator();
 
         private static bool isRunning = true;
