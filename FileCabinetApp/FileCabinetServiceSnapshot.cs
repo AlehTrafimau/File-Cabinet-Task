@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace FileCabinetApp
 {
@@ -31,8 +32,24 @@ namespace FileCabinetApp
         /// <param name="streamWriter">The stream writer.</param>
         internal void SaveToCsv(StreamWriter streamWriter)
         {
-            FileCabinetRecordCsvWriter saveSCV = new (streamWriter);
-            saveSCV.Write(this.latestSnapshotOfRecordsState);
+            FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
+            csvWriter.Write(this.latestSnapshotOfRecordsState);
+        }
+
+        /// <summary>
+        /// Saves to XML.
+        /// </summary>
+        /// <param name="streamWriter">The stream writer.</param>
+        internal void SaveToXml(StreamWriter streamWriter)
+        {
+            var sts = new XmlWriterSettings()
+            {
+                Indent = true,
+            };
+
+            XmlWriter xmlWriter = XmlWriter.Create(streamWriter, sts);
+            FileCabinetRecordXmlWriter converterToXml = new (xmlWriter);
+            converterToXml.Write(this.latestSnapshotOfRecordsState);
         }
     }
 }

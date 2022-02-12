@@ -125,13 +125,30 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
             </summary>
-            <param name="writer">The writer.</param>
+            <param name="writer">The text writer.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord[])">
             <summary>
-            Writes the specified records.
+            Convert list of records to csv format.
             </summary>
-            <param name="records">The records.</param>
+            <param name="records">The snapshot of current list of records.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+            Convert records to scv format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">The xml writer.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Convert list of records to xml format.
+            </summary>
+            <param name="records">The snapshot of current list of records.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
@@ -208,6 +225,12 @@
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Saves to CSV.
+            </summary>
+            <param name="streamWriter">The stream writer.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            Saves to XML.
             </summary>
             <param name="streamWriter">The stream writer.</param>
         </member>

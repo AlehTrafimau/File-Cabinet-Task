@@ -18,29 +18,26 @@ namespace FileCabinetApp
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.
         /// </summary>
-        /// <param name="writer">The writer.</param>
+        /// <param name="writer">The text writer.</param>
         internal FileCabinetRecordCsvWriter(TextWriter writer)
         {
             this.writer = writer;
         }
 
         /// <summary>
-        /// Writes the specified records.
+        /// Convert list of records to csv format.
         /// </summary>
-        /// <param name="records">The records.</param>
+        /// <param name="records">The snapshot of current list of records.</param>
         public void Write(FileCabinetRecord[] records)
         {
             StringBuilder csvFormat = new ();
 
             foreach (FileCabinetRecord i in records)
             {
-                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.FirstName}, {i.LastName}, {i.DateOfBirth}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
+                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.FirstName}, {i.LastName}, {i.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
             }
 
-            using (this.writer)
-            {
-                this.writer.Write(csvFormat);
-            }
+            this.writer.Write(csvFormat);
         }
     }
 }

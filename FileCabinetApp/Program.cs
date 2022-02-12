@@ -145,14 +145,14 @@ namespace FileCabinetApp
             string exportFormat = inputs[0];
             string pathToFile = inputs[1];
 
-            if (exportFormat.ToUpperInvariant() != "CSV" || !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*.CSV$"))
+            if ((exportFormat.ToUpperInvariant() != "CSV" && exportFormat.ToUpperInvariant() != "XML") || !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
             {
                 Console.WriteLine($"Invalid command: \"{exportFormat}\" or file format: \"{pathToFile}\"");
                 return;
             }
 
             bool retriveExistsFile = false;
-            if (File.Exists(pathToFile))
+            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() != "XML")
             {
                 Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
                 string? retrivePermission = Console.ReadLine();
@@ -161,7 +161,7 @@ namespace FileCabinetApp
                     retriveExistsFile = true;
                 }
             }
-            else if (!Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^[A-Z]*.CSV$"))
+            else if (!Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^[A-Z]*(.CSV|.XML)$"))
             {
                 Console.WriteLine($"Export failed: can't open file {pathToFile}.");
                 return;
@@ -170,12 +170,21 @@ namespace FileCabinetApp
             FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
             using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
             {
-                if (retriveExistsFile == false)
+                switch (exportFormat.ToUpperInvariant())
                 {
-                    streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                    case "CSV":
+                        if (retriveExistsFile == false)
+                        {
+                            streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                        }
+
+                        snapShot.SaveToCsv(streamWriter);
+                        break;
+                    case "XML":
+                        snapShot.SaveToXml(streamWriter);
+                        break;
                 }
 
-                snapShot.SaveToCsv(streamWriter);
                 Console.WriteLine($"All records are exported to file {pathToFile}");
             }
         }
