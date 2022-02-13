@@ -35,8 +35,8 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord)
         {
             int lengthOfByteRecord = 276;
-            int currentRecord = (int)(this.fileStream.Position / lengthOfByteRecord);
-            newRecord.Id = currentRecord + 1;
+            int lastRecordInFile = (int)(this.fileStream.Position / lengthOfByteRecord);
+            newRecord.Id = lastRecordInFile + 1;
 
             byte[] input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 4);
@@ -185,7 +185,8 @@ namespace FileCabinetApp
         /// </returns>
         public int GetStat()
         {
-            throw new NotImplementedException();
+            long numberOfRecordInFile = this.fileStream.Length / 276;
+            return (int)numberOfRecordInFile;
         }
 
         /// <summary>
