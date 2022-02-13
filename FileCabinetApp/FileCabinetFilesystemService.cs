@@ -84,7 +84,44 @@ namespace FileCabinetApp
         /// <param name="editedRecord">The edited record.</param>
         public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
-            throw new NotImplementedException();
+            long startByteOfRecordInFile = (editRecordId - 1) * 276;
+            this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
+
+            byte[] input = Encoding.Default.GetBytes(editedRecord.Id.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.FirstName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.LastName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Day.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Month.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Year.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.SerieOfPassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.PassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(editedRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 16);
+            this.fileStream.Write(input, 0, input.Length);
         }
 
         /// <summary>
