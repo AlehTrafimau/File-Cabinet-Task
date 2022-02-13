@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,29 +12,69 @@ namespace FileCabinetApp
     /// Service for work to file system.
     /// </summary>
     /// <seealso cref="FileCabinetApp.IFileCabinetService" />
-    internal class FileCabinetFilesystemService : IFileCabinetService
+    internal class FileCabinetFileSystemService : IFileCabinetService
     {
         private FileStream fileStream;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.
+        /// Initializes a new instance of the <see cref="FileCabinetFileSystemService"/> class.
         /// </summary>
         /// <param name="fileStream">The file stream.</param>
-        public FileCabinetFilesystemService(FileStream fileStream)
+        public FileCabinetFileSystemService(FileStream fileStream)
         {
             this.fileStream = fileStream;
         }
 
         /// <summary>
-        /// Creates the new record.
+        /// Adds new record to the default storage in file system.
         /// </summary>
         /// <param name="newRecord">The new record.</param>
         /// <returns>
-        /// The Id number of the new record.
+        /// The Id number of the new record in the default storage.
         /// </returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            throw new NotImplementedException();
+            int lengthOfByteRecord = 276;
+            int currentRecord = (int)(this.fileStream.Position / lengthOfByteRecord);
+            newRecord.Id = currentRecord + 1;
+
+            byte[] input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.FirstName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.LastName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Day.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Month.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Year.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.SerieOfPassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.PassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 16);
+            this.fileStream.Write(input, 0, input.Length);
+
+            return newRecord.Id;
         }
 
         /// <summary>

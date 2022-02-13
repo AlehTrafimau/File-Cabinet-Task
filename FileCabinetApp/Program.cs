@@ -10,8 +10,6 @@ namespace FileCabinetApp
     public static class Program
     {
         private const string DeveloperName = "Aleh Trafimau";
-        private const string DefaultValidationsMessages = "Using default validation rules.";
-        private const string CustomValidationsMessages = "Using custom validation rules.";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
@@ -49,7 +47,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
-            SetFileCabinetServiceMode(args);
+            SetConsoleParameters(args);
             Console.WriteLine(HintMessage);
             Console.WriteLine();
 
@@ -88,21 +86,27 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
-        private static void SetFileCabinetServiceMode(string[] args)
+        private static void SetConsoleParameters(string[] args)
         {
-            if (args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM")
+            if ((args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM") || (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM"))
             {
                 recordValidator = new CustomValidator();
-                Console.WriteLine(CustomValidationsMessages);
-            }
-            else if (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM")
-            {
-                recordValidator = new CustomValidator();
-                Console.WriteLine(CustomValidationsMessages);
+                Console.WriteLine("Using custom validation rules.");
             }
             else
             {
-                Console.WriteLine(DefaultValidationsMessages);
+                Console.WriteLine("Using default validation rules.");
+            }
+
+            if ((args.Length == 1 && args[0].ToUpperInvariant() == "--STORAGE=FILE") || (args.Length == 2 && args[0].ToUpperInvariant() == "-S" && args[1].ToUpperInvariant() == "FILE"))
+            {
+                Console.WriteLine("Data storage will take place in the file system.");
+                FileStream fileStream = new ("cabinet-records.db", FileMode.Append);
+                fileCabinetService = new FileCabinetFileSystemService(fileStream);
+            }
+            else
+            {
+                Console.WriteLine("Data storage will take place in the memory of program.");
             }
         }
 
@@ -256,6 +260,7 @@ namespace FileCabinetApp
 
             FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
             int userId = fileCabinetService.CreateRecord(newRecord);
+
             Console.WriteLine($"Record #{userId} is created.");
         }
 

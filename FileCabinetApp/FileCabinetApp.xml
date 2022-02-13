@@ -66,6 +66,141 @@
             <param name="bankAccount">The bank account.</param>
             <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetFileSystemService">
+            <summary>
+            Service for work to file system.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.#ctor(System.IO.FileStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetFileSystemService"/> class.
+            </summary>
+            <param name="fileStream">The file stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Creates the new record.
+            </summary>
+            <param name="newRecord">The new record.</param>
+            <returns>
+            The Id number of the new record.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Edits the exist record by Id number.
+            </summary>
+            <param name="editRecordId">The id of record for edit.</param>
+            <param name="editedRecord">The edited record.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByDayOfBirth(System.String)">
+            <summary>
+            Finds the records by birth day.
+            </summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The read only collection of records which consist of this birth date.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByFirstName(System.String)">
+            <summary>
+            Finds the records by first name.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The read only collection of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByLastName(System.String)">
+            <summary>
+            Finds the records by last name.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The read only collection of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.GetRecords">
+            <summary>
+            Gets all records which created.
+            </summary>
+            <returns>
+            The read only collection of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.GetStat">
+            <summary>
+            Gets the count of created records.
+            </summary>
+            <returns>
+            The number of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.MakeSnapshot">
+            <summary>
+            Makes the snapshot.
+            </summary>
+            <returns>
+            The snapshot of current state of the cabinet service.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetMemoryService">
+            <summary>
+            Service to create, storage, edit, find and display records about users.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>Creates the new record and adds to list.</summary>
+            <param name="newRecord">The new record.</param>
+            <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
+            <summary>Gets all records which created.</summary>
+            <returns>
+            The list of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
+            <summary>Gets the count of created records.</summary>
+            <returns>
+            The count of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.MakeSnapshot">
+            <summary>
+            Makes the snapshot.
+            </summary>
+            <returns>
+            The snapshot of current state of the cabinet service.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+            <summary>Edits the exist record by Id number.</summary>
+            <param name="editRecordId">The id of record for edit.</param>
+            <param name="editedRecord">The edited paremeters of record.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
+            <summary>Finds the records by first name.</summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The list of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByLastName(System.String)">
+            <summary>Finds the records by last name.</summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The list of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByDayOfBirth(System.String)">
+            <summary>Finds the records by birth day.</summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The list of records which consist of this birth date.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Description properties of record.
@@ -149,62 +284,6 @@
             Convert list of records to xml format.
             </summary>
             <param name="records">The snapshot of current list of records.</param>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetService">
-            <summary>
-            Service to create, storage, edit, find and display records about users.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
-            <summary>Creates the new record and adds to list.</summary>
-            <param name="newRecord">The new record.</param>
-            <returns>The Id number of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
-            <summary>Gets all records which created.</summary>
-            <returns>
-            The list of created records at the present time.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
-            <summary>Gets the count of created records.</summary>
-            <returns>
-            The count of created records.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.MakeSnapshot">
-            <summary>
-            Makes the snapshot.
-            </summary>
-            <returns>
-            The snapshot of current state of the cabinet service.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>Edits the exist record by Id number.</summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
-            <summary>Finds the records by first name.</summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The list of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
-            <summary>Finds the records by last name.</summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The list of records which consist of this last name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByDayOfBirth(System.String)">
-            <summary>Finds the records by birth day.</summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The list of records which consist of this birth date.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
             <summary>
