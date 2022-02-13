@@ -131,7 +131,50 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            List<FileCabinetRecord> recordsFromFileSystem = new ();
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            long numberOfRecordInFile = this.fileStream.Length / 276;
+
+            while (numberOfRecordInFile > 0)
+            {
+                FileCabinetRecord currentRecord = new ();
+                byte[] array = new byte[4];
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+                Array.Resize(ref array, 120);
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.FirstName = Encoding.Default.GetString(array).Trim(default(char));
+
+                Array.Clear(array);
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.LastName = Encoding.Default.GetString(array).Trim(default(char));
+
+                Array.Resize(ref array, 4);
+                this.fileStream.Read(array, 0, array.Length);
+                int day = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                this.fileStream.Read(array, 0, array.Length);
+                int month = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                this.fileStream.Read(array, 0, array.Length);
+                int year = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                currentRecord.DateOfBirth = new DateTime(year, month, day);
+
+                Array.Resize(ref array, 2);
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.SerieOfPassNumber = char.Parse(Encoding.Default.GetString(array).Trim(default(char)));
+
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.PassNumber = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+                Array.Resize(ref array, 16);
+                this.fileStream.Read(array, 0, array.Length);
+                currentRecord.BankAccount = decimal.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+                recordsFromFileSystem.Add(currentRecord);
+                numberOfRecordInFile--;
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(recordsFromFileSystem);
         }
 
         /// <summary>

@@ -101,7 +101,7 @@ namespace FileCabinetApp
             if ((args.Length == 1 && args[0].ToUpperInvariant() == "--STORAGE=FILE") || (args.Length == 2 && args[0].ToUpperInvariant() == "-S" && args[1].ToUpperInvariant() == "FILE"))
             {
                 Console.WriteLine("Data storage will take place in the file system.");
-                FileStream fileStream = new ("cabinet-records.db", FileMode.Append);
+                FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
                 fileCabinetService = new FileCabinetFileSystemService(fileStream);
             }
             else
@@ -313,7 +313,7 @@ namespace FileCabinetApp
 
             foreach (FileCabinetRecord record in cabinetRecords)
             {
-                Console.WriteLine(@$"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth:yyyy-MMM-dd}, pass number: {record.SerieOfPassNumber} {record.PassNumber}, currentBankAccount: {record.BankAccount}$");
+                Console.WriteLine(@$"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}, pass number:{record.SerieOfPassNumber} {record.PassNumber}, currentBankAccount: {record.BankAccount}$");
             }
         }
 

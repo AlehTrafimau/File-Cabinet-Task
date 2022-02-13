@@ -80,11 +80,11 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Creates the new record.
+            Adds new record to the default storage in file system.
             </summary>
             <param name="newRecord">The new record.</param>
             <returns>
-            The Id number of the new record.
+            The Id number of the new record in the default storage.
             </returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
