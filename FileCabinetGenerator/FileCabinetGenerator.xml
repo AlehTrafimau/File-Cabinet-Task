@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileCabinetGenerator</name>
+    </assembly>
+    <members>
+        <member name="T:FileCabinetApp.FileCabinetGenerator">
+            <summary>
+            Program for autogenerating new records and performing operations with them to export csv, xml format, write to fily system..
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetGenerator.Main(System.String[])">
+            <summary>Defines the entry point of the application.</summary>
+            <param name="args">The arguments.</param>
+        </member>
+    </members>
+</doc>
