@@ -188,7 +188,18 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            throw new NotImplementedException();
+            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
+            List<FileCabinetRecord> resultOfSearch = new ();
+
+            foreach (FileCabinetRecord record in allRecords)
+            {
+                if (record.LastName.ToUpperInvariant() == lastName.ToUpperInvariant())
+                {
+                    resultOfSearch.Add(record);
+                }
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
         }
 
         /// <summary>
