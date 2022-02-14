@@ -1,6 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
+using FileCabinetApp;
 
-namespace FileCabinetApp
+namespace FileCabinetGenerator
 {
     /// <summary>
     /// Program for autogenerating new records and performing operations with them to export csv, xml format, write to fily system..
@@ -16,6 +18,7 @@ namespace FileCabinetApp
         public static void Main(string[] args)
         {
             SetConsoleParameters(args);
+            ReadOnlyCollection<FileCabinetRecord> result = FileCabinetRecordGenerator.GetRandomRecords(numberOfRecords, startId);
         }
 
         private static void SetConsoleParameters(string[] args)

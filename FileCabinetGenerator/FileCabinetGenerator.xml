@@ -4,14 +4,29 @@
         <name>FileCabinetGenerator</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetGenerator">
+        <member name="T:FileCabinetGenerator.FileCabinetGenerator">
             <summary>
             Program for autogenerating new records and performing operations with them to export csv, xml format, write to fily system..
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetGenerator.Main(System.String[])">
+        <member name="M:FileCabinetGenerator.FileCabinetGenerator.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetGenerator.FileCabinetRecordGenerator">
+            <summary>
+            Consists of methods to create the collection of auto generated records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.GetRandomRecords(System.Int32,System.Int32)">
+            <summary>
+            Generates setted number of records (validation rules - default).
+            </summary>
+            <param name="numberOfRecords">The necessary number of record.</param>
+            <param name="startId">The id of the first record in the sequence.</param>
+            <returns>
+            The list of auto generated records.
+            </returns>
         </member>
     </members>
 </doc>
