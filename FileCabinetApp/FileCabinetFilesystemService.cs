@@ -165,7 +165,18 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            throw new NotImplementedException();
+            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
+            List<FileCabinetRecord> resultOfSearch = new ();
+
+            foreach (FileCabinetRecord record in allRecords)
+            {
+                if (record.FirstName.ToUpperInvariant() == firstName.ToUpperInvariant())
+                {
+                    resultOfSearch.Add(record);
+                }
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
         }
 
         /// <summary>
@@ -188,13 +199,13 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            List<FileCabinetRecord> recordsFromFileSystem = new ();
+            List<FileCabinetRecord> recordsFromFileSystem = new();
             this.fileStream.Seek(0, SeekOrigin.Begin);
             long numberOfRecordInFile = this.fileStream.Length / 276;
 
             while (numberOfRecordInFile > 0)
             {
-                FileCabinetRecord currentRecord = new ();
+                FileCabinetRecord currentRecord = new();
                 byte[] array = new byte[4];
                 this.fileStream.Read(array, 0, array.Length);
                 currentRecord.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
