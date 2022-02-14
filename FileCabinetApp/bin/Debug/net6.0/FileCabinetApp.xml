@@ -4,6 +4,20 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.ConsoleExtension">
+            <summary>
+            Consists of a set of function for work to console's data;
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ConsoleExtension.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
+            <summary>
+            dfdf.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="converter"></param>
+            <param name="validator"></param>
+            <returns></returns>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Consists a set of function for record validation according custom conditionals.
@@ -425,6 +439,17 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordsOperation">
+            <summary>
+            Consists a set of methods processing records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordsOperation.PrintRecord(System.Collections.Generic.IReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Display data of records to console.
+            </summary>
+            <param name="records">The sequence of record for display.</param>
         </member>
         <member name="T:FileCabinetApp.StringConverter">
             <summary>

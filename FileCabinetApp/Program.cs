@@ -205,22 +205,22 @@ namespace FileCabinetApp
                 }
 
                 Console.Write("First name: ");
-                var firstName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+                var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
 
                 Console.Write("Last name: ");
-                var lastName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+                var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
 
                 Console.Write("Birth date: ");
-                var dateOfBirth = ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
+                var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
 
                 Console.Write("Serie of pass number: ");
-                var serieOfPassNumber = ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
+                var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
 
                 Console.Write("Pass number: ");
-                var passNumber = ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
+                var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
 
                 Console.Write("Bank account: ");
-                var bankAccount = ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
+                var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
                 FileCabinetRecord editedRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
@@ -241,22 +241,22 @@ namespace FileCabinetApp
         private static void Create(string parameters)
         {
             Console.Write("First name: ");
-            var firstName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+            var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
 
             Console.Write("Last name: ");
-            var lastName = ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
+            var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, recordValidator.CheckName);
 
             Console.Write("Birth date: ");
-            var dateOfBirth = ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
+            var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, recordValidator.CheckBirthDate);
 
             Console.Write("Serie of pass number: ");
-            var serieOfPassNumber = ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
+            var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, recordValidator.CheckSerieOfPassNumber);
 
             Console.Write("Pass number: ");
-            var passNumber = ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
+            var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, recordValidator.CheckPassNumber);
 
             Console.Write("Bank account: ");
-            var bankAccount = ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
+            var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
             FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
             int userId = fileCabinetService.CreateRecord(newRecord);
@@ -264,57 +264,16 @@ namespace FileCabinetApp
             Console.WriteLine($"Record #{userId} is created.");
         }
 
-        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
-        {
-            do
-            {
-                T value;
-
-                string? input = Console.ReadLine();
-                Tuple<bool, string, T> conversionResult;
-
-                if (input != null)
-                {
-                    conversionResult = converter(input);
-                }
-                else
-                {
-                    continue;
-                }
-
-                if (!conversionResult.Item1)
-                {
-                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                value = conversionResult.Item3;
-
-                var validationResult = validator(value);
-                if (!validationResult.Item1)
-                {
-                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                return value;
-            }
-            while (true);
-        }
-
         private static void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> cabinetRecords = fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = fileCabinetService.GetRecords();
 
-            if (cabinetRecords.Count == 0)
+            if (records.Count == 0)
             {
                 Console.WriteLine("There are no records here");
             }
 
-            foreach (FileCabinetRecord record in cabinetRecords)
-            {
-                Console.WriteLine(@$"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}, pass number:{record.SerieOfPassNumber} {record.PassNumber}, currentBankAccount: {record.BankAccount}$");
-            }
+            RecordsOperation.PrintRecord(records);
         }
 
         private static void Find(string parameters)
@@ -338,35 +297,31 @@ namespace FileCabinetApp
                 return;
             }
 
-            List<FileCabinetRecord> cabinetRecords = new ();
+            ReadOnlyCollection<FileCabinetRecord> resultOfSearch;
 
             switch (command)
             {
                 case "FIRSTNAME":
-                    cabinetRecords.AddRange(fileCabinetService.FindByFirstName(parameterForSearch));
+                    resultOfSearch = fileCabinetService.FindByFirstName(parameterForSearch);
                     break;
                 case "LASTNAME":
-                    cabinetRecords.AddRange(fileCabinetService.FindByLastName(parameterForSearch));
+                    resultOfSearch = fileCabinetService.FindByLastName(parameterForSearch);
                     break;
                 case "DATEOFBIRTH":
-                    cabinetRecords.AddRange(fileCabinetService.FindByDayOfBirth(parameterForSearch));
+                    resultOfSearch = fileCabinetService.FindByDayOfBirth(parameterForSearch);
                     break;
                 default:
                     Console.WriteLine($"Invalid command: {command}.");
                     return;
             }
 
-            if (cabinetRecords.Count != 0)
+            if (resultOfSearch.Count != 0)
             {
-                foreach (FileCabinetRecord currentRecord in cabinetRecords)
-                {
-                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth:yyyy-MMM-dd}," +
-                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.BankAccount}$");
-                }
+                RecordsOperation.PrintRecord(resultOfSearch.ToArray());
             }
             else
             {
-                Console.WriteLine("Notes are not found");
+                Console.WriteLine("Records are not found");
             }
         }
     }

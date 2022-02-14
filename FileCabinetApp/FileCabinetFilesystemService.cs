@@ -86,6 +86,7 @@ namespace FileCabinetApp
         {
             long startByteOfRecordInFile = (editRecordId - 1) * 276;
             this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
+            editedRecord.Id = editRecordId;
 
             byte[] input = Encoding.Default.GetBytes(editedRecord.Id.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 4);
@@ -133,7 +134,26 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            throw new NotImplementedException();
+            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
+            List<FileCabinetRecord> resultOfSearch = new List<FileCabinetRecord>();
+
+            bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
+
+            if (isDateTime)
+            {
+                foreach (FileCabinetRecord currentRecord in allRecords)
+                {
+                    if (currentRecord.DateOfBirth == dayOfBirth)
+                    {
+                        resultOfSearch.Add(currentRecord);
+                    }
+                }
+
+                return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
+            }
+
+            Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
+            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
         }
 
         /// <summary>
