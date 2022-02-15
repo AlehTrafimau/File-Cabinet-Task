@@ -12,13 +12,49 @@ namespace FileCabinetGenerator
         private static int startId;
         private static int numberOfRecords;
         private static string pathToFile = string.Empty;
+        private static string exportFormat = string.Empty;
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             SetConsoleParameters(args);
-            ReadOnlyCollection<FileCabinetRecord> result = FileCabinetRecordGenerator.GetRandomRecords(numberOfRecords, startId);
+            ReadOnlyCollection<FileCabinetRecord> newRecords = FileCabinetRecordGenerator.GetRandomRecords(numberOfRecords, startId);
+
+            bool retriveExistsFile = false;
+            if (File.Exists(pathToFile))
+            {
+                Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
+                string? retrivePermission = Console.ReadLine();
+                if (retrivePermission != null && retrivePermission.ToUpperInvariant() == "NO")
+                {
+                    retriveExistsFile = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Export failed: can't open file {pathToFile}");
+            }
+
+            using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
+            {
+                switch (exportFormat.ToUpperInvariant())
+                {
+                    case "CSV":
+                        if (retriveExistsFile == false)
+                        {
+                            streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                        }
+
+                        FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
+                        csvWriter.Write(newRecords.ToArray());
+                        break;
+                    default:
+                        return;
+                }
+
+                Console.WriteLine($"{numberOfRecords} records were written to {pathToFile}");
+            }
         }
 
         private static void SetConsoleParameters(string[] args)
@@ -33,7 +69,7 @@ namespace FileCabinetGenerator
             {
                 if (Regex.IsMatch(args[0].ToLowerInvariant(), @"^--output-type=[c|x]{1}[s|m]{1}[v|l]{1}$"))
                 {
-                    string format = args[0][^3..];
+                    exportFormat = args[0][^3..];
                 }
 
                 if (Regex.IsMatch(args[1].ToLowerInvariant(), @"^--output=\S*$"))
@@ -71,7 +107,7 @@ namespace FileCabinetGenerator
             {
                 if (args[0].ToLowerInvariant() == "-t")
                 {
-                    string format = args[1];
+                    exportFormat = args[1];
                 }
 
                 if (args[2].ToLowerInvariant() == "-o")
