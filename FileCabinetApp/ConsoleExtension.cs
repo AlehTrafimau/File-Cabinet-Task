@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Consists of a set of function for work to console's data;
+    /// Consists of a set of function for work to console's data.
     /// </summary>
     internal class ConsoleExtension
     {
         /// <summary>
-        /// dfdf.
+        /// Reads a information from console, converts to  necessary format and verify its valid by special conditionals.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="converter"></param>
-        /// <param name="validator"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Generic parameter.</typeparam>
+        /// <param name="converter">A special converter of entered string.</param>
+        /// <param name="validator">A special validator of convertered string.</param>
+        /// <returns>
+        /// The value of T type which converted and validated successfully.
+        /// </returns>
         internal static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
         {
             do

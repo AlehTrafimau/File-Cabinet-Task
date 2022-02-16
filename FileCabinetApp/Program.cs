@@ -172,25 +172,23 @@ namespace FileCabinetApp
             }
 
             FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
-            using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
+            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            switch (exportFormat.ToUpperInvariant())
             {
-                switch (exportFormat.ToUpperInvariant())
-                {
-                    case "CSV":
-                        if (retriveExistsFile == false)
-                        {
-                            streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
-                        }
+                case "CSV":
+                    if (retriveExistsFile == false)
+                    {
+                        streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                    }
 
-                        snapShot.SaveToCsv(streamWriter);
-                        break;
-                    case "XML":
-                        snapShot.SaveToXml(streamWriter);
-                        break;
-                }
-
-                Console.WriteLine($"All records are exported to file {pathToFile}");
+                    snapShot.SaveToCsv(streamWriter);
+                    break;
+                case "XML":
+                    snapShot.SaveToXml(streamWriter);
+                    break;
             }
+
+            Console.WriteLine($"All records are exported to file {pathToFile}");
         }
 
         private static void Edit(string parameters)

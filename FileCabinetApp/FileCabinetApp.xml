@@ -6,17 +6,19 @@
     <members>
         <member name="T:FileCabinetApp.ConsoleExtension">
             <summary>
-            Consists of a set of function for work to console's data;
+            Consists of a set of function for work to console's data.
             </summary>
         </member>
         <member name="M:FileCabinetApp.ConsoleExtension.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
             <summary>
-            dfdf.
+            Reads a information from console, converts to  necessary format and verify its valid by special conditionals.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="converter"></param>
-            <param name="validator"></param>
-            <returns></returns>
+            <typeparam name="T">Generic parameter.</typeparam>
+            <param name="converter">A special converter of entered string.</param>
+            <param name="validator">A special validator of convertered string.</param>
+            <returns>
+            The value of T type which converted and validated successfully.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
