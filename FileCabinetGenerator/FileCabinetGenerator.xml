@@ -28,5 +28,145 @@
             The list of auto generated records.
             </returns>
         </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.FirstNameGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.LastNameGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.BirthDateGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.SerieOfPassNumberGenerate(System.Random)">
+            <summary>
+            Generates a random serie of pass number.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random serie of pass number.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.PassNumberGenerate(System.Random)">
+            <summary>
+            Generates a random pass number.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random pass number.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordGenerator.BankAccountGenerate(System.Random)">
+            <summary>
+            Generates a random bank account.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random bank account.
+            </returns>
+        </member>
+        <member name="T:FileCabinetGenerator.FileCabinetRecordXmlSerializer">
+            <summary>
+            Convert records to xml format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordXmlSerializer.#ctor(System.IO.StreamWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetGenerator.FileCabinetRecordXmlSerializer"/> class.
+            </summary>
+            <param name="fileStream">The file stream.</param>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecordXmlSerializer.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            sd.
+            </summary>
+            <param name="records">dsds.</param>
+        </member>
+        <member name="T:FileCabinetGenerator.IFileRecordGenerator">
+            <summary>
+            Consists a set of methods to auto-generate filds' value of record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.GetRandomRecords(System.Int32,System.Int32)">
+            <summary>
+            Generates setted number of records (validation rules - default).
+            </summary>
+            <param name="numberOfRecords">The necessary number of record.</param>
+            <param name="startId">The id of the first record in the sequence.</param>
+            <returns>
+            The list of auto generated records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.FirstNameGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.LastNameGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.BirthDateGenerate(System.Random)">
+            <summary>
+            Generates a random first name.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.SerieOfPassNumberGenerate(System.Random)">
+            <summary>
+            Generates a random serie of pass number.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random serie of pass number.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.PassNumberGenerate(System.Random)">
+            <summary>
+            Generates a random pass number.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random pass number.
+            </returns>
+        </member>
+        <member name="M:FileCabinetGenerator.IFileRecordGenerator.BankAccountGenerate(System.Random)">
+            <summary>
+            Generates a random bank account.
+            </summary>
+            <param name="generator">The random number-generator.</param>
+            <returns>
+            Generated random bank account.
+            </returns>
+        </member>
     </members>
 </doc>

@@ -25,6 +25,10 @@
     <ProjectReference Include="..\FileCabinetApp\FileCabinetApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>
 
 

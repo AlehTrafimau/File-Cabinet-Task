@@ -19,7 +19,8 @@ namespace FileCabinetGenerator
         public static void Main(string[] args)
         {
             SetConsoleParameters(args);
-            ReadOnlyCollection<FileCabinetRecord> newRecords = FileCabinetRecordGenerator.GetRandomRecords(numberOfRecords, startId);
+            FileCabinetRecordGenerator recordsGenerator = new ();
+            ReadOnlyCollection<FileCabinetRecord> newRecords = recordsGenerator.GetRandomRecords(numberOfRecords, startId);
 
             bool retriveExistsFile = false;
             if (File.Exists(pathToFile))
@@ -36,25 +37,27 @@ namespace FileCabinetGenerator
                 Console.WriteLine($"Export failed: can't open file {pathToFile}");
             }
 
-            using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
+            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            switch (exportFormat.ToUpperInvariant())
             {
-                switch (exportFormat.ToUpperInvariant())
-                {
-                    case "CSV":
-                        if (retriveExistsFile == false)
-                        {
-                            streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
-                        }
+                case "CSV":
+                    if (retriveExistsFile == false)
+                    {
+                        streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                    }
 
-                        FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
-                        csvWriter.Write(newRecords.ToArray());
-                        break;
-                    default:
-                        return;
-                }
-
-                Console.WriteLine($"{numberOfRecords} records were written to {pathToFile}");
+                    FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
+                    csvWriter.Write(newRecords.ToArray());
+                    break;
+                case "XML":
+                    FileCabinetRecordXmlSerializer xmlWriter = new (streamWriter);
+                    xmlWriter.Write(newRecords.ToArray());
+                    break;
+                default:
+                    return;
             }
+
+            Console.WriteLine($"{numberOfRecords} records were written to {pathToFile}");
         }
 
         private static void SetConsoleParameters(string[] args)
