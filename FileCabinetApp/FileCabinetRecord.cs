@@ -1,8 +1,11 @@
-﻿namespace FileCabinetApp
+﻿using System.Xml.Serialization;
+
+namespace FileCabinetApp
 {
     /// <summary>
     /// Description properties of record.
     /// </summary>
+    [XmlType("record")]
     public class FileCabinetRecord
     {
         /// <summary>
@@ -42,30 +45,37 @@
 
         /// <summary>Gets or sets the identifier.</summary>
         /// <value>The identifier.</value>
+        [XmlAttribute("Id")]
         public int Id { get; set; }
 
         /// <summary>Gets or sets the first name.</summary>
         /// <value>The first name.</value>
+        [XmlElement("firstName")]
         public string FirstName { get; set; }
 
         /// <summary>Gets or sets the last name.</summary>
         /// <value>The last name.</value>
+        [XmlElement("lastName")]
         public string LastName { get; set; }
 
         /// <summary>Gets or sets the date of birth.</summary>
         /// <value>The date of birth.</value>
+        [XmlElement("dateOfBirth")]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>Gets or sets the serie of pass number.</summary>
         /// <value>The serie of pass number.</value>
+        [XmlElement("serieOfPassNumber")]
         public char SerieOfPassNumber { get; set; }
 
         /// <summary>Gets or sets the pass number.</summary>
         /// <value>The pass number.</value>
+        [XmlElement(ElementName = "passNumber")]
         public short PassNumber { get; set; }
 
         /// <summary>Gets or sets the bank account.</summary>
         /// <value>The bank account.</value>
+        [XmlElement(ElementName = "bankAccount")]
         public decimal BankAccount { get; set; }
     }
 }
