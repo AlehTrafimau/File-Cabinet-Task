@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Xml.Serialization;
 using FileCabinetApp;
 
 namespace FileCabinetGenerator
@@ -6,9 +7,9 @@ namespace FileCabinetGenerator
     /// <summary>
     /// Consists of methods to create the collection of auto generated records.
     /// </summary>
-    internal static class FileCabinetRecordGenerator
+    internal class FileCabinetRecordGenerator : IFileCabinetRecordGenerator
     {
-        private static readonly string[] FirstNames = new string[]
+        private readonly string[] firstNames = new string[]
         {
             "Anatoliy", "Anton", "Arkadiy", "Artur", "Boris", "Dmitriy", "Vadim", "Valentin", "Valeriy", "Viktor", "Vitaliy",
             "Vladimir", "Vladislav", "Vyacheslav", "Gennadiy", "Georgiy", "Denis", "Dmitriy", "Egor", "Ivan", "Igor", "Ilya",
@@ -16,7 +17,7 @@ namespace FileCabinetGenerator
             "Sergey", "Stepan", "Timofey", "Fedor", "Yan",
         };
 
-        private static readonly string[] LastNames = new string[]
+        private readonly string[] lastNames = new string[]
         {
            "Ivanov", "Smirnov", "Kuznetsov", "Popov", "Vasilyev", "Petrov", "Falcov", "Mikhailov", "Novikov", "Fedorov",
            "Morozov", "Volkov", "Alexeyev", "Lebedev", "Semyonov", "Egorov", "Pavlov", "Kozlov", "Stepanov", "Nikolaev",
@@ -31,19 +32,19 @@ namespace FileCabinetGenerator
         /// <returns>
         /// The list of auto generated records.
         /// </returns>
-        internal static ReadOnlyCollection<FileCabinetRecord> GetRandomRecords(int numberOfRecords, int startId)
+        public ReadOnlyCollection<FileCabinetRecord> GetRandomRecords(int numberOfRecords, int startId)
         {
             List<FileCabinetRecord> result = new ();
             Random random = new ();
 
             while (numberOfRecords > 0)
             {
-                string firstName = FirstNameGenerate(random);
-                string lastName = LastNameGenerate(random);
-                DateTime dateOfBirth = BirthDateGenerate(random);
-                char serieOfPassNumber = SerieOfPassNumberGenerate(random);
-                short passNumber = PassNumberGenerate(random);
-                decimal bankAccount = BankAccountGenerate(random);
+                string firstName = this.FirstNameGenerate(random);
+                string lastName = this.LastNameGenerate(random);
+                DateTime dateOfBirth = this.BirthDateGenerate(random);
+                char serieOfPassNumber = this.SerieOfPassNumberGenerate(random);
+                short passNumber = this.PassNumberGenerate(random);
+                decimal bankAccount = this.BankAccountGenerate(random);
                 result.Add(new FileCabinetRecord(startId, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount));
                 numberOfRecords--;
                 startId++;
@@ -52,21 +53,42 @@ namespace FileCabinetGenerator
             return new ReadOnlyCollection<FileCabinetRecord>(result);
         }
 
-        private static string FirstNameGenerate(Random generator)
+        /// <summary>
+        /// Generates a random first name.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random first name.
+        /// </returns>
+        public string FirstNameGenerate(Random generator)
         {
-            int randomIndex = generator.Next(FirstNames.Length - 1);
-            string result = FirstNames[randomIndex];
+            int randomIndex = generator.Next(this.firstNames.Length - 1);
+            string result = this.firstNames[randomIndex];
             return result;
         }
 
-        private static string LastNameGenerate(Random generator)
+        /// <summary>
+        /// Generates a random first name.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random first name.
+        /// </returns>
+        public string LastNameGenerate(Random generator)
         {
-            int randomIndex = generator.Next(LastNames.Length - 1);
-            string result = LastNames[randomIndex];
+            int randomIndex = generator.Next(this.lastNames.Length - 1);
+            string result = this.lastNames[randomIndex];
             return result;
         }
 
-        private static DateTime BirthDateGenerate(Random generator)
+        /// <summary>
+        /// Generates a random first name.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random first name.
+        /// </returns>
+        public DateTime BirthDateGenerate(Random generator)
         {
             int day = generator.Next(1, 31);
             int month = generator.Next(1, 12);
@@ -80,7 +102,14 @@ namespace FileCabinetGenerator
             return new (year, month, day);
         }
 
-        private static char SerieOfPassNumberGenerate(Random generator)
+        /// <summary>
+        /// Generates a random serie of pass number.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random serie of pass number.
+        /// </returns>
+        public char SerieOfPassNumberGenerate(Random generator)
         {
             string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             int randomIndex = generator.Next(chars.Length - 1);
@@ -88,13 +117,27 @@ namespace FileCabinetGenerator
             return result;
         }
 
-        private static short PassNumberGenerate(Random generator)
+        /// <summary>
+        /// Generates a random pass number.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random pass number.
+        /// </returns>
+        public short PassNumberGenerate(Random generator)
         {
             short result = (short)generator.Next(1, 9999);
             return result;
         }
 
-        private static decimal BankAccountGenerate(Random generator)
+        /// <summary>
+        /// Generates a random bank account.
+        /// </summary>
+        /// <param name="generator">The random number-generator.</param>
+        /// <returns>
+        /// Generated random bank account.
+        /// </returns>
+        public decimal BankAccountGenerate(Random generator)
         {
             decimal result = new (generator.Next(), generator.Next(), generator.Next(), false, (byte)generator.Next(27));
             return result;
