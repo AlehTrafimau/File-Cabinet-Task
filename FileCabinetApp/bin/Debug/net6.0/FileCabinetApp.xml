@@ -86,13 +86,20 @@
             <summary>
             Service for work to file system.
             </summary>
-            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+            <seealso cref="T:FileCabinetApp.IFileCabinetService"/>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.#ctor(System.IO.FileStream)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetFileSystemService"/> class.
             </summary>
             <param name="fileStream">The file stream.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.AddRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            dsd.
+            </summary>
+            <param name="newRecord"></param>
+            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -190,6 +197,12 @@
             <returns>
             The snapshot of current state of the cabinet service.
             </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.AddRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds new record to list.
+            </summary>
+            <param name="newRecord">The new records for add.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
             <summary>Edits the exist record by Id number.</summary>
@@ -339,11 +352,11 @@
             <param name="newRecord"> The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+        <member name="M:FileCabinetApp.IFileCabinetService.AddRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Makes the snapshot.
+            Adds new record to list.
             </summary>
-            <returns>The snapshot of current state of the cabinet service.</returns>
+            <param name="newRecord">The new records for add.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
             <summary>Gets all records which created.</summary>
@@ -382,6 +395,12 @@
             <returns>
             The read only collection of records which consist of this birth date.
             </returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            Makes the snapshot.
+            </summary>
+            <returns>The snapshot of current state of the cabinet service.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

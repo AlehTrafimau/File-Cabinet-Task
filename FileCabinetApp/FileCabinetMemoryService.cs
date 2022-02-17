@@ -67,6 +67,32 @@ namespace FileCabinetApp
             return newSnapshot;
         }
 
+        /// <summary>
+        /// Adds new record to list.
+        /// </summary>
+        /// <param name="newRecord">The new records for add.</param>
+        public void AddRecord(FileCabinetRecord newRecord)
+        {
+            int lastElementId = this.usersRecords.Count + 1;
+            if (newRecord.Id >= lastElementId)
+            {
+                newRecord.Id = lastElementId;
+                this.usersRecords.Add(newRecord);
+
+                AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
+                AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
+                AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord);
+            }
+            else
+            {
+                int indexOfRecord = newRecord.Id - 1;
+                EditDictionary(this.firstNameDictionary, this.usersRecords[indexOfRecord].FirstName, newRecord.FirstName, newRecord.Id);
+                EditDictionary(this.lastNameDictionary, this.usersRecords[indexOfRecord].LastName, newRecord.LastName, newRecord.Id);
+                EditDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord.Id);
+                this.usersRecords[indexOfRecord] = newRecord;
+            }
+        }
+
         /// <summary>Edits the exist record by Id number.</summary>
         /// <param name="editRecordId">The id of record for edit.</param>
         /// <param name="editedRecord">The edited paremeters of record.</param>

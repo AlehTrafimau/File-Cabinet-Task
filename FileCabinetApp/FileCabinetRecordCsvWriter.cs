@@ -34,7 +34,7 @@ namespace FileCabinetApp
 
             foreach (FileCabinetRecord i in records)
             {
-                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
+                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
             }
 
             this.writer.Write(csvFormat);

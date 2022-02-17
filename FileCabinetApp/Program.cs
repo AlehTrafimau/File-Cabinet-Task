@@ -29,6 +29,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -40,6 +41,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
             new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
             new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
+            new string[] { "import", "imports records data from file system", "The 'export' command imports records data from file system" },
         };
 
         /// <summary>Defines the entry point of the application.</summary>
@@ -156,7 +158,7 @@ namespace FileCabinetApp
             }
 
             bool retriveExistsFile = false;
-            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() != "XML")
+            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() == "CSV")
             {
                 Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
                 string? retrivePermission = Console.ReadLine();
@@ -164,6 +166,10 @@ namespace FileCabinetApp
                 {
                     retriveExistsFile = true;
                 }
+            }
+            else if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() == "XML")
+            {
+                retriveExistsFile = false;
             }
             else if (!Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^[A-Z]*(.CSV|.XML)$"))
             {
@@ -178,7 +184,7 @@ namespace FileCabinetApp
                 case "CSV":
                     if (retriveExistsFile == false)
                     {
-                        streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                        streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
                     }
 
                     snapShot.SaveToCsv(streamWriter);
@@ -189,6 +195,62 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"All records are exported to file {pathToFile}");
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2);
+            string importFormat = inputs[0];
+            string pathToFile = inputs[1];
+
+            if (importFormat.ToUpperInvariant() != "CSV" && !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
+            {
+                Console.WriteLine($"Invalid command: \"{importFormat}\" or file format: \"{pathToFile}\"");
+                return;
+            }
+
+            if (!File.Exists(pathToFile))
+            {
+                Console.WriteLine($"Import error: file {pathToFile} is not exist.");
+            }
+
+            using StreamReader importStream = new (pathToFile);
+            int counterOfImportRecord = 0;
+
+            while (!importStream.EndOfStream)
+            {
+                string? currentFileString = importStream.ReadLine();
+                string[] recordFilds = new string[7];
+
+                if (currentFileString != null)
+                {
+                    recordFilds = currentFileString.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                }
+
+                if (recordFilds[0].ToUpperInvariant() != "ID")
+                {
+                    try
+                    {
+                        FileCabinetRecord newRecord = new ();
+                        newRecord.Id = int.Parse(recordFilds[0], CultureInfo.InvariantCulture);
+                        newRecord.FirstName = recordFilds[1];
+                        newRecord.LastName = recordFilds[2];
+                        newRecord.DateOfBirth = DateTime.Parse(recordFilds[3], CultureInfo.InvariantCulture);
+                        newRecord.SerieOfPassNumber = char.Parse(recordFilds[4].Trim(' '));
+                        newRecord.PassNumber = short.Parse(recordFilds[5], CultureInfo.InvariantCulture);
+                        newRecord.BankAccount = decimal.Parse(recordFilds[6], CultureInfo.InvariantCulture);
+                        fileCabinetService.AddRecord(newRecord);
+                        counterOfImportRecord++;
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"This file haven't got records {pathToFile}");
+                        return;
+                    }
+                }
+            }
+
+            Console.WriteLine($"{counterOfImportRecord} records were imported from {pathToFile}");
         }
 
         private static void Edit(string parameters)

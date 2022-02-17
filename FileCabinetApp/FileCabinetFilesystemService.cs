@@ -11,7 +11,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service for work to file system.
     /// </summary>
-    /// <seealso cref="FileCabinetApp.IFileCabinetService" />
+    /// <seealso cref="FileCabinetApp.IFileCabinetService"/>
     internal class FileCabinetFileSystemService : IFileCabinetService
     {
         private FileStream fileStream;
@@ -23,6 +23,16 @@ namespace FileCabinetApp
         public FileCabinetFileSystemService(FileStream fileStream)
         {
             this.fileStream = fileStream;
+        }
+
+        /// <summary>
+        /// dsd.
+        /// </summary>
+        /// <param name="newRecord"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void AddRecord(FileCabinetRecord newRecord)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
