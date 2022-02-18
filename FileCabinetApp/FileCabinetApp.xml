@@ -94,13 +94,6 @@
             </summary>
             <param name="fileStream">The file stream.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.AddRecord(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            dsd.
-            </summary>
-            <param name="newRecord"></param>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Adds new record to the default storage in file system.
@@ -168,6 +161,12 @@
             The snapshot of current state of the cabinet service.
             </returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores records from file system to this list of users records.
+            </summary>
+            <param name="snapshot"> The snapshot of import records.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service to create, storage, edit, find and display records about users.
@@ -198,11 +197,11 @@
             The snapshot of current state of the cabinet service.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.AddRecord(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
-            Adds new record to list.
+            Restores records from file system to this list of users records.
             </summary>
-            <param name="newRecord">The new records for add.</param>
+            <param name="snapshot"> The snapshot of import records.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
             <summary>Edits the exist record by Id number.</summary>
@@ -280,6 +279,23 @@
             <summary>Gets or sets the bank account.</summary>
             <value>The bank account.</value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>
+            DFDF.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="streamReader">The text writer.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            lllll.
+            </summary>
+            <returns>f.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>
             Convert records to scv format.
@@ -319,7 +335,7 @@
             Service to storage states of records.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.FileCabinetServiceSnapshot.latestSnapshotOfRecordsState">
+        <member name="F:FileCabinetApp.FileCabinetServiceSnapshot.recordsSnapshot">
             <summary>
             Storages snapshots of records status.
             </summary>
@@ -329,6 +345,20 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
             </summary>
             <param name="newSnapshot">The new snapshot.</param>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
+            <summary>
+            Gets latest snaphot of records.
+            </summary>
+            <value>
+            Latest snapshot.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.ReadFromCsv(System.IO.StreamReader)">
+            <summary>
+            Reads records from file system.
+            </summary>
+            <param name="streamReader">The stream reader for reading records from file.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
@@ -352,11 +382,11 @@
             <param name="newRecord"> The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.AddRecord(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Adds new record to list.
             </summary>
-            <param name="newRecord">The new records for add.</param>
+            <param name="snapshot">The new records for add.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
             <summary>Gets all records which created.</summary>

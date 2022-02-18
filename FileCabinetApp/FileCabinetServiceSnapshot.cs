@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace FileCabinetApp
         /// <summary>
         /// Storages snapshots of records status.
         /// </summary>
-        private readonly FileCabinetRecord[] latestSnapshotOfRecordsState;
+        private FileCabinetRecord[] recordsSnapshot;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.
@@ -23,7 +24,32 @@ namespace FileCabinetApp
         /// <param name="newSnapshot">The new snapshot.</param>
         internal FileCabinetServiceSnapshot(FileCabinetRecord[] newSnapshot)
         {
-            this.latestSnapshotOfRecordsState = newSnapshot;
+            this.recordsSnapshot = newSnapshot;
+        }
+
+        /// <summary>
+        /// Gets latest snaphot of records.
+        /// </summary>
+        /// <value>
+        /// Latest snapshot.
+        /// </value>
+        public ReadOnlyCollection<FileCabinetRecord> Records
+        {
+            get
+            {
+                return new ReadOnlyCollection<FileCabinetRecord>(this.recordsSnapshot);
+            }
+        }
+
+        /// <summary>
+        /// Reads records from file system.
+        /// </summary>
+        /// <param name="streamReader">The stream reader for reading records from file.</param>
+        internal void ReadFromCsv(StreamReader streamReader)
+        {
+            FileCabinetRecordCsvReader newReader = new (streamReader);
+            FileCabinetRecord[] newRecords = newReader.ReadAll().ToArray();
+            this.recordsSnapshot = newRecords;
         }
 
         /// <summary>
@@ -33,7 +59,7 @@ namespace FileCabinetApp
         internal void SaveToCsv(StreamWriter streamWriter)
         {
             FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
-            csvWriter.Write(this.latestSnapshotOfRecordsState);
+            csvWriter.Write(this.recordsSnapshot);
         }
 
         /// <summary>
@@ -49,7 +75,7 @@ namespace FileCabinetApp
 
             XmlWriter xmlWriter = XmlWriter.Create(streamWriter, sts);
             FileCabinetRecordXmlWriter converterToXml = new (xmlWriter);
-            converterToXml.Write(this.latestSnapshotOfRecordsState);
+            converterToXml.Write(this.recordsSnapshot);
         }
     }
 }

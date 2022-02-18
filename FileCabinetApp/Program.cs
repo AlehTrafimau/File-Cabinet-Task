@@ -215,42 +215,11 @@ namespace FileCabinetApp
             }
 
             using StreamReader importStream = new (pathToFile);
-            int counterOfImportRecord = 0;
 
-            while (!importStream.EndOfStream)
-            {
-                string? currentFileString = importStream.ReadLine();
-                string[] recordFilds = new string[7];
-
-                if (currentFileString != null)
-                {
-                    recordFilds = currentFileString.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                }
-
-                if (recordFilds[0].ToUpperInvariant() != "ID")
-                {
-                    try
-                    {
-                        FileCabinetRecord newRecord = new ();
-                        newRecord.Id = int.Parse(recordFilds[0], CultureInfo.InvariantCulture);
-                        newRecord.FirstName = recordFilds[1];
-                        newRecord.LastName = recordFilds[2];
-                        newRecord.DateOfBirth = DateTime.Parse(recordFilds[3], CultureInfo.InvariantCulture);
-                        newRecord.SerieOfPassNumber = char.Parse(recordFilds[4].Trim(' '));
-                        newRecord.PassNumber = short.Parse(recordFilds[5], CultureInfo.InvariantCulture);
-                        newRecord.BankAccount = decimal.Parse(recordFilds[6], CultureInfo.InvariantCulture);
-                        fileCabinetService.AddRecord(newRecord);
-                        counterOfImportRecord++;
-                    }
-                    catch
-                    {
-                        Console.WriteLine($"This file haven't got records {pathToFile}");
-                        return;
-                    }
-                }
-            }
-
-            Console.WriteLine($"{counterOfImportRecord} records were imported from {pathToFile}");
+            FileCabinetServiceSnapshot lastestSnaphot = new (Array.Empty<FileCabinetRecord>());
+            lastestSnaphot.ReadFromCsv(importStream);
+            fileCabinetService.Restore(lastestSnaphot);
+            Console.WriteLine($"{lastestSnaphot.Records.Count} records were imported from {pathToFile}");
         }
 
         private static void Edit(string parameters)

@@ -20,8 +20,8 @@ namespace FileCabinetApp
         /// <summary>
         /// Adds new record to list.
         /// </summary>
-        /// <param name="newRecord">The new records for add.</param>
-        public void AddRecord(FileCabinetRecord newRecord);
+        /// <param name="snapshot">The new records for add.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>Gets all records which created.</summary>
         /// <returns>

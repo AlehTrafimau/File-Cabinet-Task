@@ -26,16 +26,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// dsd.
-        /// </summary>
-        /// <param name="newRecord"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void AddRecord(FileCabinetRecord newRecord)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Adds new record to the default storage in file system.
         /// </summary>
         /// <param name="newRecord">The new record.</param>
@@ -285,6 +275,15 @@ namespace FileCabinetApp
         /// The snapshot of current state of the cabinet service.
         /// </returns>
         public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Restores records from file system to this list of users records.
+        /// </summary>
+        /// <param name="snapshot"> The snapshot of import records.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             throw new NotImplementedException();
         }
