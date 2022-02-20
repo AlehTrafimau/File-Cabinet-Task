@@ -161,6 +161,12 @@
             The snapshot of current content of file system repository.
             </returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.RemoveRecord(System.Int32)">
+            <summary>
+            Removes the record from current repositiry.
+            </summary>
+            <param name="recordId"> The id if record for remove.</param>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Restores records from file system to the current repository.
