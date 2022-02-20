@@ -103,7 +103,7 @@ namespace FileCabinetApp
             if ((args.Length == 1 && args[0].ToUpperInvariant() == "--STORAGE=FILE") || (args.Length == 2 && args[0].ToUpperInvariant() == "-S" && args[1].ToUpperInvariant() == "FILE"))
             {
                 Console.WriteLine("Data storage will take place in the file system.");
-                FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
+                FileStream fileStream = new("cabinet-records.db", FileMode.OpenOrCreate);
                 fileCabinetService = new FileCabinetFileSystemService(fileStream);
             }
             else
@@ -178,7 +178,7 @@ namespace FileCabinetApp
             }
 
             FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
-            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            using StreamWriter streamWriter = new(pathToFile, retriveExistsFile, System.Text.Encoding.Default);
             switch (exportFormat.ToUpperInvariant())
             {
                 case "CSV":
@@ -203,7 +203,7 @@ namespace FileCabinetApp
             string importFormat = inputs[0];
             string pathToFile = inputs[1];
 
-            if (importFormat.ToUpperInvariant() != "CSV" && !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
+            if ((importFormat.ToUpperInvariant() != "CSV" || importFormat.ToUpperInvariant() != "XML") && !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
             {
                 Console.WriteLine($"Invalid command: \"{importFormat}\" or file format: \"{pathToFile}\"");
                 return;
@@ -215,9 +215,16 @@ namespace FileCabinetApp
             }
 
             using StreamReader importStream = new (pathToFile);
-
             FileCabinetServiceSnapshot lastestSnaphot = new (Array.Empty<FileCabinetRecord>());
-            lastestSnaphot.ReadFromCsv(importStream);
+            if (importFormat.ToUpperInvariant() == "CSV")
+            {
+                lastestSnaphot.ReadFromCsv(importStream);
+            }
+            else
+            {
+                lastestSnaphot.ReadFromXml(importStream);
+            }
+
             fileCabinetService.Restore(lastestSnaphot);
             Console.WriteLine($"{lastestSnaphot.Records.Count} records were imported from {pathToFile}");
         }
@@ -251,7 +258,7 @@ namespace FileCabinetApp
                 Console.Write("Bank account: ");
                 var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
-                FileCabinetRecord editedRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+                FileCabinetRecord editedRecord = new(0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
                 fileCabinetService.EditRecord(requestedID, editedRecord);
             }
@@ -287,7 +294,7 @@ namespace FileCabinetApp
             Console.Write("Bank account: ");
             var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
-            FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+            FileCabinetRecord newRecord = new(0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
             int userId = fileCabinetService.CreateRecord(newRecord);
 
             Console.WriteLine($"Record #{userId} is created.");

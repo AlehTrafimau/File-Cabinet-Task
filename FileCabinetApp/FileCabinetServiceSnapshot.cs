@@ -42,12 +42,23 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Reads records from file system.
+        /// Reads records from file system in csv format.
         /// </summary>
         /// <param name="streamReader">The stream reader for reading records from file.</param>
         internal void ReadFromCsv(StreamReader streamReader)
         {
             FileCabinetRecordCsvReader newReader = new (streamReader);
+            FileCabinetRecord[] newRecords = newReader.ReadAll().ToArray();
+            this.recordsSnapshot = newRecords;
+        }
+
+        /// <summary>
+        /// Reads records from file system in xml format.
+        /// </summary>
+        /// <param name="streamReader">The stream reader for reading records from file.</param>
+        internal void ReadFromXml(StreamReader streamReader)
+        {
+            FileCabinetRecordXmlReader newReader = new (streamReader);
             FileCabinetRecord[] newRecords = newReader.ReadAll().ToArray();
             this.recordsSnapshot = newRecords;
         }

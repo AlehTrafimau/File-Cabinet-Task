@@ -99,22 +99,22 @@
             </summary>
             <param name="records">dsds.</param>
         </member>
-        <member name="T:FileCabinetGenerator.IFileRecordGenerator">
+        <member name="T:FileCabinetGenerator.IFileCabinetRecordGenerator">
             <summary>
             Consists a set of methods to auto-generate filds' value of record.
             </summary>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.GetRandomRecords(System.Int32,System.Int32)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.GetRandomRecords(System.Int32,System.Int32)">
             <summary>
             Generates setted number of records (validation rules - default).
             </summary>
             <param name="numberOfRecords">The necessary number of record.</param>
             <param name="startId">The id of the first record in the sequence.</param>
             <returns>
-            The list of auto generated records.
+            The list of auto generated records
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.FirstNameGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.FirstNameGenerate(System.Random)">
             <summary>
             Generates a random first name.
             </summary>
@@ -123,7 +123,7 @@
             Generated random first name.
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.LastNameGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.LastNameGenerate(System.Random)">
             <summary>
             Generates a random first name.
             </summary>
@@ -132,7 +132,7 @@
             Generated random first name.
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.BirthDateGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.BirthDateGenerate(System.Random)">
             <summary>
             Generates a random first name.
             </summary>
@@ -141,7 +141,7 @@
             Generated random first name.
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.SerieOfPassNumberGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.SerieOfPassNumberGenerate(System.Random)">
             <summary>
             Generates a random serie of pass number.
             </summary>
@@ -150,7 +150,7 @@
             Generated random serie of pass number.
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.PassNumberGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.PassNumberGenerate(System.Random)">
             <summary>
             Generates a random pass number.
             </summary>
@@ -159,7 +159,7 @@
             Generated random pass number.
             </returns>
         </member>
-        <member name="M:FileCabinetGenerator.IFileRecordGenerator.BankAccountGenerate(System.Random)">
+        <member name="M:FileCabinetGenerator.IFileCabinetRecordGenerator.BankAccountGenerate(System.Random)">
             <summary>
             Generates a random bank account.
             </summary>

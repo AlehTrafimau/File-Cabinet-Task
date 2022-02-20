@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// DFDF.
+    /// Reads records from csv file in.
     /// </summary>
     internal class FileCabinetRecordCsvReader
     {
@@ -17,16 +17,18 @@ namespace FileCabinetApp
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvReader"/> class.
         /// </summary>
-        /// <param name="streamReader">The text writer.</param>
+        /// <param name="streamReader">The stream reader.</param>
         public FileCabinetRecordCsvReader(StreamReader streamReader)
         {
             this.streamReader = streamReader;
         }
 
         /// <summary>
-        /// lllll.
+        /// Reads recors data from csv file.
         /// </summary>
-        /// <returns>f.</returns>
+        /// <returns>
+        /// List of records from csv file.
+        /// </returns>
         public IList<FileCabinetRecord> ReadAll()
         {
             List<FileCabinetRecord> newRecords = new ();

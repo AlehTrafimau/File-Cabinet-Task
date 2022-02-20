@@ -281,20 +281,22 @@
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
             <summary>
-            DFDF.
+            Reads records from csv file in.
             </summary>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
             </summary>
-            <param name="streamReader">The text writer.</param>
+            <param name="streamReader">The stream reader.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
             <summary>
-            lllll.
+            Reads recors data from csv file.
             </summary>
-            <returns>f.</returns>
+            <returns>
+            List of records from csv file.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>
@@ -312,6 +314,25 @@
             Convert list of records to csv format.
             </summary>
             <param name="records">The snapshot of current list of records.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            Reads records from xml file in.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="streamReader">The stream reader.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Reads recors data from xml file.
+            </summary>
+            <returns>
+            List of records from xml file.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
@@ -356,7 +377,13 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.ReadFromCsv(System.IO.StreamReader)">
             <summary>
-            Reads records from file system.
+            Reads records from file system in csv format.
+            </summary>
+            <param name="streamReader">The stream reader for reading records from file.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.ReadFromXml(System.IO.StreamReader)">
+            <summary>
+            Reads records from file system in xml format.
             </summary>
             <param name="streamReader">The stream reader for reading records from file.</param>
         </member>
