@@ -70,9 +70,10 @@ namespace FileCabinetApp
         /// <returns>
         /// The count of created records.
         /// </returns>
-        public int GetStat()
+        public (int, int) GetStat()
         {
-            return this.usersRecords.Count;
+            (int NumberOfRecords, int removedRecords) stat = new (this.usersRecords.Count, 0);
+            return stat;
         }
 
         /// <summary>

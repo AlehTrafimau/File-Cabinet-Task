@@ -45,7 +45,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The number of created records.
         /// </returns>
-        public int GetStat();
+        public (int, int) GetStat();
 
         /// <summary>
         /// Edits the exist record by Id number.

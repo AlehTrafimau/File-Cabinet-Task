@@ -297,10 +297,13 @@ namespace FileCabinetApp
         /// <returns>
         /// The number of created records.
         /// </returns>
-        public int GetStat()
+        public (int, int) GetStat()
         {
-            long numberOfRecordInFile = this.fileStream.Length / 278;
-            return (int)numberOfRecordInFile;
+            int numberOfRecordInFile = (int)this.fileStream.Length / BytesInRecord;
+            int removedRecordsInFile = numberOfRecordInFile - this.GetRecords().Count;
+
+            (int NumberOfRecords, int removedRecords) stat = new (numberOfRecordInFile, removedRecordsInFile);
+            return stat;
         }
 
         /// <summary>
@@ -351,7 +354,7 @@ namespace FileCabinetApp
         public void Purge()
         {
             ReadOnlyCollection<FileCabinetRecord> validRecords = this.GetRecords();
-            int totalRecordsInRepo = this.GetStat();
+            int totalRecordsInRepo = this.GetStat().Item1;
             this.fileStream.SetLength(0);
             this.fileStream.Seek(0, SeekOrigin.Begin);
             foreach (var i in validRecords)

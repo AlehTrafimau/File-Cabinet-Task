@@ -237,7 +237,7 @@ namespace FileCabinetApp
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (Program.fileCabinetService.GetStat() < requestedID)
+                if (Program.fileCabinetService.GetStat().Item1 < requestedID)
                 {
                     Console.WriteLine($"#{requestedID} record is not found");
                     return;
@@ -273,8 +273,9 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            var recordsCount = fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount.Item1} record(s).");
+            Console.WriteLine($"{recordsCount.Item2} removed record(s).");
         }
 
         private static void Create(string parameters)
@@ -310,7 +311,7 @@ namespace FileCabinetApp
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 requestedIdRecord = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (fileCabinetService.GetStat() < requestedIdRecord || requestedIdRecord < 1)
+                if (fileCabinetService.GetStat().Item1 < requestedIdRecord || requestedIdRecord < 1)
                 {
                     Console.WriteLine($"#{requestedIdRecord} record is not found");
                     return;
