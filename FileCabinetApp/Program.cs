@@ -26,6 +26,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
@@ -39,6 +40,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "prints notes statistics", "The 'stat' command prints notes' statistics." },
             new string[] { "create", "saves user's date and returns user's ID", "The 'create' command saves user's date and returns user's ID." },
+            new string[] { "purge", "defragments records in file system", "The 'purge' command defragments records in file sustem" },
             new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
             new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
             new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
@@ -376,6 +378,18 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Records are not found");
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            if (fileCabinetService is FileCabinetFileSystemService)
+            {
+                fileCabinetService.Purge();
+            }
+            else
+            {
+                Console.WriteLine("This command is available for file cabinet file system service only.");
             }
         }
     }

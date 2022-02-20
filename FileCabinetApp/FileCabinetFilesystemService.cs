@@ -344,5 +344,22 @@ namespace FileCabinetApp
                 this.EditRecord(newRecords[i].Id, newRecords[i]);
             }
         }
+
+        /// <summary>
+        /// Defragments records in file system repository.
+        /// </summary>
+        public void Purge()
+        {
+            ReadOnlyCollection<FileCabinetRecord> validRecords = this.GetRecords();
+            int totalRecordsInRepo = this.GetStat();
+            this.fileStream.SetLength(0);
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            foreach (var i in validRecords)
+            {
+                this.CreateRecord(i);
+            }
+
+            Console.WriteLine($"Data file processing is completed: {totalRecordsInRepo - validRecords.Count} of {totalRecordsInRepo} records were purged.");
+        }
     }
 }

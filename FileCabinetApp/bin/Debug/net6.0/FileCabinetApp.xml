@@ -173,6 +173,11 @@
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Purge">
+            <summary>
+            Defragments records in file system repository.
+            </summary>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service to create, storage, edit, find and display records about users.
@@ -490,6 +495,11 @@
             Makes the snapshot.
             </summary>
             <returns>The snapshot of current state of the cabinet service.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
+            <summary>
+            Defragments records in file system repository.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

@@ -89,5 +89,13 @@ namespace FileCabinetApp
         {
             return new FileCabinetServiceSnapshot(new FileCabinetRecord[] { new FileCabinetRecord() });
         }
+
+        /// <summary>
+        /// Defragments records in file system repository.
+        /// </summary>
+        public void Purge()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
