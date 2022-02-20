@@ -36,15 +36,18 @@ namespace FileCabinetApp
             foreach (FileCabinetRecord i in records)
             {
                 this.writer.WriteStartElement("record");
-                this.writer.WriteAttributeString("ID", $"{i.Id}");
+                this.writer.WriteAttributeString("Id", $"{i.Id}");
 
-                this.writer.WriteStartElement("name");
-                this.writer.WriteAttributeString("first", $"{i.FirstName}");
-                this.writer.WriteAttributeString("last", $"{i.LastName}");
+                this.writer.WriteStartElement("firstName");
+                this.writer.WriteValue(i.FirstName);
+                this.writer.WriteEndElement();
+
+                this.writer.WriteStartElement("lastName");
+                this.writer.WriteValue(i.LastName);
                 this.writer.WriteEndElement();
 
                 this.writer.WriteStartElement("dateOfBirth");
-                this.writer.WriteValue(i.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                this.writer.WriteValue(i.DateOfBirth);
                 this.writer.WriteEndElement();
 
                 this.writer.WriteStartElement("serieOfPassNumber");

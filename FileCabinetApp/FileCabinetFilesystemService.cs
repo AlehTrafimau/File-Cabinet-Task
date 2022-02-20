@@ -11,7 +11,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Service for work to file system.
     /// </summary>
-    /// <seealso cref="FileCabinetApp.IFileCabinetService" />
+    /// <seealso cref="FileCabinetApp.IFileCabinetService"/>
     internal class FileCabinetFileSystemService : IFileCabinetService
     {
         private FileStream fileStream;
@@ -35,6 +35,7 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord)
         {
             int lengthOfByteRecord = 276;
+            this.fileStream.Seek(0, SeekOrigin.End);
             int lastRecordInFile = (int)(this.fileStream.Position / lengthOfByteRecord);
             newRecord.Id = lastRecordInFile + 1;
 
@@ -73,6 +74,7 @@ namespace FileCabinetApp
             input = Encoding.Default.GetBytes(newRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 16);
             this.fileStream.Write(input, 0, input.Length);
+            this.fileStream.Flush();
 
             return newRecord.Id;
         }
@@ -135,7 +137,7 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
             ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
-            List<FileCabinetRecord> resultOfSearch = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> resultOfSearch = new ();
 
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
@@ -210,13 +212,13 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            List<FileCabinetRecord> recordsFromFileSystem = new();
+            List<FileCabinetRecord> recordsFromFileSystem = new ();
             this.fileStream.Seek(0, SeekOrigin.Begin);
             long numberOfRecordInFile = this.fileStream.Length / 276;
 
             while (numberOfRecordInFile > 0)
             {
-                FileCabinetRecord currentRecord = new();
+                FileCabinetRecord currentRecord = new ();
                 byte[] array = new byte[4];
                 this.fileStream.Read(array, 0, array.Length);
                 currentRecord.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
@@ -269,14 +271,37 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Makes the snapshot.
+        /// Makes the snapshot of records data in file system repository.
         /// </summary>
         /// <returns>
-        /// The snapshot of current state of the cabinet service.
+        /// The snapshot of current content of file system repository.
         /// </returns>
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
-            throw new NotImplementedException();
+            FileCabinetServiceSnapshot newSnapshot = new (this.GetRecords().ToArray());
+            return newSnapshot;
+        }
+
+        /// <summary>
+        /// Restores records from file system to the current repository.
+        /// </summary>
+        /// <param name="snapshot"> The snapshot of import records.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            ReadOnlyCollection<FileCabinetRecord> newRecords = snapshot.Records;
+
+            for (int i = 0; i < newRecords.Count; i++)
+            {
+                int lastElementId = this.GetRecords().ToArray().Length;
+                if (newRecords[i].Id > lastElementId)
+                {
+                    this.CreateRecord(newRecords[i]);
+                }
+                else
+                {
+                    this.EditRecord(newRecords[i].Id, newRecords[i]);
+                }
+            }
         }
     }
 }

@@ -18,10 +18,10 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord);
 
         /// <summary>
-        /// Makes the snapshot.
+        /// Adds new record from file system to current repository.
         /// </summary>
-        /// <returns>The snapshot of current state of the cabinet service.</returns>
-        public FileCabinetServiceSnapshot MakeSnapshot();
+        /// <param name="snapshot">The new records for add.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>Gets all records which created.</summary>
         /// <returns>
@@ -60,5 +60,14 @@ namespace FileCabinetApp
         /// The read only collection of records which consist of this birth date.
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter);
+
+        /// <summary>
+        /// Makes the snapshot.
+        /// </summary>
+        /// <returns>The snapshot of current state of the cabinet service.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(new FileCabinetRecord[] { new FileCabinetRecord() });
+        }
     }
 }

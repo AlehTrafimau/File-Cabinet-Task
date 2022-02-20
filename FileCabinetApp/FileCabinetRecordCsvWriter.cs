@@ -11,7 +11,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Convert records to scv format.
     /// </summary>
-    internal class FileCabinetRecordCsvWriter
+    public class FileCabinetRecordCsvWriter
     {
         private readonly TextWriter writer;
 
@@ -19,7 +19,7 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.
         /// </summary>
         /// <param name="writer">The text writer.</param>
-        internal FileCabinetRecordCsvWriter(TextWriter writer)
+        public FileCabinetRecordCsvWriter(TextWriter writer)
         {
             this.writer = writer;
         }
@@ -34,7 +34,7 @@ namespace FileCabinetApp
 
             foreach (FileCabinetRecord i in records)
             {
-                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.FirstName}, {i.LastName}, {i.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
+                csvFormat.AppendLine(CultureInfo.InvariantCulture, $"{i.Id}, {i.FirstName}, {i.LastName}, {i.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}, {i.SerieOfPassNumber}, {i.PassNumber}, {i.BankAccount}");
             }
 
             this.writer.Write(csvFormat);

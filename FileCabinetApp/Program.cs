@@ -29,6 +29,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -40,6 +41,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
             new string[] { "edit", "edits record in sevice according input ID", "The 'edit' command record note in sevice according input ID" },
             new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
+            new string[] { "import", "imports records data from file system", "The 'export' command imports records data from file system" },
         };
 
         /// <summary>Defines the entry point of the application.</summary>
@@ -156,7 +158,7 @@ namespace FileCabinetApp
             }
 
             bool retriveExistsFile = false;
-            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() != "XML")
+            if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() == "CSV")
             {
                 Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
                 string? retrivePermission = Console.ReadLine();
@@ -165,6 +167,10 @@ namespace FileCabinetApp
                     retriveExistsFile = true;
                 }
             }
+            else if (File.Exists(pathToFile) && exportFormat.ToUpperInvariant() == "XML")
+            {
+                retriveExistsFile = false;
+            }
             else if (!Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^[A-Z]*(.CSV|.XML)$"))
             {
                 Console.WriteLine($"Export failed: can't open file {pathToFile}.");
@@ -172,25 +178,55 @@ namespace FileCabinetApp
             }
 
             FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
-            using (StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default))
+            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            switch (exportFormat.ToUpperInvariant())
             {
-                switch (exportFormat.ToUpperInvariant())
-                {
-                    case "CSV":
-                        if (retriveExistsFile == false)
-                        {
-                            streamWriter.WriteLine("FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
-                        }
+                case "CSV":
+                    if (retriveExistsFile == false)
+                    {
+                        streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
+                    }
 
-                        snapShot.SaveToCsv(streamWriter);
-                        break;
-                    case "XML":
-                        snapShot.SaveToXml(streamWriter);
-                        break;
-                }
-
-                Console.WriteLine($"All records are exported to file {pathToFile}");
+                    snapShot.SaveToCsv(streamWriter);
+                    break;
+                case "XML":
+                    snapShot.SaveToXml(streamWriter);
+                    break;
             }
+
+            Console.WriteLine($"All records are exported to file {pathToFile}");
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] inputs = parameters.Split(' ', 2);
+            string importFormat = inputs[0];
+            string pathToFile = inputs[1];
+
+            if ((importFormat.ToUpperInvariant() != "CSV" || importFormat.ToUpperInvariant() != "XML") && !Regex.IsMatch(pathToFile.ToUpperInvariant(), @"^\S*(.CSV|.XML)$"))
+            {
+                Console.WriteLine($"Invalid command: \"{importFormat}\" or file format: \"{pathToFile}\"");
+                return;
+            }
+
+            if (!File.Exists(pathToFile))
+            {
+                Console.WriteLine($"Import error: file {pathToFile} is not exist.");
+            }
+
+            using StreamReader importStream = new (pathToFile);
+            FileCabinetServiceSnapshot lastestSnaphot = new (Array.Empty<FileCabinetRecord>());
+            if (importFormat.ToUpperInvariant() == "CSV")
+            {
+                lastestSnaphot.ReadFromCsv(importStream);
+            }
+            else
+            {
+                lastestSnaphot.ReadFromXml(importStream);
+            }
+
+            fileCabinetService.Restore(lastestSnaphot);
+            Console.WriteLine($"{lastestSnaphot.Records.Count} records were imported from {pathToFile}");
         }
 
         private static void Edit(string parameters)
