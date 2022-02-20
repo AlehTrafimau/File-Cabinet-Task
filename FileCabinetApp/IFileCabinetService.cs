@@ -12,10 +12,18 @@ namespace FileCabinetApp
     /// </summary>
     internal interface IFileCabinetService
     {
-        /// <summary>Creates the new record.</summary>
+        /// <summary>
+        /// Creates the new record.
+        /// </summary>
         /// <param name="newRecord"> The new record.</param>
         /// <returns>The Id number of the new record.</returns>
         public int CreateRecord(FileCabinetRecord newRecord);
+
+        /// <summary>
+        /// Removes the record from repository.
+        /// </summary>
+        /// <param name="recordId"> The id if record for remove.</param>
+        public void RemoveRecord(int recordId);
 
         /// <summary>
         /// Adds new record from file system to current repository.
@@ -23,38 +31,50 @@ namespace FileCabinetApp
         /// <param name="snapshot">The new records for add.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot);
 
-        /// <summary>Gets all records which created.</summary>
+        /// <summary>
+        /// Gets all records which created.
+        /// </summary>
         /// <returns>
         /// The read only collection of created records at the present time.
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
-        /// <summary>Gets the count of created records.</summary>
+        /// <summary>
+        /// Gets the count of created records.
+        /// </summary>
         /// <returns>
         /// The number of created records.
         /// </returns>
-        public int GetStat();
+        public (int, int) GetStat();
 
-        /// <summary>Edits the exist record by Id number.</summary>
+        /// <summary>
+        /// Edits the exist record by Id number.
+        /// </summary>
         /// <param name="editRecordId">The id of record for edit.</param>
         /// <param name="editedRecord">The edited record.</param>
         public void EditRecord(int editRecordId, FileCabinetRecord editedRecord);
 
-        /// <summary>Finds the records by first name.</summary>
+        /// <summary>
+        /// Finds the records by first name.
+        /// </summary>
         /// <param name="firstName">The first name.</param>
         /// <returns>
         /// The read only collection of records which consist of this first name.
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
 
-        /// <summary>Finds the records by last name.</summary>
+        /// <summary>
+        /// Finds the records by last name.
+        /// </summary>
         /// <param name="lastName">The last name.</param>
         /// <returns>
         /// The read only collection of records which consist of this last name.
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
 
-        /// <summary>Finds the records by birth day.</summary>
+        /// <summary>
+        /// Finds the records by birth day.
+        /// </summary>
         /// <param name="birthDayParameter">The date parameter.</param>
         /// <returns>
         /// The read only collection of records which consist of this birth date.
@@ -68,6 +88,14 @@ namespace FileCabinetApp
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             return new FileCabinetServiceSnapshot(new FileCabinetRecord[] { new FileCabinetRecord() });
+        }
+
+        /// <summary>
+        /// Defragments records in file system repository.
+        /// </summary>
+        public void Purge()
+        {
+            throw new NotImplementedException();
         }
     }
 }

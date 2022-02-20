@@ -14,6 +14,7 @@ namespace FileCabinetApp
     /// <seealso cref="FileCabinetApp.IFileCabinetService"/>
     internal class FileCabinetFileSystemService : IFileCabinetService
     {
+        private const int BytesInRecord = 278;
         private FileStream fileStream;
 
         /// <summary>
@@ -34,12 +35,16 @@ namespace FileCabinetApp
         /// </returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            int lengthOfByteRecord = 276;
+            short isDeleted = 0;
             this.fileStream.Seek(0, SeekOrigin.End);
-            int lastRecordInFile = (int)(this.fileStream.Position / lengthOfByteRecord);
+            int lastRecordInFile = (int)(this.fileStream.Position / BytesInRecord);
             newRecord.Id = lastRecordInFile + 1;
 
-            byte[] input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
+            byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 4);
             this.fileStream.Write(input, 0, input.Length);
 
@@ -86,9 +91,23 @@ namespace FileCabinetApp
         /// <param name="editedRecord">The edited record.</param>
         public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
-            long startByteOfRecordInFile = (editRecordId - 1) * 276;
+            long startByteOfRecordInFile = (editRecordId - 1) * BytesInRecord;
             this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
             editedRecord.Id = editRecordId;
+
+            byte[] array = new byte[2];
+            this.fileStream.Read(array, 0, array.Length);
+            int isDeleted = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+            if (isDeleted == 1)
+            {
+                Console.WriteLine($"Invalid operation. The record #{editRecordId} is removed.");
+                this.fileStream.Seek(0, SeekOrigin.End);
+                isDeleted = 0;
+                byte[] inpu = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
+                Array.Resize(ref inpu, 2);
+                this.fileStream.Write(inpu, 0, inpu.Length);
+            }
 
             byte[] input = Encoding.Default.GetBytes(editedRecord.Id.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 4);
@@ -125,6 +144,8 @@ namespace FileCabinetApp
             input = Encoding.Default.GetBytes(editedRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 16);
             this.fileStream.Write(input, 0, input.Length);
+
+            Console.WriteLine($"Record #{editRecordId} is updated");
         }
 
         /// <summary>
@@ -214,12 +235,24 @@ namespace FileCabinetApp
         {
             List<FileCabinetRecord> recordsFromFileSystem = new ();
             this.fileStream.Seek(0, SeekOrigin.Begin);
-            long numberOfRecordInFile = this.fileStream.Length / 276;
+            long numberOfRecordInFile = this.fileStream.Length / BytesInRecord;
+            short isDeleted;
 
             while (numberOfRecordInFile > 0)
             {
                 FileCabinetRecord currentRecord = new ();
-                byte[] array = new byte[4];
+                byte[] array = new byte[2];
+                this.fileStream.Read(array, 0, array.Length);
+                isDeleted = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+                if (isDeleted == 1)
+                {
+                    this.fileStream.Seek(276, SeekOrigin.Current);
+                    numberOfRecordInFile--;
+                    continue;
+                }
+
+                Array.Resize(ref array, 4);
                 this.fileStream.Read(array, 0, array.Length);
                 currentRecord.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
 
@@ -264,10 +297,13 @@ namespace FileCabinetApp
         /// <returns>
         /// The number of created records.
         /// </returns>
-        public int GetStat()
+        public (int, int) GetStat()
         {
-            long numberOfRecordInFile = this.fileStream.Length / 276;
-            return (int)numberOfRecordInFile;
+            int numberOfRecordInFile = (int)this.fileStream.Length / BytesInRecord;
+            int removedRecordsInFile = numberOfRecordInFile - this.GetRecords().Count;
+
+            (int NumberOfRecords, int removedRecords) stat = new (numberOfRecordInFile, removedRecordsInFile);
+            return stat;
         }
 
         /// <summary>
@@ -283,6 +319,22 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Removes the record from current repositiry.
+        /// </summary>
+        /// <param name="recordId"> The id if record for remove.</param>
+        public void RemoveRecord(int recordId)
+        {
+            int isDeleted = 1;
+            long startByteOfRecordInFile = (recordId - 1) * BytesInRecord;
+            this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
+            byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+            this.fileStream.Flush();
+            Console.WriteLine($"Record #{recordId} is removed.");
+        }
+
+        /// <summary>
         /// Restores records from file system to the current repository.
         /// </summary>
         /// <param name="snapshot"> The snapshot of import records.</param>
@@ -292,16 +344,25 @@ namespace FileCabinetApp
 
             for (int i = 0; i < newRecords.Count; i++)
             {
-                int lastElementId = this.GetRecords().ToArray().Length;
-                if (newRecords[i].Id > lastElementId)
-                {
-                    this.CreateRecord(newRecords[i]);
-                }
-                else
-                {
-                    this.EditRecord(newRecords[i].Id, newRecords[i]);
-                }
+                this.EditRecord(newRecords[i].Id, newRecords[i]);
             }
+        }
+
+        /// <summary>
+        /// Defragments records in file system repository.
+        /// </summary>
+        public void Purge()
+        {
+            ReadOnlyCollection<FileCabinetRecord> validRecords = this.GetRecords();
+            int totalRecordsInRepo = this.GetStat().Item1;
+            this.fileStream.SetLength(0);
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            foreach (var i in validRecords)
+            {
+                this.CreateRecord(i);
+            }
+
+            Console.WriteLine($"Data file processing is completed: {totalRecordsInRepo - validRecords.Count} of {totalRecordsInRepo} records were purged.");
         }
     }
 }

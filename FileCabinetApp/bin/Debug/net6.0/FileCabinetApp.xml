@@ -155,17 +155,28 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.MakeSnapshot">
             <summary>
-            Makes the snapshot.
+            Makes the snapshot of records data in file system repository.
             </summary>
             <returns>
-            The snapshot of current state of the cabinet service.
+            The snapshot of current content of file system repository.
             </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.RemoveRecord(System.Int32)">
+            <summary>
+            Removes the record from current repositiry.
+            </summary>
+            <param name="recordId"> The id if record for remove.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Restores records from file system to the current repository.
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Purge">
+            <summary>
+            Defragments records in file system repository.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
@@ -176,6 +187,12 @@
             <summary>Creates the new record and adds to list.</summary>
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
+            <summary>
+            Removes the record from current repositiry.
+            </summary>
+            <param name="recordId"> The id if record for remove.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
             <summary>Gets all records which created.</summary>
@@ -405,9 +422,17 @@
             </summary>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
-            <summary>Creates the new record.</summary>
+            <summary>
+            Creates the new record.
+            </summary>
             <param name="newRecord"> The new record.</param>
             <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
+            <summary>
+            Removes the record from repository.
+            </summary>
+            <param name="recordId"> The id if record for remove.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -416,38 +441,50 @@
             <param name="snapshot">The new records for add.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
-            <summary>Gets all records which created.</summary>
+            <summary>
+            Gets all records which created.
+            </summary>
             <returns>
             The read only collection of created records at the present time.
             </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
-            <summary>Gets the count of created records.</summary>
+            <summary>
+            Gets the count of created records.
+            </summary>
             <returns>
             The number of created records.
             </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>Edits the exist record by Id number.</summary>
+            <summary>
+            Edits the exist record by Id number.
+            </summary>
             <param name="editRecordId">The id of record for edit.</param>
             <param name="editedRecord">The edited record.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
-            <summary>Finds the records by first name.</summary>
+            <summary>
+            Finds the records by first name.
+            </summary>
             <param name="firstName">The first name.</param>
             <returns>
             The read only collection of records which consist of this first name.
             </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
-            <summary>Finds the records by last name.</summary>
+            <summary>
+            Finds the records by last name.
+            </summary>
             <param name="lastName">The last name.</param>
             <returns>
             The read only collection of records which consist of this last name.
             </returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByDayOfBirth(System.String)">
-            <summary>Finds the records by birth day.</summary>
+            <summary>
+            Finds the records by birth day.
+            </summary>
             <param name="birthDayParameter">The date parameter.</param>
             <returns>
             The read only collection of records which consist of this birth date.
@@ -458,6 +495,11 @@
             Makes the snapshot.
             </summary>
             <returns>The snapshot of current state of the cabinet service.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
+            <summary>
+            Defragments records in file system repository.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
