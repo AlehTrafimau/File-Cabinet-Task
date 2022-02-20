@@ -103,7 +103,7 @@ namespace FileCabinetApp
             if ((args.Length == 1 && args[0].ToUpperInvariant() == "--STORAGE=FILE") || (args.Length == 2 && args[0].ToUpperInvariant() == "-S" && args[1].ToUpperInvariant() == "FILE"))
             {
                 Console.WriteLine("Data storage will take place in the file system.");
-                FileStream fileStream = new("cabinet-records.db", FileMode.OpenOrCreate);
+                FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
                 fileCabinetService = new FileCabinetFileSystemService(fileStream);
             }
             else
@@ -178,7 +178,7 @@ namespace FileCabinetApp
             }
 
             FileCabinetServiceSnapshot snapShot = fileCabinetService.MakeSnapshot();
-            using StreamWriter streamWriter = new(pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
             switch (exportFormat.ToUpperInvariant())
             {
                 case "CSV":
@@ -258,7 +258,7 @@ namespace FileCabinetApp
                 Console.Write("Bank account: ");
                 var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
-                FileCabinetRecord editedRecord = new(0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+                FileCabinetRecord editedRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
                 fileCabinetService.EditRecord(requestedID, editedRecord);
             }
@@ -294,7 +294,7 @@ namespace FileCabinetApp
             Console.Write("Bank account: ");
             var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, recordValidator.CheckBankAccount);
 
-            FileCabinetRecord newRecord = new(0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+            FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
             int userId = fileCabinetService.CreateRecord(newRecord);
 
             Console.WriteLine($"Record #{userId} is created.");

@@ -18,7 +18,7 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord);
 
         /// <summary>
-        /// Adds new record to list.
+        /// Adds new record from file system to current repository.
         /// </summary>
         /// <param name="snapshot">The new records for add.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot);

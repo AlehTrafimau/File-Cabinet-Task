@@ -163,7 +163,7 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
-            Restores records from file system to this list of users records.
+            Restores records from file system to the current repository.
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
         </member>
@@ -411,7 +411,7 @@
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
-            Adds new record to list.
+            Adds new record from file system to current repository.
             </summary>
             <param name="snapshot">The new records for add.</param>
         </member>
