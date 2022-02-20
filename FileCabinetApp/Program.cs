@@ -25,6 +25,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("exit", Exit),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
@@ -298,6 +299,23 @@ namespace FileCabinetApp
             int userId = fileCabinetService.CreateRecord(newRecord);
 
             Console.WriteLine($"Record #{userId} is created.");
+        }
+
+        private static void Remove(string parameters)
+        {
+            int requestedIdRecord = 0;
+
+            if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
+            {
+                requestedIdRecord = int.Parse(parameters, CultureInfo.InvariantCulture);
+                if (fileCabinetService.GetStat() < requestedIdRecord || requestedIdRecord < 1)
+                {
+                    Console.WriteLine($"#{requestedIdRecord} record is not found");
+                    return;
+                }
+            }
+
+            fileCabinetService.RemoveRecord(requestedIdRecord);
         }
 
         private static void List(string parameters)

@@ -29,6 +29,26 @@ namespace FileCabinetApp
             return newRecord.Id;
         }
 
+        /// <summary>
+        /// Removes the record from current repositiry.
+        /// </summary>
+        /// <param name="recordId"> The id if record for remove.</param>
+        public void RemoveRecord(int recordId)
+        {
+            int indexOfRemoveRecord = recordId - 1;
+            if (this.usersRecords[indexOfRemoveRecord].Id != recordId)
+            {
+                Console.WriteLine($"Record #{recordId} doesn't exists.");
+                return;
+            }
+
+            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, recordId);
+            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, recordId);
+            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), recordId);
+            this.usersRecords.RemoveAt(indexOfRemoveRecord);
+            Console.WriteLine($"Record #{recordId} is removed.");
+        }
+
         /// <summary>Gets all records which created.</summary>
         /// <returns>
         /// The list of created records at the present time.
@@ -90,9 +110,15 @@ namespace FileCabinetApp
                 else
                 {
                     int indexOfRecord = newRecords[i].Id - 1;
-                    EditDictionary(this.firstNameDictionary, this.usersRecords[indexOfRecord].FirstName, newRecords[i].FirstName, newRecords[i], newRecords[i].Id);
-                    EditDictionary(this.lastNameDictionary, this.usersRecords[indexOfRecord].LastName, newRecords[i].LastName, newRecords[i], newRecords[i].Id);
-                    EditDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i], newRecords[i].Id);
+                    RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRecord].FirstName, newRecords[i].Id);
+                    AddToDictionary(this.firstNameDictionary, newRecords[i].FirstName, newRecords[i]);
+
+                    RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRecord].LastName, newRecords[i].Id);
+                    AddToDictionary(this.lastNameDictionary, newRecords[i].LastName, newRecords[i]);
+
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i].Id);
+                    AddToDictionary(this.dateOfBirthDictionary, newRecords[i].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i]);
+
                     this.usersRecords[indexOfRecord] = newRecords[i];
                 }
             }
@@ -106,21 +132,16 @@ namespace FileCabinetApp
             int recordIndex = editRecordId - 1;
             editedRecord.Id = editRecordId;
 
-            string firstNameBeforeEdit = this.usersRecords[recordIndex].FirstName;
-            this.usersRecords[recordIndex].FirstName = editedRecord.FirstName;
-            EditDictionary(this.firstNameDictionary, firstNameBeforeEdit, editedRecord.FirstName, editedRecord, editedRecord.Id);
+            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[recordIndex].FirstName, editedRecord.Id);
+            AddToDictionary(this.firstNameDictionary, editedRecord.FirstName, editedRecord);
 
-            string? lastNameBeforeEdit = this.usersRecords[recordIndex].LastName;
-            this.usersRecords[recordIndex].LastName = editedRecord.LastName;
-            EditDictionary(this.lastNameDictionary, lastNameBeforeEdit, editedRecord.LastName, editedRecord, editedRecord.Id);
+            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[recordIndex].LastName, editedRecord.Id);
+            AddToDictionary(this.lastNameDictionary, editedRecord.LastName, editedRecord);
 
-            DateTime dateOfBirthBeforeEdit = this.usersRecords[recordIndex].DateOfBirth;
-            this.usersRecords[recordIndex].DateOfBirth = editedRecord.DateOfBirth;
-            EditDictionary(this.dateOfBirthDictionary, dateOfBirthBeforeEdit.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord, editedRecord.Id);
+            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[recordIndex].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.Id);
+            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord);
 
-            this.usersRecords[recordIndex].PassNumber = editedRecord.PassNumber;
-            this.usersRecords[recordIndex].SerieOfPassNumber = editedRecord.SerieOfPassNumber;
-            this.usersRecords[recordIndex].BankAccount = editedRecord.BankAccount;
+            this.usersRecords[recordIndex] = editedRecord;
             Console.WriteLine($"Record #{editedRecord.Id} is updated");
         }
 
@@ -199,26 +220,23 @@ namespace FileCabinetApp
             }
         }
 
-        private static void EditDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string oldKey, string newKey, FileCabinetRecord newRecord, int sourceId)
+        private static void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, int recordId)
         {
-            oldKey = oldKey.ToUpperInvariant();
-            newKey = newKey.ToUpperInvariant();
+            key = key.ToUpperInvariant();
 
-            for (int i = 0; i < dictionary[oldKey].Count; i++)
+            for (int i = 0; i < dictionary[key].Count; i++)
             {
-                if (dictionary[oldKey][i].Id == sourceId)
+                if (dictionary[key][i].Id == recordId)
                 {
-                    dictionary[oldKey].RemoveAt(i);
-                    if (dictionary[oldKey].Count == 0)
+                    dictionary[key].RemoveAt(i);
+                    if (dictionary[key].Count == 0)
                     {
-                        dictionary.Remove(oldKey);
+                        dictionary.Remove(key);
                     }
 
                     break;
                 }
             }
-
-            AddToDictionary(dictionary, newKey, newRecord);
         }
     }
 }

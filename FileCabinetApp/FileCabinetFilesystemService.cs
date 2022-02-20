@@ -282,6 +282,11 @@ namespace FileCabinetApp
             return newSnapshot;
         }
 
+        public void RemoveRecord(int recordId)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Restores records from file system to the current repository.
         /// </summary>
