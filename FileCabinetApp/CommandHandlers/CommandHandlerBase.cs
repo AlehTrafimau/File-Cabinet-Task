@@ -14,6 +14,17 @@ namespace FileCabinetApp.CommandHandlers
         private ICommandHandler? nextHandler;
 
         /// <summary>
+        /// Gets the next handler of handling request.
+        /// </summary>
+        /// <value>
+        /// The next handler of handling request.
+        /// </value>
+        protected ICommandHandler? NextHandler
+        {
+            get { return this.nextHandler; }
+        }
+
+        /// <summary>
         /// Sets the next handler for current command.
         /// </summary>
         /// <param name="nextHandler">The next handler.</param>
@@ -23,9 +34,9 @@ namespace FileCabinetApp.CommandHandlers
         }
 
         /// <summary>
-        /// Defines a handle for handling current request.
+        /// Handlings the input request or transmits further.
         /// </summary>
-        /// <param name="handlingRequest">The request to hadnling.</param>
+        /// <param name="handlingRequest">The input request.</param>
         public abstract void Handle(AppCommandRequest handlingRequest);
     }
 }

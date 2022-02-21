@@ -12,7 +12,7 @@ namespace FileCabinetApp
     {
         public static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         public static IRecordValidator recordValidator = new DefaultValidator();
-        public static bool isRunning = true; 
+        public static bool isRunning = true;
 
         private const string DeveloperName = "Aleh Trafimau";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
@@ -76,8 +76,30 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var commandHandler = new CommandHandler();
-            return commandHandler;
+            var helpHandler = new HelpCommandHandler();
+            var createHandler = new CreateCommandHandler();
+            var editHandler = new EditCommandHandler();
+            var removeHandler = new RemoveCommandHandler();
+            var statHandler = new StatCommandHandler();
+            var findHandler = new FindCommandHandler();
+            var importHandler = new ImportCommandHandler();
+            var exportHandler = new ExportCommandHandler();
+            var listHandler = new ListCommandHandler();
+            var purgeHandler = new PurgeCommandHandler();
+            var exitHandler = new ExitCommandHandler();
+
+            helpHandler.SetNext(createHandler);
+            createHandler.SetNext(editHandler);
+            editHandler.SetNext(removeHandler);
+            removeHandler.SetNext(statHandler);
+            statHandler.SetNext(findHandler);
+            findHandler.SetNext(importHandler);
+            importHandler.SetNext(exportHandler);
+            exportHandler.SetNext(listHandler);
+            listHandler.SetNext(purgeHandler);
+            purgeHandler.SetNext(exitHandler);
+
+            return helpHandler;
         }
     }
 }
