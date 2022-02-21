@@ -9,19 +9,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Gets number of records in current repo.
     /// </summary>
-    public class StatCommandHandler : CommandHandlerBase
+    public class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService fileCabinetService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
-        /// </summary>
-        /// <param name="fileCabinetService">The file cabinet service.</param>
-        public StatCommandHandler(IFileCabinetService fileCabinetService)
-        {
-            this.fileCabinetService = fileCabinetService;
-        }
-
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>

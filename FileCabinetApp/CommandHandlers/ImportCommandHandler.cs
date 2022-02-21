@@ -10,19 +10,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Imports records from file system.
     /// </summary>
-    public class ImportCommandHandler : CommandHandlerBase
+    public class ImportCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService fileCabinetService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
-        /// </summary>
-        /// <param name="fileCabinetService">The file cabinet service.</param>
-        public ImportCommandHandler(IFileCabinetService fileCabinetService)
-        {
-            this.fileCabinetService = fileCabinetService;
-        }
-
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>

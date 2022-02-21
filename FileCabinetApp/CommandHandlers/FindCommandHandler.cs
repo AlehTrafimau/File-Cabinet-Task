@@ -11,19 +11,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Finds all records in the storage by special parameters.
     /// </summary>
-    public class FindCommandHandler : CommandHandlerBase
+    public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService fileCabinetService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
-        /// </summary>
-        /// <param name="fileCabinetService">The file cabinet service.</param>
-        public FindCommandHandler(IFileCabinetService fileCabinetService)
-        {
-            this.fileCabinetService = fileCabinetService;
-        }
-
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>

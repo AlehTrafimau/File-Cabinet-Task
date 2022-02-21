@@ -10,19 +10,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Display all records in the storage.
     /// </summary>
-    public class ListCommandHandler : CommandHandlerBase
+    public class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService fileCabinetService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
-        /// </summary>
-        /// <param name="fileCabinetService">The file cabinet service.</param>
-        public ListCommandHandler(IFileCabinetService fileCabinetService)
-        {
-            this.fileCabinetService = fileCabinetService;
-        }
-
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
