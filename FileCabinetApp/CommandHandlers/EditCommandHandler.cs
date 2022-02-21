@@ -11,8 +11,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Edits record note in sevice according input ID.
     /// </summary>
-    internal class EditCommandHandler : CommandHandlerBase
+    public class EditCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public EditCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -21,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "EDIT")
             {
-                Edit(handlingRequest.Parameters);
+                this.Edit(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -30,12 +41,12 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Edit(string parameters)
+        private void Edit(string parameters)
         {
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (Program.fileCabinetService.GetStat().Item1 < requestedID)
+                if (this.fileCabinetService.GetStat().Item1 < requestedID)
                 {
                     Console.WriteLine($"#{requestedID} record is not found");
                     return;
@@ -61,7 +72,7 @@ namespace FileCabinetApp.CommandHandlers
 
                 FileCabinetRecord editedRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
 
-                Program.fileCabinetService.EditRecord(requestedID, editedRecord);
+                this.fileCabinetService.EditRecord(requestedID, editedRecord);
             }
             else
             {

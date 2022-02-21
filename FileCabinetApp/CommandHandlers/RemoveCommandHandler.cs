@@ -11,8 +11,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Removes the specified record from the storage.
     /// </summary>
-    internal class RemoveCommandHandler : CommandHandlerBase
+    public class RemoveCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public RemoveCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -21,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "REMOVE")
             {
-                Remove(handlingRequest.Parameters);
+                this.Remove(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -30,21 +41,21 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             int requestedIdRecord = 0;
 
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 requestedIdRecord = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (Program.fileCabinetService.GetStat().Item1 < requestedIdRecord || requestedIdRecord < 1)
+                if (this.fileCabinetService.GetStat().Item1 < requestedIdRecord || requestedIdRecord < 1)
                 {
                     Console.WriteLine($"#{requestedIdRecord} record is not found");
                     return;
                 }
             }
 
-            Program.fileCabinetService.RemoveRecord(requestedIdRecord);
+            this.fileCabinetService.RemoveRecord(requestedIdRecord);
         }
     }
 }

@@ -10,8 +10,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Display all records in the storage.
     /// </summary>
-    internal class ListCommandHandler : CommandHandlerBase
+    public class ListCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -20,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "LIST")
             {
-                List(handlingRequest.Parameters);
+                this.List(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -29,9 +40,9 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void List(string parameters)
+        private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = Program.fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = this.fileCabinetService.GetRecords();
 
             if (records.Count == 0)
             {

@@ -9,8 +9,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Defrangents the file system storage.
     /// </summary>
-    internal class PurgeCommandHandler : CommandHandlerBase
+    public class PurgeCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public PurgeCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -19,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "PURGE")
             {
-                Purge(handlingRequest.Parameters);
+                this.Purge(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -28,11 +39,11 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Purge(string parameters)
+        private void Purge(string parameters)
         {
-            if (Program.fileCabinetService is FileCabinetFileSystemService)
+            if (this.fileCabinetService is FileCabinetFileSystemService)
             {
-                Program.fileCabinetService.Purge();
+                this.fileCabinetService.Purge();
             }
             else
             {

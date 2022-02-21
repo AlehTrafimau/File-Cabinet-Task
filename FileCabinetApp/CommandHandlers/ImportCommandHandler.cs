@@ -10,8 +10,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Imports records from file system.
     /// </summary>
-    internal class ImportCommandHandler : CommandHandlerBase
+    public class ImportCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public ImportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -20,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "IMPORT")
             {
-                Import(handlingRequest.Parameters);
+                this.Import(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -29,7 +40,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Import(string parameters)
+        private void Import(string parameters)
         {
             string[] inputs = parameters.Split(' ', 2);
             string importFormat = inputs[0];
@@ -57,7 +68,7 @@ namespace FileCabinetApp.CommandHandlers
                 lastestSnaphot.ReadFromXml(importStream);
             }
 
-            Program.fileCabinetService.Restore(lastestSnaphot);
+            this.fileCabinetService.Restore(lastestSnaphot);
             Console.WriteLine($"{lastestSnaphot.Records.Count} records were imported from {pathToFile}");
         }
     }

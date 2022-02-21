@@ -9,8 +9,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Gets number of records in current repo.
     /// </summary>
-    internal class StatCommandHandler : CommandHandlerBase
+    public class StatCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -19,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "STAT")
             {
-                Stat(handlingRequest.Parameters);
+                this.Stat(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -28,9 +39,9 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Stat(string parameters)
+        private void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = this.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount.Item1} record(s).");
             Console.WriteLine($"{recordsCount.Item2} removed record(s).");
         }

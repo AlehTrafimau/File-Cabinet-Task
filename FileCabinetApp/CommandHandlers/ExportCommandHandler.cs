@@ -10,8 +10,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Exports all records in the storage to file system file.
     /// </summary>
-    internal class ExportCommandHandler : CommandHandlerBase
+    public class ExportCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public ExportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -20,7 +31,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "EXPORT")
             {
-                Export(handlingRequest.Parameters);
+                this.Export(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -29,7 +40,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Export(string parameters)
+        private void Export(string parameters)
         {
             string[] inputs = parameters.Split(' ', 2);
             string exportFormat = inputs[0];
@@ -61,7 +72,7 @@ namespace FileCabinetApp.CommandHandlers
                 return;
             }
 
-            FileCabinetServiceSnapshot snapShot = Program.fileCabinetService.MakeSnapshot();
+            FileCabinetServiceSnapshot snapShot = this.fileCabinetService.MakeSnapshot();
             using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
             switch (exportFormat.ToUpperInvariant())
             {

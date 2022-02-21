@@ -11,8 +11,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Finds all records in the storage by special parameters.
     /// </summary>
-    internal class FindCommandHandler : CommandHandlerBase
+    public class FindCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -21,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "FIND")
             {
-                Find(handlingRequest.Parameters);
+                this.Find(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -30,7 +41,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Find(string parameters)
+        private void Find(string parameters)
         {
             string[] inputs = parameters.Split(' ', 2);
             string command = inputs[0].ToUpperInvariant();
@@ -56,13 +67,13 @@ namespace FileCabinetApp.CommandHandlers
             switch (command)
             {
                 case "FIRSTNAME":
-                    resultOfSearch = Program.fileCabinetService.FindByFirstName(parameterForSearch);
+                    resultOfSearch = this.fileCabinetService.FindByFirstName(parameterForSearch);
                     break;
                 case "LASTNAME":
-                    resultOfSearch = Program.fileCabinetService.FindByLastName(parameterForSearch);
+                    resultOfSearch = this.fileCabinetService.FindByLastName(parameterForSearch);
                     break;
                 case "DATEOFBIRTH":
-                    resultOfSearch = Program.fileCabinetService.FindByDayOfBirth(parameterForSearch);
+                    resultOfSearch = this.fileCabinetService.FindByDayOfBirth(parameterForSearch);
                     break;
                 default:
                     Console.WriteLine($"Invalid command: {command}.");

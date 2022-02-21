@@ -9,7 +9,7 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Exits the application.
     /// </summary>
-    internal class ExitCommandHandler : CommandHandlerBase
+    public class ExitCommandHandler : CommandHandlerBase
     {
         /// <summary>
         /// Handlings the input request or transmits further.
