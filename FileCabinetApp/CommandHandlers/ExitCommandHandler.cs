@@ -11,6 +11,17 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ExitCommandHandler : CommandHandlerBase
     {
+        private Action<bool> appStatus;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
+        /// </summary>
+        /// <param name="run">Commnand to run.</param>
+        public ExitCommandHandler(Action<bool> run)
+        {
+            this.appStatus = run;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -19,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (handlingRequest.Command.ToUpperInvariant() == "EXIT")
             {
-                Exit(handlingRequest.Parameters);
+                this.Exit(handlingRequest.Parameters);
                 return;
             }
             else if (this.NextHandler != null)
@@ -28,10 +39,10 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void Exit(string parameters)
+        private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.isRunning = false;
+            this.appStatus(false);
         }
     }
 }

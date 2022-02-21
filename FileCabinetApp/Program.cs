@@ -12,7 +12,7 @@ namespace FileCabinetApp
     {
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         public static IRecordValidator recordValidator = new DefaultValidator();
-        public static bool isRunning = true;
+        private static bool isRunning = true;
 
         private const string DeveloperName = "Aleh Trafimau";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
@@ -77,16 +77,17 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers()
         {
             var helpHandler = new HelpCommandHandler();
-            var createHandler = new CreateCommandHandler(fileCabinetService);
-            var editHandler = new EditCommandHandler(fileCabinetService);
-            var removeHandler = new RemoveCommandHandler(fileCabinetService);
-            var statHandler = new StatCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService);
-            var importHandler = new ImportCommandHandler(fileCabinetService);
-            var exportHandler = new ExportCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService);
-            var purgeHandler = new PurgeCommandHandler(fileCabinetService);
-            var exitHandler = new ExitCommandHandler();
+            var serviceCommandHandler = new ServiceCommandHandlerBase(fileCabinetService);
+            var createHandler = new CreateCommandHandler();
+            var editHandler = new EditCommandHandler();
+            var removeHandler = new RemoveCommandHandler();
+            var statHandler = new StatCommandHandler();
+            var findHandler = new FindCommandHandler();
+            var importHandler = new ImportCommandHandler();
+            var exportHandler = new ExportCommandHandler();
+            var listHandler = new ListCommandHandler();
+            var purgeHandler = new PurgeCommandHandler();
+            var exitHandler = new ExitCommandHandler((bool run) => isRunning = run);
 
             helpHandler.SetNext(createHandler);
             createHandler.SetNext(editHandler);
