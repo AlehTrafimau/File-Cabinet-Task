@@ -12,6 +12,19 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class ListCommandHandler : ServiceCommandHandlerBase
     {
+        private IRecordPrinter printer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="printer">The handler of records to output to console.</param>
+        /// <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
+            : base(fileCabinetService)
+        {
+            this.printer = printer;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -38,7 +51,7 @@ namespace FileCabinetApp.CommandHandlers
                 Console.WriteLine("There are no records here");
             }
 
-            RecordsOperation.PrintRecord(records);
+            this.printer.Print(records);
         }
     }
 }

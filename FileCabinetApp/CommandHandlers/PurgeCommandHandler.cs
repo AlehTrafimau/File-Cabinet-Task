@@ -12,6 +12,15 @@ namespace FileCabinetApp.CommandHandlers
     public class PurgeCommandHandler : ServiceCommandHandlerBase
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        public PurgeCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
+        {
+        }
+
+        /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
         /// <param name="handlingRequest">The input request.</param>

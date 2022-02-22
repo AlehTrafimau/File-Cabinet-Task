@@ -19,18 +19,10 @@ namespace FileCabinetApp.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceCommandHandlerBase"/> class.
         /// </summary>
-        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <param name="fileCabinetService">The instance of file cabinet service instance.</param>
         public ServiceCommandHandlerBase(IFileCabinetService fileCabinetService)
         {
             this.fileCabinetService = fileCabinetService;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ServiceCommandHandlerBase"/> class.
-        /// </summary>
-        public ServiceCommandHandlerBase()
-        {
-            this.fileCabinetService = new FileCabinetMemoryService();
         }
 
         /// <summary>

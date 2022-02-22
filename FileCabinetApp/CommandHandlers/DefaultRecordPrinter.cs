@@ -5,18 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// Consists a set of methods processing records.
+    /// Outputs records to console by default format.
     /// </summary>
-    internal static class RecordsOperation
+    internal class DefaultRecordPrinter : IRecordPrinter
     {
         /// <summary>
-        /// Display data of records to console.
+        /// Outputs records to console by default format.
         /// </summary>
         /// <param name="records">The sequence of record for display.</param>
-        internal static void PrintRecord(IReadOnlyCollection<FileCabinetRecord> records)
+        public void Print(IEnumerable<FileCabinetRecord> records)
         {
             if (records != null)
             {

@@ -14,6 +14,15 @@ namespace FileCabinetApp.CommandHandlers
     public class RemoveCommandHandler : ServiceCommandHandlerBase
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        public RemoveCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
+        {
+        }
+
+        /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
         /// <param name="handlingRequest">The input request.</param>

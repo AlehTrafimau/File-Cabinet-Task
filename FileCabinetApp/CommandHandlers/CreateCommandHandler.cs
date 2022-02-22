@@ -11,6 +11,19 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class CreateCommandHandler : ServiceCommandHandlerBase
     {
+        private IRecordValidator recordValidator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        /// <param name="recordValidator">Sets rules of validation.</param>
+        public CreateCommandHandler(IFileCabinetService fileCabinetService, IRecordValidator recordValidator)
+            : base(fileCabinetService)
+        {
+            this.recordValidator = recordValidator;
+        }
+
         /// <summary>
         /// Handlings the input request or transmits further.
         /// </summary>
@@ -31,22 +44,22 @@ namespace FileCabinetApp.CommandHandlers
         private void Create(string parameters)
         {
             Console.Write("First name: ");
-            var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, Program.recordValidator.CheckName);
+            var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.recordValidator.CheckName);
 
             Console.Write("Last name: ");
-            var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, Program.recordValidator.CheckName);
+            var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.recordValidator.CheckName);
 
             Console.Write("Birth date: ");
-            var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, Program.recordValidator.CheckBirthDate);
+            var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, this.recordValidator.CheckBirthDate);
 
             Console.Write("Serie of pass number: ");
-            var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, Program.recordValidator.CheckSerieOfPassNumber);
+            var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, this.recordValidator.CheckSerieOfPassNumber);
 
             Console.Write("Pass number: ");
-            var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, Program.recordValidator.CheckPassNumber);
+            var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, this.recordValidator.CheckPassNumber);
 
             Console.Write("Bank account: ");
-            var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, Program.recordValidator.CheckBankAccount);
+            var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, this.recordValidator.CheckBankAccount);
 
             FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
             int userId = this.fileCabinetService.CreateRecord(newRecord);
