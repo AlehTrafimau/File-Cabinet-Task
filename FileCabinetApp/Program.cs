@@ -74,6 +74,18 @@ namespace FileCabinetApp
             }
         }
 
+        private static void Print(IEnumerable<FileCabinetRecord> records)
+        {
+            if (records != null)
+            {
+                foreach (FileCabinetRecord currentRecord in records)
+                {
+                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}," +
+                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.BankAccount}$");
+                }
+            }
+        }
+
         private static ICommandHandler CreateCommandHandlers()
         {
             var recordPrinter = new DefaultRecordPrinter();
@@ -83,10 +95,10 @@ namespace FileCabinetApp
             var editHandler = new EditCommandHandler(fileCabinetService, recordValidator);
             var removeHandler = new RemoveCommandHandler(fileCabinetService);
             var statHandler = new StatCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
+            var findHandler = new FindCommandHandler(fileCabinetService, Print);
             var importHandler = new ImportCommandHandler(fileCabinetService);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
+            var listHandler = new ListCommandHandler(fileCabinetService, Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var exitHandler = new ExitCommandHandler((bool run) => isRunning = run);
 
