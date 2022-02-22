@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FileCabinetApp
+﻿namespace FileCabinetApp
 {
     /// <summary>
     /// Consists a function to record validate.
@@ -12,14 +6,10 @@ namespace FileCabinetApp
     public interface IRecordValidator
     {
         /// <summary>
-        /// Validates records data.
+        /// Validates record by default rules.
         /// </summary>
-        /// <param name="firstName">The first name validator.</param>
-        /// <param name="lastName">The last name validator.</param>
-        /// <param name="birthDate">The birth day validator.</param>
-        /// <param name="serieOfPassNumber">The serie of pas number validator.</param>
-        /// <param name="passNumber">The pass number validator.</param>
-        /// <param name="bankAccount">The bank account validator.</param>
-        public void ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount);
+        /// <param name="record">The file cabinet record instance for validation.</param>
+        /// <returns>The result of record validation.</returns>
+        public Tuple<bool, string[]> ValidateParameters(FileCabinetRecord record);
     }
 }

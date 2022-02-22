@@ -15,112 +15,131 @@ namespace FileCabinetApp
     public class DefaultValidator : IRecordValidator
     {
         /// <summary>
-        /// Validates records data.
+        /// Validates record by default rules.
         /// </summary>
-        /// <param name="firstName">The first name validator.</param>
-        /// <param name="lastName">The last name validator.</param>
-        /// <param name="birthDate">The birth day validator.</param>
-        /// <param name="serieOfPassNumber">The serie of pas number validator.</param>
-        /// <param name="passNumber">The pass number validator.</param>
-        /// <param name="bankAccount">The bank account validator.</param>
-        public void ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount)
+        /// <param name="record">The file cabinet record instance for validation.</param>
+        /// <returns>The result of record validation.</returns>
+        public Tuple<bool, string[]> ValidateParameters(FileCabinetRecord record)
         {
-            Console.Write("First name: ");
-            firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.CheckName);
+            Tuple<bool, string[]> resultOfRecordValidation;
+            List<string> validateErrors = new ();
+            bool hasError = true;
+            List<Tuple<bool, string>> resultsOfValidation = new ()
+            {
+                CheckFirstName(record),
+                CheckLastName(record),
+                CheckBirthDate(record),
+                CheckSerieOfPassNumber(record),
+                CheckPassNumber(record),
+                CheckBankAccount(record),
+            };
 
-            Console.Write("Last name: ");
-            lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.CheckName);
+            foreach (var i in resultsOfValidation)
+            {
+                if (i.Item1 == false)
+                {
+                    hasError = false;
+                    validateErrors.Add(i.Item2);
+                }
+            }
 
-            Console.Write("Birth date: ");
-            birthDate = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, this.CheckBirthDate);
-
-            Console.Write("Serie of pass number: ");
-            serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, this.CheckSerieOfPassNumber);
-
-            Console.Write("Pass number: ");
-            passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, this.CheckPassNumber);
-
-            Console.Write("Bank account: ");
-            bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, this.CheckBankAccount);
+            resultOfRecordValidation = new Tuple<bool, string[]>(hasError, validateErrors.ToArray());
+            return resultOfRecordValidation;
         }
 
-        private Tuple<bool, string> CheckName(string name)
+        private static Tuple<bool, string> CheckFirstName(FileCabinetRecord record)
         {
             Tuple<bool, string> result;
 
-            if (name != null && Regex.IsMatch(name, @"^\S{2,60}$"))
+            if (record.FirstName != null && Regex.IsMatch(record.FirstName, @"^\S{2,60}$"))
             {
                 result = new (true, string.Empty);
             }
             else
             {
-                result = new (false, "The length of name: from 2 to 60 symbols");
+                result = new (false, "The length of first name must be from 2 to 60 symbols");
             }
 
             return result;
         }
 
-        private Tuple<bool, string> CheckBirthDate(DateTime birthDate)
+        private static Tuple<bool, string> CheckLastName(FileCabinetRecord record)
+        {
+            Tuple<bool, string> result;
+
+            if (record.LastName != null && Regex.IsMatch(record.LastName, @"^\S{2,60}$"))
+            {
+                result = new (true, string.Empty);
+            }
+            else
+            {
+                result = new (false, "The length of last name must be from 2 to 60 symbols");
+            }
+
+            return result;
+        }
+
+        private static Tuple<bool, string> CheckBirthDate(FileCabinetRecord record)
         {
             Tuple<bool, string> result;
             DateTime currentDate = DateTime.Now;
             DateTime minValueDateOfBirth = new (1950, 1, 1);
 
-            if (birthDate.CompareTo(currentDate) < 0 && birthDate.CompareTo(minValueDateOfBirth) >= 0)
+            if (record.DateOfBirth.CompareTo(currentDate) < 0 && record.DateOfBirth.CompareTo(minValueDateOfBirth) >= 0)
             {
                 result = new (true, string.Empty);
             }
             else
             {
-                result = new (false, "Correct format: \"Year - Month - Day\". This parameter is from \"1950-1-1\" to current date.");
+                result = new (false, "Incorrect date of birth. This parameter must be from \"1950-1-1\" to current date.");
             }
 
             return result;
         }
 
-        private Tuple<bool, string> CheckSerieOfPassNumber(char serieOfPassNumber)
+        private static Tuple<bool, string> CheckSerieOfPassNumber(FileCabinetRecord record)
         {
             Tuple<bool, string> result;
 
-            if (Regex.IsMatch(serieOfPassNumber.ToString(), @"^([A-Z]{1}|[a-z]{1})$"))
+            if (Regex.IsMatch(record.SerieOfPassNumber.ToString(), @"^([A-Z]{1}|[a-z]{1})$"))
             {
                 result = new (true, string.Empty);
             }
             else
             {
-                result = new (false, "Correct format: \"A\" (one letter)");
+                result = new (false, "Invalid serie of pass number. Correct format of pass number serie: \"A\" (available one letter only)");
             }
 
             return result;
         }
 
-        private Tuple<bool, string> CheckPassNumber(short passNumber)
+        private static Tuple<bool, string> CheckPassNumber(FileCabinetRecord record)
         {
             Tuple<bool, string> result;
 
-            if (Regex.IsMatch(passNumber.ToString(CultureInfo.InvariantCulture), @"^\d{1,4}$"))
+            if (Regex.IsMatch(record.PassNumber.ToString(CultureInfo.InvariantCulture), @"^\d{1,4}$"))
             {
                 result = new (true, string.Empty);
             }
             else
             {
-                result = new (false, "Correct format: (1-4 digits only)");
+                result = new (false, "Invalid pass number. Correct format: (1-4 digits only)");
             }
 
             return result;
         }
 
-        private Tuple<bool, string> CheckBankAccount(decimal bankAccount)
+        private static Tuple<bool, string> CheckBankAccount(FileCabinetRecord record)
         {
             Tuple<bool, string> result;
 
-            if (bankAccount >= 0)
+            if (record.BankAccount >= 0)
             {
                 result = new (true, string.Empty);
             }
             else
             {
-                result = new (false, "The bank account must be more than zero or equal zero");
+                result = new (false, "Invalid bank account. The bank account must be more than zero or equal zero");
             }
 
             return result;

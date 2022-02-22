@@ -12,15 +12,14 @@ namespace FileCabinetApp
     internal class ConsoleExtension
     {
         /// <summary>
-        /// Reads a information from console, converts to  necessary format and verify its valid by special conditionals.
+        /// Reads a information from console, converts to necessary format..
         /// </summary>
-        /// <typeparam name="T">Generic parameter.</typeparam>
+        /// <typeparam name="T">Generic parameter of necessary type.</typeparam>
         /// <param name="converter">A special converter of entered string.</param>
-        /// <param name="validator">A special validator of convertered string.</param>
         /// <returns>
-        /// The value of T type which converted and validated successfully.
+        /// The value of T type which converted successfully.
         /// </returns>
-        internal static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        internal static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter)
         {
             do
             {
@@ -45,14 +44,6 @@ namespace FileCabinetApp
                 }
 
                 value = conversionResult.Item3;
-
-                var validationResult = validator(value);
-                if (!validationResult.Item1)
-                {
-                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
                 return value;
             }
             while (true);

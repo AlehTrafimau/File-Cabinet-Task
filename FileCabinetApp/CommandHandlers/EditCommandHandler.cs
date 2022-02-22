@@ -45,25 +45,64 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Edit(string parameters)
         {
+            int requestedID = 0;
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
-                int requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
+                requestedID = int.Parse(parameters, CultureInfo.InvariantCulture);
                 if (this.fileCabinetService.GetStat().Item1 < requestedID)
                 {
                     Console.WriteLine($"#{requestedID} record is not found");
                     return;
                 }
-
-                this.recordValidator.ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount);
-
-                FileCabinetRecord editedRecord = new (0, firstName, lastName, birthDate, serieOfPassNumber, passNumber, bankAccount);
-
-                this.fileCabinetService.EditRecord(requestedID, editedRecord);
             }
             else
             {
                 Console.WriteLine($"Parameters did not enter");
+                return;
             }
+
+            FileCabinetRecord editedRecord;
+
+            while (true)
+            {
+                Console.Write("First name: ");
+                var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert);
+
+                Console.Write("Last name: ");
+                var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert);
+
+                Console.Write("Birth date: ");
+                var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert);
+
+                Console.Write("Serie of pass number: ");
+                var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert);
+
+                Console.Write("Pass number: ");
+                var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert);
+
+                Console.Write("Bank account: ");
+                var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert);
+
+                FileCabinetRecord recordForValidate = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+                Tuple<bool, string[]> validator = this.recordValidator.ValidateParameters(recordForValidate);
+                if (validator.Item1 == false)
+                {
+                    Console.WriteLine($"\tValidation failed:");
+                    foreach (var i in validator.Item2)
+                    {
+                        Console.WriteLine(i);
+                    }
+
+                    Console.WriteLine($"\tPlease, correct your input.");
+                }
+                else
+                {
+                    editedRecord = recordForValidate;
+                    break;
+                }
+            }
+
+            this.fileCabinetService.EditRecord(requestedID, editedRecord);
         }
     }
 }
