@@ -12,12 +12,39 @@ namespace FileCabinetApp
     /// Consists a set of function for record validation according dafault conditionals.
     /// </summary>
     /// <seealso cref="FileCabinetApp.IRecordValidator"/>
-    internal class DefaultValidator : IRecordValidator
+    public class DefaultValidator : IRecordValidator
     {
-        /// <summary>Checks the name.</summary>
-        /// <param name="name">The name.</param>
-        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        public Tuple<bool, string> CheckName(string name)
+        /// <summary>
+        /// Validates records data.
+        /// </summary>
+        /// <param name="firstName">The first name validator.</param>
+        /// <param name="lastName">The last name validator.</param>
+        /// <param name="birthDate">The birth day validator.</param>
+        /// <param name="serieOfPassNumber">The serie of pas number validator.</param>
+        /// <param name="passNumber">The pass number validator.</param>
+        /// <param name="bankAccount">The bank account validator.</param>
+        public void ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount)
+        {
+            Console.Write("First name: ");
+            firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.CheckName);
+
+            Console.Write("Last name: ");
+            lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.CheckName);
+
+            Console.Write("Birth date: ");
+            birthDate = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, this.CheckBirthDate);
+
+            Console.Write("Serie of pass number: ");
+            serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, this.CheckSerieOfPassNumber);
+
+            Console.Write("Pass number: ");
+            passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, this.CheckPassNumber);
+
+            Console.Write("Bank account: ");
+            bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, this.CheckBankAccount);
+        }
+
+        private Tuple<bool, string> CheckName(string name)
         {
             Tuple<bool, string> result;
 
@@ -33,10 +60,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        /// <summary>Checks the birth date.</summary>
-        /// <param name="birthDate">The birth date.</param>
-        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        public Tuple<bool, string> CheckBirthDate(DateTime birthDate)
+        private Tuple<bool, string> CheckBirthDate(DateTime birthDate)
         {
             Tuple<bool, string> result;
             DateTime currentDate = DateTime.Now;
@@ -54,10 +78,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        /// <summary>Checks the serie of pass number.</summary>
-        /// <param name="serieOfPassNumber">The serie of pass number.</param>
-        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        public Tuple<bool, string> CheckSerieOfPassNumber(char serieOfPassNumber)
+        private Tuple<bool, string> CheckSerieOfPassNumber(char serieOfPassNumber)
         {
             Tuple<bool, string> result;
 
@@ -73,10 +94,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        /// <summary>Checks the pass number.</summary>
-        /// <param name="passNumber">The pass number.</param>
-        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        public Tuple<bool, string> CheckPassNumber(short passNumber)
+        private Tuple<bool, string> CheckPassNumber(short passNumber)
         {
             Tuple<bool, string> result;
 
@@ -92,10 +110,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        /// <summary>Checks the bank account.</summary>
-        /// <param name="bankAccount">The bank account.</param>
-        /// <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        public Tuple<bool, string> CheckBankAccount(decimal bankAccount)
+        private Tuple<bool, string> CheckBankAccount(decimal bankAccount)
         {
             Tuple<bool, string> result;
 

@@ -314,30 +314,16 @@
             </summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator"/>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.CheckName(System.String)">
-            <summary>Checks the name.</summary>
-            <param name="name">The name.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.CheckBirthDate(System.DateTime)">
-            <summary>Checks the birth date.</summary>
-            <param name="birthDate">The birth date.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.CheckSerieOfPassNumber(System.Char)">
-            <summary>Checks the serie of pass number.</summary>
-            <param name="serieOfPassNumber">The serie of pass number.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.CheckPassNumber(System.Int16)">
-            <summary>Checks the pass number.</summary>
-            <param name="passNumber">The pass number.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.CheckBankAccount(System.Decimal)">
-            <summary>Checks the bank account.</summary>
-            <param name="bankAccount">The bank account.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(System.String@,System.String@,System.DateTime@,System.Char@,System.Int16@,System.Decimal@)">
+            <summary>
+            Validates records data.
+            </summary>
+            <param name="firstName">The first name validator.</param>
+            <param name="lastName">The last name validator.</param>
+            <param name="birthDate">The birth day validator.</param>
+            <param name="serieOfPassNumber">The serie of pas number validator.</param>
+            <param name="passNumber">The pass number validator.</param>
+            <param name="bankAccount">The bank account validator.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
@@ -345,30 +331,16 @@
             </summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator"/>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.CheckName(System.String)">
-            <summary>Checks the name.</summary>
-            <param name="name">The name.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.CheckBirthDate(System.DateTime)">
-            <summary>Checks the birth date.</summary>
-            <param name="birthDate">The birth date.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.CheckSerieOfPassNumber(System.Char)">
-            <summary>Checks the serie of pass number.</summary>
-            <param name="serieOfPassNumber">The serie of pass number.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.CheckPassNumber(System.Int16)">
-            <summary>Checks the pass number.</summary>
-            <param name="passNumber">The pass number.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.CheckBankAccount(System.Decimal)">
-            <summary>Checks the bank account.</summary>
-            <param name="bankAccount">The bank account.</param>
-            <returns>True, if the parameter conform special conditionals, or false and error message, otherwise.</returns>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(System.String@,System.String@,System.DateTime@,System.Char@,System.Int16@,System.Decimal@)">
+            <summary>
+            Validates records data.
+            </summary>
+            <param name="firstName">The first name validator.</param>
+            <param name="lastName">The last name validator.</param>
+            <param name="birthDate">The birth day validator.</param>
+            <param name="serieOfPassNumber">The serie of pas number validator.</param>
+            <param name="passNumber">The pass number validator.</param>
+            <param name="bankAccount">The bank account validator.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFileSystemService">
             <summary>
@@ -791,53 +763,19 @@
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
-            Consists a set of functions to record validate.
+            Consists a function to record validate.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IRecordValidator.CheckName(System.String)">
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(System.String@,System.String@,System.DateTime@,System.Char@,System.Int16@,System.Decimal@)">
             <summary>
-            Checks the name parameter.
+            Validates records data.
             </summary>
-            <param name="name">The name.</param>
-            <returns>
-            True, if the parameter conform special conditionals, or false and error message, otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IRecordValidator.CheckBirthDate(System.DateTime)">
-            <summary>
-            Checks the birth date.
-            </summary>
-            <param name="birthDate">The birth date.</param>
-            <returns>
-            True, if the parameter conform special conditionals, or false and error message, otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IRecordValidator.CheckSerieOfPassNumber(System.Char)">
-            <summary>
-            Checks the serie of pass number.
-            </summary>
-            <param name="serieOfPassNumber">The serie of pass number.</param>
-            <returns>
-            True, if the parameter conform special conditionals, or false and error message, otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IRecordValidator.CheckPassNumber(System.Int16)">
-            <summary>
-            Checks the pass number.
-            </summary>
-            <param name="passNumber">The pass number.</param>
-            <returns>
-            True, if the parameter conform special conditionals, or false and error message, otherwise.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IRecordValidator.CheckBankAccount(System.Decimal)">
-            <summary>
-            Checks the bank account.
-            </summary>
-            <param name="bankAccount">The bank account.</param>
-            <returns>
-            True, if the parameter conform special conditionals, or false and error message, otherwise.
-            </returns>
+            <param name="firstName">The first name validator.</param>
+            <param name="lastName">The last name validator.</param>
+            <param name="birthDate">The birth day validator.</param>
+            <param name="serieOfPassNumber">The serie of pas number validator.</param>
+            <param name="passNumber">The pass number validator.</param>
+            <param name="bankAccount">The bank account validator.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>

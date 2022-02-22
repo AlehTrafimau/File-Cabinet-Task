@@ -43,25 +43,8 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Create(string parameters)
         {
-            Console.Write("First name: ");
-            var firstName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.recordValidator.CheckName);
-
-            Console.Write("Last name: ");
-            var lastName = ConsoleExtension.ReadInput(StringConverter.StringConvert, this.recordValidator.CheckName);
-
-            Console.Write("Birth date: ");
-            var dateOfBirth = ConsoleExtension.ReadInput(StringConverter.DateTimeConvert, this.recordValidator.CheckBirthDate);
-
-            Console.Write("Serie of pass number: ");
-            var serieOfPassNumber = ConsoleExtension.ReadInput(StringConverter.CharConvert, this.recordValidator.CheckSerieOfPassNumber);
-
-            Console.Write("Pass number: ");
-            var passNumber = ConsoleExtension.ReadInput(StringConverter.ShortConvert, this.recordValidator.CheckPassNumber);
-
-            Console.Write("Bank account: ");
-            var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert, this.recordValidator.CheckBankAccount);
-
-            FileCabinetRecord newRecord = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
+            this.recordValidator.ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount);
+            FileCabinetRecord newRecord = new (0, firstName, lastName, birthDate, serieOfPassNumber, passNumber, bankAccount);
             int userId = this.fileCabinetService.CreateRecord(newRecord);
 
             Console.WriteLine($"Record #{userId} is created.");

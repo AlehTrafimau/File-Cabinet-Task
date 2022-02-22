@@ -7,53 +7,19 @@ using System.Threading.Tasks;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Consists a set of functions to record validate.
+    /// Consists a function to record validate.
     /// </summary>
     public interface IRecordValidator
     {
         /// <summary>
-        /// Checks the name parameter.
+        /// Validates records data.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false and error message, otherwise.
-        /// </returns>
-        public Tuple<bool, string> CheckName(string name);
-
-        /// <summary>
-        /// Checks the birth date.
-        /// </summary>
-        /// <param name="birthDate">The birth date.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false and error message, otherwise.
-        /// </returns>
-        public Tuple<bool, string> CheckBirthDate(DateTime birthDate);
-
-        /// <summary>
-        /// Checks the serie of pass number.
-        /// </summary>
-        /// <param name="serieOfPassNumber">The serie of pass number.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false and error message, otherwise.
-        /// </returns>
-        public Tuple<bool, string> CheckSerieOfPassNumber(char serieOfPassNumber);
-
-        /// <summary>
-        /// Checks the pass number.
-        /// </summary>
-        /// <param name="passNumber">The pass number.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false and error message, otherwise.
-        /// </returns>
-        public Tuple<bool, string> CheckPassNumber(short passNumber);
-
-        /// <summary>
-        /// Checks the bank account.
-        /// </summary>
-        /// <param name="bankAccount">The bank account.</param>
-        /// <returns>
-        /// True, if the parameter conform special conditionals, or false and error message, otherwise.
-        /// </returns>
-        public Tuple<bool, string> CheckBankAccount(decimal bankAccount);
+        /// <param name="firstName">The first name validator.</param>
+        /// <param name="lastName">The last name validator.</param>
+        /// <param name="birthDate">The birth day validator.</param>
+        /// <param name="serieOfPassNumber">The serie of pas number validator.</param>
+        /// <param name="passNumber">The pass number validator.</param>
+        /// <param name="bankAccount">The bank account validator.</param>
+        public void ValidateParameters(out string firstName, out string lastName, out DateTime birthDate, out char serieOfPassNumber, out short passNumber, out decimal bankAccount);
     }
 }
