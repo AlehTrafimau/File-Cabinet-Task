@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="record">The file cabinet record instance for validation.</param>
         /// <returns>The result of record validation.</returns>
-        public Tuple<bool, string[]> ValidateParameters(FileCabinetRecord record);
+        public Tuple<bool, string> ValidateParameters(FileCabinetRecord record);
     }
 }

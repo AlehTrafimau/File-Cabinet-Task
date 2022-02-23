@@ -66,11 +66,12 @@ namespace FileCabinetApp.CommandHandlers
                 var bankAccount = ConsoleExtension.ReadInput(StringConverter.DecimalConvert);
 
                 FileCabinetRecord recordForValidate = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
-                Tuple<bool, string[]> validator = this.recordValidator.ValidateParameters(recordForValidate);
+                Tuple<bool, string> validator = this.recordValidator.ValidateParameters(recordForValidate);
                 if (validator.Item1 == false)
                 {
+                    string[] validationErrors = validator.Item2.Split(' ');
                     Console.WriteLine($"\tValidation failed:");
-                    foreach (var i in validator.Item2)
+                    foreach (var i in validationErrors)
                     {
                         Console.WriteLine(i);
                     }
