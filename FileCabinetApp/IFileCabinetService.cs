@@ -10,7 +10,7 @@ namespace FileCabinetApp
     /// <summary>
     /// Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
     /// </summary>
-    internal interface IFileCabinetService
+    public interface IFileCabinetService
     {
         /// <summary>
         /// Creates the new record.
