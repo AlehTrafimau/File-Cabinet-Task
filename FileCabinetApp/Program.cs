@@ -14,14 +14,7 @@ namespace FileCabinetApp
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
-        private static IRecordValidator recordValidator = new ValidatorBuilder()
-            .ValidateFirstName(2, 60)
-            .ValidateLastName(2, 60)
-            .ValidateDateOfBirth(new DateTime(1950, 1, 1), DateTime.Now)
-            .ValidateSerieOfPassNumber(new DefaultSerieOfPassNumberValidator())
-            .ValidatePassNumber(new DefaultPassNumberValidator())
-            .ValidateBankAccount(new DefaultBankAccountValidator())
-            .Create();
+        private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
 
         private static bool isRunning = true;
 
@@ -62,14 +55,7 @@ namespace FileCabinetApp
         {
             if ((args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM") || (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM"))
             {
-                recordValidator = new ValidatorBuilder()
-                    .ValidateFirstName(2, 30)
-                    .ValidateLastName(2, 30)
-                    .ValidateDateOfBirth(new DateTime(1950, 1, 1), DateTime.Now.AddYears(-10))
-                    .ValidateSerieOfPassNumber(new CustomSerieOfPassNumberValidator())
-                    .ValidatePassNumber(new CustomPassNumberValidator())
-                    .ValidateBankAccount(new CustomBankAccountValidator())
-                    .Create();
+                recordValidator = new ValidatorBuilder().CreateCustom();
 
                 Console.WriteLine("Using custom validation rules.");
             }

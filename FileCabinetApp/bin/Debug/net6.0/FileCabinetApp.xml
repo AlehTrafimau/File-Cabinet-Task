@@ -957,11 +957,6 @@
             Builds the validator of record data.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.ValidatorBuilder.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.ValidatorBuilder"/> class by default validation rules.
-            </summary>
-        </member>
         <member name="P:FileCabinetApp.ValidatorBuilder.FirstNameValidator">
             <summary>
             Gets or sets the validator of the first name parameter of the record.
@@ -1056,6 +1051,18 @@
             <returns>The bank account validator.</returns>
         </member>
         <member name="M:FileCabinetApp.ValidatorBuilder.Create">
+            <summary>
+            Creates new record validator.
+            </summary>
+            <returns>The new record validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateDefault">
+            <summary>
+            Creates new record validator.
+            </summary>
+            <returns>The new record validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorBuilder.CreateCustom">
             <summary>
             Creates new record validator.
             </summary>
