@@ -32,7 +32,7 @@ namespace FileCabinetApp.GeneralValidators
         {
             Tuple<bool, string> result;
 
-            if (record.LastName != null && Regex.IsMatch(record.LastName, @"^\S+$") && record.LastName.Length < this.max && record.LastName.Length > this.min)
+            if (record.LastName != null && Regex.IsMatch(record.LastName, @"^\S+$") && record.LastName.Length <= this.max && record.LastName.Length >= this.min)
             {
                 result = new (true, string.Empty);
             }
