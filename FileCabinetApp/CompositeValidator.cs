@@ -1,17 +1,25 @@
 ﻿using System.Text;
-using FileCabinetApp.DefaultValidators;
-using FileCabinetApp.GeneralValidators;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Consists a set of function for record validation according dafault conditionals.
+    /// Validates the record according to the entry conditions.
     /// </summary>
-    /// <seealso cref="IRecordValidator"/>
-    internal class DefaultValidator : IRecordValidator
+    public class CompositeValidator : IRecordValidator
     {
+        private List<IRecordValidator> validators = new ();
+
         /// <summary>
-        /// Validates record by default rules.
+        /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
+        /// </summary>
+        /// <param name="validators">A list of validators.</param>
+        protected CompositeValidator(IEnumerable<IRecordValidator> validators)
+        {
+            this.validators.AddRange(validators);
+        }
+
+        /// <summary>
+        /// Validates record.
         /// </summary>
         /// <param name="record">The file cabinet record instance for validation.</param>
         /// <returns>The result of record validation.</returns>
@@ -20,15 +28,12 @@ namespace FileCabinetApp
             Tuple<bool, string> resultOfRecordValidation;
             var validateErrors = new StringBuilder();
             bool hasError = true;
-            List<Tuple<bool, string>> resultsOfValidation = new ()
+            List<Tuple<bool, string>> resultsOfValidation = new ();
+
+            foreach (var validator in this.validators)
             {
-                new FirstNameValidator(2, 60).ValidateParameters(record),
-                new LastNameValidator(2, 60).ValidateParameters(record),
-                new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now).ValidateParameters(record),
-                new DefaultSerieOfPassNumberValidator().ValidateParameters(record),
-                new DefaultPassNumberValidator().ValidateParameters(record),
-                new DefaultBankAccountValidator().ValidateParameters(record),
-            };
+                resultsOfValidation.Add(validator.ValidateParameters(record));
+            }
 
             foreach (var i in resultsOfValidation)
             {

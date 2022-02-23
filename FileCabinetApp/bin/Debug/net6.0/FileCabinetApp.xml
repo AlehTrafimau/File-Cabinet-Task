@@ -292,6 +292,24 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CompositeValidator">
+            <summary>
+            ff.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.IRecordValidator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CompositeValidator"/> class.
+            </summary>
+            <param name="validators">A list of validators.</param>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates record.
+            </summary>
+            <param name="record">The file cabinet record instance for validation.</param>
+            <returns>The result of record validation.</returns>
+        </member>
         <member name="T:FileCabinetApp.ConsoleExtension">
             <summary>
             Consists of a set of function for work to console's data.
@@ -306,6 +324,17 @@
             <returns>
             The value of T type which converted successfully.
             </returns>
+        </member>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            Consists a set of function for record validation according custom conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CustomValidator"/> class.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.CustomValidators.CustomBankAccountValidator">
             <summary>
@@ -349,18 +378,16 @@
             Results of validation: success of validation and errors in verification.
             </returns>
         </member>
-        <member name="T:FileCabinetApp.CustomValidator">
+        <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
-            Consists a set of function for record validation according custom conditionals.
+            Consists a set of function for record validation according dafault conditionals.
             </summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator"/>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.DefaultValidator.#ctor">
             <summary>
-            Validates record by default rules.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DefaultValidator"/> class.
             </summary>
-            <param name="record">The file cabinet record instance for validation.</param>
-            <returns>The result of record validation.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFileSystemService">
             <summary>
@@ -906,19 +933,6 @@
             <returns>
             Results of validation: success of validation and errors in verification.
             </returns>
-        </member>
-        <member name="T:FileCabinetApp.DefaultValidator">
-            <summary>
-            Consists a set of function for record validation according dafault conditionals.
-            </summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Validates record by default rules.
-            </summary>
-            <param name="record">The file cabinet record instance for validation.</param>
-            <returns>The result of record validation.</returns>
         </member>
         <member name="T:FileCabinetApp.StringConverter">
             <summary>
