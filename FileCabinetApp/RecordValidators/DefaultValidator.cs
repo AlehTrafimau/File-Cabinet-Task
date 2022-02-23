@@ -1,12 +1,13 @@
 ﻿using System.Text;
 using FileCabinetApp.DefaultValidators;
+using FileCabinetApp.GeneralValidators;
 
 namespace FileCabinetApp
 {
     /// <summary>
     /// Consists a set of function for record validation according dafault conditionals.
     /// </summary>
-    /// <seealso cref="FileCabinetApp.IRecordValidator"/>
+    /// <seealso cref="IRecordValidator"/>
     internal class DefaultValidator : IRecordValidator
     {
         /// <summary>
@@ -21,9 +22,9 @@ namespace FileCabinetApp
             bool hasError = true;
             List<Tuple<bool, string>> resultsOfValidation = new ()
             {
-                new DefaultFirstNameValidator().ValidateParameters(record),
-                new DefaultLastNameValidator().ValidateParameters(record),
-                new DefaultBankAccountValidator().ValidateParameters(record),
+                new FirstNameValidator(2, 60).ValidateParameters(record),
+                new LastNameValidator(2, 60).ValidateParameters(record),
+                new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now).ValidateParameters(record),
                 new DefaultSerieOfPassNumberValidator().ValidateParameters(record),
                 new DefaultPassNumberValidator().ValidateParameters(record),
                 new DefaultBankAccountValidator().ValidateParameters(record),
@@ -35,6 +36,7 @@ namespace FileCabinetApp
                 {
                     hasError = false;
                     validateErrors.Append(i.Item2);
+                    validateErrors.Append('\n');
                 }
             }
 

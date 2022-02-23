@@ -67,15 +67,11 @@ namespace FileCabinetApp.CommandHandlers
 
                 FileCabinetRecord recordForValidate = new (0, firstName, lastName, dateOfBirth, serieOfPassNumber, passNumber, bankAccount);
                 Tuple<bool, string> validator = this.recordValidator.ValidateParameters(recordForValidate);
+
                 if (validator.Item1 == false)
                 {
-                    string[] validationErrors = validator.Item2.Split(' ');
                     Console.WriteLine($"\tValidation failed:");
-                    foreach (var i in validationErrors)
-                    {
-                        Console.WriteLine(i);
-                    }
-
+                    Console.Write(validator.Item2);
                     Console.WriteLine($"\tPlease, correct your input.");
                 }
                 else

@@ -307,6 +307,48 @@
             The value of T type which converted successfully.
             </returns>
         </member>
+        <member name="T:FileCabinetApp.CustomValidators.CustomBankAccountValidator">
+            <summary>
+            Validates bank account parameter of record by custom rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidators.CustomBankAccountValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates bank account parameter of record by custom rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.CustomValidators.CustomPassNumberValidator">
+            <summary>
+            Validates pass number parameter of record by custom rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidators.CustomPassNumberValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates pass number parameter of record by custom rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.CustomValidators.CustomSerieOfPassNumberValidator">
+            <summary>
+            Validates serie of pass number parameter of record by custom rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidators.CustomSerieOfPassNumberValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates serie of pass number parameter of record by custom rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Consists a set of function for record validation according custom conditionals.
@@ -314,19 +356,6 @@
             <seealso cref="T:FileCabinetApp.IRecordValidator"/>
         </member>
         <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Validates record by default rules.
-            </summary>
-            <param name="record">The file cabinet record instance for validation.</param>
-            <returns>The result of record validation.</returns>
-        </member>
-        <member name="T:FileCabinetApp.DefaultValidator">
-            <summary>
-            Consists a set of function for record validation according dafault conditionals.
-            </summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Validates record by default rules.
             </summary>
@@ -667,6 +696,69 @@
             </summary>
             <param name="streamWriter">The stream writer.</param>
         </member>
+        <member name="T:FileCabinetApp.GeneralValidators.DateOfBirthValidator">
+            <summary>
+            Validates date of birth parameter of record by input rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.GeneralValidators.DateOfBirthValidator"/> class.
+            </summary>
+            <param name="minDate">Min date of birth parameter.</param>
+            <param name="maxDate">Max date of birth parameter.</param>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.DateOfBirthValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates date of birth parameter of record by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.GeneralValidators.FirstNameValidator">
+            <summary>
+            Validates the first name parameter of record by input rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.FirstNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.GeneralValidators.FirstNameValidator"/> class.
+            </summary>
+            <param name="min">Min length of the first name.</param>
+            <param name="max">Max length of the first name.</param>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.FirstNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates first name parameter of record by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.GeneralValidators.LastNameValidator">
+            <summary>
+            Validates the last name parameter of record by input rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.LastNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.GeneralValidators.LastNameValidator"/> class.
+            </summary>
+            <param name="min">Min length of the last name.</param>
+            <param name="max">Max length of the last name.</param>
+        </member>
+        <member name="M:FileCabinetApp.GeneralValidators.LastNameValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates last name parameter of record by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
@@ -772,6 +864,61 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidators.DefaultBankAccountValidator">
+            <summary>
+            Validates bank account parameter of record by default rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidators.DefaultBankAccountValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates bank account parameter of record by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidators.DefaultPassNumberValidator">
+            <summary>
+            Validates the pass number parameter of record by default rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidators.DefaultPassNumberValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates the pass number parameter of record by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidators.DefaultSerieOfPassNumberValidator">
+            <summary>
+            Validates the serie of pas number parameter by default rules.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidators.DefaultSerieOfPassNumberValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates the serie of pas number parameter by default rules.
+            </summary>
+            <param name="record">The record for validate.</param>
+            <returns>
+            Results of validation: success of validation and errors in verification.
+            </returns>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            Consists a set of function for record validation according dafault conditionals.
+            </summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator"/>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates record by default rules.
+            </summary>
+            <param name="record">The file cabinet record instance for validation.</param>
+            <returns>The result of record validation.</returns>
         </member>
         <member name="T:FileCabinetApp.StringConverter">
             <summary>

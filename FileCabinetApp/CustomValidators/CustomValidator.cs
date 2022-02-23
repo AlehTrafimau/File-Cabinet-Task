@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using FileCabinetApp.CustomValidators;
+using FileCabinetApp.GeneralValidators;
 
 namespace FileCabinetApp
 {
@@ -21,9 +22,9 @@ namespace FileCabinetApp
             bool hasError = true;
             List<Tuple<bool, string>> resultsOfValidation = new ()
             {
-                new CustomFirstNameValidator().ValidateParameters(record),
-                new CustomLastNameValidator().ValidateParameters(record),
-                new CustomBankAccountValidator().ValidateParameters(record),
+                new FirstNameValidator(5, 30).ValidateParameters(record),
+                new LastNameValidator(5, 30).ValidateParameters(record),
+                new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now.AddYears(-10)).ValidateParameters(record),
                 new CustomSerieOfPassNumberValidator().ValidateParameters(record),
                 new CustomPassNumberValidator().ValidateParameters(record),
                 new CustomBankAccountValidator().ValidateParameters(record),
@@ -35,6 +36,7 @@ namespace FileCabinetApp
                 {
                     hasError = false;
                     validateErrors.Append(i.Item2);
+                    validateErrors.Append('\n');
                 }
             }
 
