@@ -74,6 +74,11 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Data storage will take place in the memory of program.");
             }
+
+            if (args.Length == 1 && args[0].ToUpperInvariant() == "USE-STOPWATCH")
+            {
+                fileCabinetService = new ServiceMeter(fileCabinetService);
+            }
         }
 
         private static void Print(IEnumerable<FileCabinetRecord> records)
