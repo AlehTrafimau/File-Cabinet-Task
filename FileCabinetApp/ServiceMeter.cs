@@ -13,7 +13,10 @@ namespace FileCabinetApp
     /// </summary>
     internal class ServiceMeter : IFileCabinetService
     {
-        private IFileCabinetService service;
+        /// <summary>
+        /// The instance of current file cabinet service.
+        /// </summary>
+        protected IFileCabinetService service;
         private Stopwatch stopWatch = new ();
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="newRecord">The new record.</param>
         /// <returns>The Id number of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord newRecord)
+        public virtual int CreateRecord(FileCabinetRecord newRecord)
         {
             this.stopWatch.Restart();
             int newRecordId = this.service.CreateRecord(newRecord);
@@ -45,7 +48,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="editRecordId">The id of record for edit.</param>
         /// <param name="editedRecord">The edited paremeters of record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
+        public virtual void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
             this.stopWatch.Restart();
             this.service.EditRecord(editRecordId, editedRecord);
@@ -61,7 +64,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
             this.stopWatch.Restart();
             ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByDayOfBirth(birthDayParameter);
@@ -78,7 +81,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             this.stopWatch.Restart();
             ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByFirstName(firstName);
@@ -95,7 +98,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public virtual ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             this.stopWatch.Restart();
             ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByLastName(lastName);
@@ -111,7 +114,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of created records at the present time.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
+        public virtual ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             this.stopWatch.Restart();
             ReadOnlyCollection<FileCabinetRecord> result = this.service.GetRecords();
@@ -127,7 +130,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The count of created records.
         /// </returns>
-        public (int, int) GetStat()
+        public virtual (int, int) GetStat()
         {
             this.stopWatch.Restart();
             (int, int) result = this.service.GetStat();
@@ -145,14 +148,15 @@ namespace FileCabinetApp
         /// </returns>
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
-            throw new NotImplementedException();
+            FileCabinetServiceSnapshot newSnapshot = this.service.MakeSnapshot();
+            return newSnapshot;
         }
 
         /// <summary>
         /// Elemenates time of running remove opeation.
         /// </summary>
         /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId)
+        public virtual void RemoveRecord(int recordId)
         {
             this.stopWatch.Restart();
             this.service.RemoveRecord(recordId);
@@ -165,7 +169,7 @@ namespace FileCabinetApp
         /// Elemenates time of running remove opeation.
         /// </summary>
         /// <param name="snapshot"> The snapshot of import records.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot)
+        public virtual void Restore(FileCabinetServiceSnapshot snapshot)
         {
             this.stopWatch.Restart();
             this.service.Restore(snapshot);

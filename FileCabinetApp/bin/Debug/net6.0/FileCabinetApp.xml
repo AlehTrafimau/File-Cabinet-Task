@@ -912,9 +912,95 @@
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
         </member>
+        <member name="T:FileCabinetApp.ServiceLogger">
+            <summary>
+            Writes information about service operations to file system storage.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.#ctor(System.IO.StreamWriter,FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceLogger"/> class.
+            </summary>
+            <param name="streamWriter">The instance of stream writer.</param>
+            <param name="service">The instance of current file cabinet srvice.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes information about create operation to file system storage.
+            </summary>
+            <param name="newRecord">The new record.</param>
+            <returns>The Id number of the new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes information about edit operation to file system storage.
+            </summary>
+            <param name="editRecordId">The id of record for edit.</param>
+            <param name="editedRecord">The edited paremeters of record.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByDayOfBirth(System.String)">
+            <summary>
+            Writes information about find by date of birth operation to file system storage.
+            </summary>
+            <param name="birthDayParameter">The date parameter.</param>
+            <returns>
+            The list of records which consist of this birth date.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
+            <summary>
+            Writes information about find by first name operations to file system storage.
+            </summary>
+            <param name="firstName">The first name.</param>
+            <returns>
+            The list of records which consist of this first name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
+            <summary>
+            Writes information about find by last name operations to file system storage.
+            </summary>
+            <param name="lastName">The last name.</param>
+            <returns>
+            The list of records which consist of this last name.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
+            <summary>
+            Writes information about get record operation to file system storage.
+            </summary>
+            <returns>
+            The list of created records at the present time.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetStat">
+            <summary>
+            Writes information about get stat operation to file system storage.
+            </summary>
+            <returns>
+            The count of created records.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.RemoveRecord(System.Int32)">
+            <summary>
+            Writes information about remove record operation to file system storage.
+            </summary>
+            <param name="recordId"> The id if record for remove.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Writes information about restore operation to file system storage.
+            </summary>
+            <param name="snapshot"> The snapshot of import records.</param>
+        </member>
         <member name="T:FileCabinetApp.ServiceMeter">
             <summary>
             Elemenates time of running any operation with IFileCabinetRecord instance.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.ServiceMeter.service">
+            <summary>
+            The instance of current file cabinet service.
             </summary>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
