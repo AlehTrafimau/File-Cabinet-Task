@@ -85,10 +85,7 @@ namespace FileCabinetApp
         /// Makes the snapshot.
         /// </summary>
         /// <returns>The snapshot of current state of the cabinet service.</returns>
-        public FileCabinetServiceSnapshot MakeSnapshot()
-        {
-            return new FileCabinetServiceSnapshot(new FileCabinetRecord[] { new FileCabinetRecord() });
-        }
+        public FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
         /// Defragments records in file system repository.
