@@ -1,6 +1,8 @@
-﻿using FileCabinetApp.CustomValidators;
+﻿using System.Globalization;
+using FileCabinetApp.CustomValidators;
 using FileCabinetApp.DefaultValidators;
 using FileCabinetApp.GeneralValidators;
+using Microsoft.Extensions.Configuration;
 
 namespace FileCabinetApp
 {
@@ -149,9 +151,25 @@ namespace FileCabinetApp
         /// <returns>The new record validator.</returns>
         public IRecordValidator CreateDefault()
         {
-            this.FirstNameValidator = new FirstNameValidator(2, 60);
-            this.LastNameValidator = new LastNameValidator(2, 60);
-            this.DateOfBirthValidator = new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("FileCabinetSettings.json")
+                .Build();
+
+            var appConfig = builder.GetSection("default");
+
+            int minValueOfFirstName = int.Parse(appConfig.GetSection("firstName").GetSection("min").Value, CultureInfo.InvariantCulture);
+            int maxValueOfFirstName = int.Parse(appConfig.GetSection("firstName").GetSection("max").Value, CultureInfo.InvariantCulture);
+            this.FirstNameValidator = new FirstNameValidator(minValueOfFirstName, maxValueOfFirstName);
+
+            int minValueOfLastName = int.Parse(appConfig.GetSection("LastName").GetSection("min").Value, CultureInfo.InvariantCulture);
+            int maxValueOfLastName = int.Parse(appConfig.GetSection("LastName").GetSection("max").Value, CultureInfo.InvariantCulture);
+            this.LastNameValidator = new LastNameValidator(minValueOfLastName, maxValueOfLastName);
+
+            DateTime minValueOfDateOfBirth = DateTime.Parse(appConfig.GetSection("DateOfBirth").GetSection("from").Value, CultureInfo.InvariantCulture);
+            DateTime maxValueOfDateOfBirth = DateTime.Parse(appConfig.GetSection("DateOfBirth").GetSection("to").Value, CultureInfo.InvariantCulture);
+            this.DateOfBirthValidator = new DateOfBirthValidator(minValueOfDateOfBirth, maxValueOfDateOfBirth);
+
             this.SerieOfPassNumberValidator = new DefaultSerieOfPassNumberValidator();
             this.PassNumberValidator = new DefaultPassNumberValidator();
             this.BankAccountValidator = new DefaultBankAccountValidator();
@@ -166,9 +184,25 @@ namespace FileCabinetApp
         /// <returns>The new record validator.</returns>
         public IRecordValidator CreateCustom()
         {
-            this.FirstNameValidator = new FirstNameValidator(2, 30);
-            this.LastNameValidator = new LastNameValidator(2, 30);
-            this.DateOfBirthValidator = new DateOfBirthValidator(new DateTime(1950, 1, 1), DateTime.Now.AddYears(-10));
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("FileCabinetSettings.json")
+                .Build();
+
+            var appConfig = builder.GetSection("custom");
+
+            int minValueOfFirstName = int.Parse(appConfig.GetSection("firstName").GetSection("min").Value, CultureInfo.InvariantCulture);
+            int maxValueOfFirstName = int.Parse(appConfig.GetSection("firstName").GetSection("max").Value, CultureInfo.InvariantCulture);
+            this.FirstNameValidator = new FirstNameValidator(minValueOfFirstName, maxValueOfFirstName);
+
+            int minValueOfLastName = int.Parse(appConfig.GetSection("LastName").GetSection("min").Value, CultureInfo.InvariantCulture);
+            int maxValueOfLastName = int.Parse(appConfig.GetSection("LastName").GetSection("max").Value, CultureInfo.InvariantCulture);
+            this.LastNameValidator = new LastNameValidator(minValueOfLastName, maxValueOfLastName);
+
+            DateTime minValueOfDateOfBirth = DateTime.Parse(appConfig.GetSection("DateOfBirth").GetSection("from").Value, CultureInfo.InvariantCulture);
+            DateTime maxValueOfDateOfBirth = DateTime.Parse(appConfig.GetSection("DateOfBirth").GetSection("to").Value, CultureInfo.InvariantCulture);
+            this.DateOfBirthValidator = new DateOfBirthValidator(minValueOfDateOfBirth, maxValueOfDateOfBirth);
+
             this.SerieOfPassNumberValidator = new CustomSerieOfPassNumberValidator();
             this.PassNumberValidator = new CustomPassNumberValidator();
             this.BankAccountValidator = new CustomBankAccountValidator();

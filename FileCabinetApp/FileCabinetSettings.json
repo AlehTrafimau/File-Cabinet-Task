@@ -1,0 +1,30 @@
+{
+  "default": {
+          "firstName": {
+          "min": 2,
+          "max": 60
+           },
+          "lastName": {
+          "min": 2,
+          "max": 60
+           },
+          "dateOfBirth": {
+          "from": "1950/1/1",
+          "to": "2022/2/24"
+          }
+  },
+  "custom": {
+          "firstName": {
+          "min": 5,
+          "max": 80
+           },
+          "lastName": {
+          "min": 5,
+          "max": 80
+            },
+          "dateOfBirth": {
+          "from": "1950/1/1",
+          "to": "2012/2/24"
+           }
+  }
+}
