@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FileCabinetApp
 {
@@ -15,6 +11,9 @@ namespace FileCabinetApp
     internal class FileCabinetFileSystemService : IFileCabinetService
     {
         private const int BytesInRecord = 278;
+        private readonly Dictionary<string, List<long>> firstNameDictionary = new ();
+        private readonly Dictionary<string, List<long>> lastNameDictionary = new ();
+        private readonly Dictionary<string, List<long>> dateOfBirthDictionary = new ();
         private FileStream fileStream;
 
         /// <summary>
@@ -24,6 +23,7 @@ namespace FileCabinetApp
         public FileCabinetFileSystemService(FileStream fileStream)
         {
             this.fileStream = fileStream;
+            this.InitializeDictionaries();
         }
 
         /// <summary>
@@ -37,8 +37,12 @@ namespace FileCabinetApp
         {
             short isDeleted = 0;
             this.fileStream.Seek(0, SeekOrigin.End);
+            long recordPosition = this.fileStream.Position;
             int lastRecordInFile = (int)(this.fileStream.Position / BytesInRecord);
             newRecord.Id = lastRecordInFile + 1;
+            AddToDictionary(this.firstNameDictionary, newRecord.FirstName, recordPosition);
+            AddToDictionary(this.lastNameDictionary, newRecord.LastName, recordPosition);
+            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordPosition);
 
             byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
             Array.Resize(ref input, 2);
@@ -104,9 +108,9 @@ namespace FileCabinetApp
                 Console.WriteLine($"Invalid operation. The record #{editRecordId} is removed.");
                 this.fileStream.Seek(0, SeekOrigin.End);
                 isDeleted = 0;
-                byte[] inpu = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
-                Array.Resize(ref inpu, 2);
-                this.fileStream.Write(inpu, 0, inpu.Length);
+                byte[] recordStatus = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
+                Array.Resize(ref recordStatus, 2);
+                this.fileStream.Write(recordStatus, 0, recordStatus.Length);
             }
 
             byte[] input = Encoding.Default.GetBytes(editedRecord.Id.ToString(CultureInfo.InvariantCulture));
@@ -157,26 +161,24 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
-            List<FileCabinetRecord> resultOfSearch = new ();
+            List<FileCabinetRecord> findResult = new ();
 
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
             if (isDateTime)
             {
-                foreach (FileCabinetRecord currentRecord in allRecords)
+                string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                foreach (var currentRecordIndexInFile in this.dateOfBirthDictionary[correctFormatOfParameter])
                 {
-                    if (currentRecord.DateOfBirth == dayOfBirth)
-                    {
-                        resultOfSearch.Add(currentRecord);
-                    }
+                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
+                    findResult.Add(record);
                 }
 
-                return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
+                return new ReadOnlyCollection<FileCabinetRecord>(findResult);
             }
 
             Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
+            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
         }
 
         /// <summary>
@@ -188,18 +190,18 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
-            List<FileCabinetRecord> resultOfSearch = new ();
+            List<FileCabinetRecord> findResult = new ();
 
-            foreach (FileCabinetRecord record in allRecords)
+            if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                if (record.FirstName.ToUpperInvariant() == firstName.ToUpperInvariant())
+                foreach (var currentRecordIndexInFile in this.firstNameDictionary[firstName.ToUpperInvariant()])
                 {
-                    resultOfSearch.Add(record);
+                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
+                    findResult.Add(record);
                 }
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
+            return new ReadOnlyCollection<FileCabinetRecord>(findResult);
         }
 
         /// <summary>
@@ -211,18 +213,18 @@ namespace FileCabinetApp
         /// </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            ReadOnlyCollection<FileCabinetRecord> allRecords = this.GetRecords();
-            List<FileCabinetRecord> resultOfSearch = new ();
+            List<FileCabinetRecord> findResult = new ();
 
-            foreach (FileCabinetRecord record in allRecords)
+            if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                if (record.LastName.ToUpperInvariant() == lastName.ToUpperInvariant())
+                foreach (var currentRecordIndexInFile in this.lastNameDictionary[lastName.ToUpperInvariant()])
                 {
-                    resultOfSearch.Add(record);
+                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
+                    findResult.Add(record);
                 }
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(resultOfSearch);
+            return new ReadOnlyCollection<FileCabinetRecord>(findResult);
         }
 
         /// <summary>
@@ -331,6 +333,7 @@ namespace FileCabinetApp
             Array.Resize(ref input, 2);
             this.fileStream.Write(input, 0, input.Length);
             this.fileStream.Flush();
+            this.RemoveFromDictionaries(recordId);
             Console.WriteLine($"Record #{recordId} is removed.");
         }
 
@@ -363,6 +366,138 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"Data file processing is completed: {totalRecordsInRepo - validRecords.Count} of {totalRecordsInRepo} records were purged.");
+        }
+
+        private static void AddToDictionary(Dictionary<string, List<long>> dictionary, string key, long elementOfKey)
+        {
+            if (dictionary.ContainsKey(key.ToUpperInvariant()))
+            {
+                dictionary[key.ToUpperInvariant()].Add(elementOfKey);
+            }
+            else
+            {
+                dictionary.Add(key.ToUpperInvariant(), new List<long>() { elementOfKey });
+            }
+        }
+
+        private void RemoveFromDictionaries(int recordId)
+        {
+            long indexOfRecord = (recordId - 1) * BytesInRecord;
+            FileCabinetRecord removedRecord = this.ReadRecordFromFile(indexOfRecord);
+
+            string firstNameKey = removedRecord.FirstName.ToUpperInvariant();
+            this.firstNameDictionary[firstNameKey].Remove(indexOfRecord);
+
+            if (this.firstNameDictionary[firstNameKey].Count == 0)
+            {
+                this.firstNameDictionary.Remove(firstNameKey);
+            }
+
+            string lastNameKey = removedRecord.LastName.ToUpperInvariant();
+            this.lastNameDictionary[lastNameKey].Remove(indexOfRecord);
+
+            if (this.lastNameDictionary[lastNameKey].Count == 0)
+            {
+                this.lastNameDictionary.Remove(lastNameKey);
+            }
+
+            string dateOfBirthKey = removedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            this.dateOfBirthDictionary[dateOfBirthKey].Remove(indexOfRecord);
+
+            if (this.dateOfBirthDictionary[dateOfBirthKey].Count == 0)
+            {
+                this.dateOfBirthDictionary.Remove(dateOfBirthKey);
+            }
+        }
+
+        private void InitializeDictionaries()
+        {
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            long numberOfRecordInFile = this.fileStream.Length / BytesInRecord;
+            short isDeleted;
+            long startOfRecordByte = 0;
+
+            while (numberOfRecordInFile > 0)
+            {
+                startOfRecordByte = this.fileStream.Position;
+                byte[] array = new byte[2];
+                this.fileStream.Read(array, 0, array.Length);
+                isDeleted = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+                if (isDeleted == 1)
+                {
+                    this.fileStream.Seek(276, SeekOrigin.Current);
+                    numberOfRecordInFile--;
+                    continue;
+                }
+                else
+                {
+                    this.fileStream.Seek(4, SeekOrigin.Current);
+                }
+
+                Array.Resize(ref array, 120);
+                this.fileStream.Read(array, 0, array.Length);
+                string firstName = Encoding.Default.GetString(array).Trim(default(char));
+                AddToDictionary(this.firstNameDictionary, firstName, startOfRecordByte);
+
+                Array.Clear(array);
+                this.fileStream.Read(array, 0, array.Length);
+                string lastName = Encoding.Default.GetString(array).Trim(default(char));
+                AddToDictionary(this.lastNameDictionary, lastName, startOfRecordByte);
+
+                Array.Resize(ref array, 4);
+                this.fileStream.Read(array, 0, array.Length);
+                int day = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                this.fileStream.Read(array, 0, array.Length);
+                int month = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                this.fileStream.Read(array, 0, array.Length);
+                int year = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                DateTime dateOfBirth = new DateTime(year, month, day);
+                AddToDictionary(this.dateOfBirthDictionary, dateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), startOfRecordByte);
+                this.fileStream.Seek(20, SeekOrigin.Current);
+
+                numberOfRecordInFile--;
+            }
+        }
+
+        private FileCabinetRecord ReadRecordFromFile(long firstByteOfRecord)
+        {
+            FileCabinetRecord recordsFromFileSystem = new ();
+            this.fileStream.Seek(firstByteOfRecord + 2, SeekOrigin.Begin);
+
+            byte[] array = new byte[4];
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+            Array.Resize(ref array, 120);
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.FirstName = Encoding.Default.GetString(array).Trim(default(char));
+
+            Array.Clear(array);
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.LastName = Encoding.Default.GetString(array).Trim(default(char));
+
+            Array.Resize(ref array, 4);
+            this.fileStream.Read(array, 0, array.Length);
+            int day = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+            this.fileStream.Read(array, 0, array.Length);
+            int month = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+            this.fileStream.Read(array, 0, array.Length);
+            int year = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+            recordsFromFileSystem.DateOfBirth = new DateTime(year, month, day);
+
+            Array.Resize(ref array, 2);
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.SerieOfPassNumber = char.Parse(Encoding.Default.GetString(array).Trim(default(char)));
+
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.PassNumber = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+            Array.Resize(ref array, 16);
+            this.fileStream.Read(array, 0, array.Length);
+            recordsFromFileSystem.BankAccount = decimal.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+
+            return recordsFromFileSystem;
         }
     }
 }
