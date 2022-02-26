@@ -143,7 +143,7 @@
             Finds all records in the storage by special parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{FileCabinetApp.IRecordIterator})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
@@ -890,6 +890,27 @@
             <summary>
             Defragments records in file system repository.
             </summary>
+        </member>
+        <member name="T:FileCabinetApp.IRecordIterator">
+            <summary>
+            Contains of methods to iteration of data in the storage.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordIterator.GetNext">
+            <summary>
+            Returns the next record in current file cabinet storage.
+            </summary>
+            <returns>
+            The next record.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.IRecordIterator.HasMore">
+            <summary>
+            Stores information about exist of a record in the current storage.
+            </summary>
+            <returns>
+            True if the current storage has a next record, and false otherwise.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

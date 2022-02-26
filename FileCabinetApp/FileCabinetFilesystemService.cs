@@ -159,26 +159,24 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this birth date.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
+        public IRecordIterator FindByDayOfBirth(string birthDayParameter)
         {
-            List<FileCabinetRecord> findResult = new ();
-
+            IRecordIterator iterator = new FilesystemIterator();
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
-            if (isDateTime)
+            if (!isDateTime)
             {
-                string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-                foreach (var currentRecordIndexInFile in this.dateOfBirthDictionary[correctFormatOfParameter])
-                {
-                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
-                    findResult.Add(record);
-                }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(findResult);
+                Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
+                return iterator;
             }
 
-            Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+            string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
+            {
+                iterator = new FilesystemIterator(this.dateOfBirthDictionary, correctFormatOfParameter.ToUpperInvariant(), this.fileStream);
+            }
+
+            return iterator;
         }
 
         /// <summary>
@@ -188,20 +186,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this first name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IRecordIterator FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> findResult = new ();
+            IRecordIterator iterator = new FilesystemIterator();
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                foreach (var currentRecordIndexInFile in this.firstNameDictionary[firstName.ToUpperInvariant()])
-                {
-                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
-                    findResult.Add(record);
-                }
+                iterator = new FilesystemIterator(this.firstNameDictionary, firstName.ToUpperInvariant(), this.fileStream);
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(findResult);
+            return iterator;
         }
 
         /// <summary>
@@ -211,20 +205,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this last name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IRecordIterator FindByLastName(string lastName)
         {
-            List<FileCabinetRecord> findResult = new ();
+            IRecordIterator iterator = new FilesystemIterator();
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                foreach (var currentRecordIndexInFile in this.lastNameDictionary[lastName.ToUpperInvariant()])
-                {
-                    FileCabinetRecord record = this.ReadRecordFromFile(currentRecordIndexInFile);
-                    findResult.Add(record);
-                }
+                iterator = new FilesystemIterator(this.lastNameDictionary, lastName.ToUpperInvariant(), this.fileStream);
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(findResult);
+            return iterator;
         }
 
         /// <summary>

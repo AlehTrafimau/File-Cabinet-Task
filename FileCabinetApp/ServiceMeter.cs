@@ -64,10 +64,10 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public virtual ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
+        public virtual IRecordIterator FindByDayOfBirth(string birthDayParameter)
         {
             this.stopWatch.Restart();
-            ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByDayOfBirth(birthDayParameter);
+            IRecordIterator findResult = this.service.FindByDayOfBirth(birthDayParameter);
             this.stopWatch.Stop();
             TimeSpan timeSpan = this.stopWatch.Elapsed;
             Console.WriteLine($"FindByDayOfBirth method execution duration is {timeSpan.Ticks} ticks.");
@@ -81,10 +81,10 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public virtual ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public virtual IRecordIterator FindByFirstName(string firstName)
         {
             this.stopWatch.Restart();
-            ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByFirstName(firstName);
+            IRecordIterator findResult = this.service.FindByFirstName(firstName);
             this.stopWatch.Stop();
             TimeSpan timeSpan = this.stopWatch.Elapsed;
             Console.WriteLine($"FindByFirstName method execution duration is {timeSpan.Ticks} ticks.");
@@ -98,10 +98,10 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public virtual ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public virtual IRecordIterator FindByLastName(string lastName)
         {
             this.stopWatch.Restart();
-            ReadOnlyCollection<FileCabinetRecord> findResult = this.service.FindByLastName(lastName);
+            IRecordIterator findResult = this.service.FindByLastName(lastName);
             this.stopWatch.Stop();
             TimeSpan timeSpan = this.stopWatch.Elapsed;
             Console.WriteLine($"FindByLastName method execution duration is {timeSpan.Ticks} ticks.");

@@ -61,7 +61,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this first name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
+        public IRecordIterator FindByFirstName(string firstName);
 
         /// <summary>
         /// Finds the records by last name.
@@ -70,7 +70,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this last name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
+        public IRecordIterator FindByLastName(string lastName);
 
         /// <summary>
         /// Finds the records by birth day.
@@ -79,7 +79,7 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this birth date.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter);
+        public IRecordIterator FindByDayOfBirth(string birthDayParameter);
 
         /// <summary>
         /// Makes the snapshot.

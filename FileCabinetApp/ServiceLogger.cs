@@ -59,15 +59,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public override ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
+        public override IRecordIterator FindByDayOfBirth(string birthDayParameter)
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by day of birth with birth date = '{birthDayParameter}'");
-            ReadOnlyCollection<FileCabinetRecord> findResult = base.FindByDayOfBirth(birthDayParameter);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned {findResult.Count} records.");
+            IRecordIterator findResult = base.FindByDayOfBirth(birthDayParameter);
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records:");
 
-            foreach (var i in findResult)
+            while (findResult.HasMore())
             {
-                this.streamWriter.WriteLine($"Id = '{i.Id}', FirstName = '{i.FirstName}', LastName = '{i.LastName}', DateOfBirth = '{i.DateOfBirth}', SerieOfPassNumber = '{i.SerieOfPassNumber}', PassNumber = '{i.PassNumber}', BankAccount = '{i.BankAccount}'");
+                FileCabinetRecord record = findResult.GetNext();
+                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
             }
 
             this.streamWriter.Flush();
@@ -81,15 +82,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public override ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public override IRecordIterator FindByFirstName(string firstName)
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by first name with birth date = '{firstName}'");
-            ReadOnlyCollection<FileCabinetRecord> findResult = base.FindByFirstName(firstName);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned {findResult.Count} records.");
+            IRecordIterator findResult = base.FindByFirstName(firstName);
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records:");
 
-            foreach (var i in findResult)
+            while (findResult.HasMore())
             {
-                this.streamWriter.WriteLine($"Id = '{i.Id}', FirstName = '{i.FirstName}', LastName = '{i.LastName}', DateOfBirth = '{i.DateOfBirth}', SerieOfPassNumber = '{i.SerieOfPassNumber}', PassNumber = '{i.PassNumber}', BankAccount = '{i.BankAccount}'");
+                FileCabinetRecord record = findResult.GetNext();
+                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
             }
 
             this.streamWriter.Flush();
@@ -103,15 +105,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public override ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public override IRecordIterator FindByLastName(string lastName)
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by last name with birth date = '{lastName}'");
-            ReadOnlyCollection<FileCabinetRecord> findResult = base.FindByLastName(lastName);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned {findResult.Count} records.");
+            IRecordIterator findResult = base.FindByLastName(lastName);
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records.");
 
-            foreach (var i in findResult)
+            while (findResult.HasMore())
             {
-                this.streamWriter.WriteLine($"Id = '{i.Id}', FirstName = '{i.FirstName}', LastName = '{i.LastName}', DateOfBirth = '{i.DateOfBirth}', SerieOfPassNumber = '{i.SerieOfPassNumber}', PassNumber = '{i.PassNumber}', BankAccount = '{i.BankAccount}'");
+                FileCabinetRecord record = findResult.GetNext();
+                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
             }
 
             this.streamWriter.Flush();
