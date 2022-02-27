@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 
@@ -159,24 +160,35 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this birth date.
         /// </returns>
-        public IRecordIterator FindByDayOfBirth(string birthDayParameter)
+        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            IRecordIterator iterator = new FilesystemIterator();
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
             if (!isDateTime)
             {
                 Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-                return iterator;
+                return new FileCabinetRecord[1];
             }
 
             string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
             if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
             {
-                iterator = new FilesystemIterator(this.dateOfBirthDictionary, correctFormatOfParameter.ToUpperInvariant(), this.fileStream);
-            }
+                FilesystemEnumerable fileEnum = new FilesystemEnumerable(this.dateOfBirthDictionary[correctFormatOfParameter], this.fileStream);
 
-            return iterator;
+                List<FileCabinetRecord> result = new ();
+
+                foreach (FileCabinetRecord i in fileEnum)
+                {
+                    result.Add(i);
+                }
+
+                return result;
+            }
+            else
+            {
+                return new FileCabinetRecord[1];
+            }
         }
 
         /// <summary>
@@ -186,16 +198,23 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this first name.
         /// </returns>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            IRecordIterator iterator = new FilesystemIterator();
-
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                iterator = new FilesystemIterator(this.firstNameDictionary, firstName.ToUpperInvariant(), this.fileStream);
+                FilesystemEnumerable fileEnum = new FilesystemEnumerable(this.firstNameDictionary[firstName.ToUpperInvariant()], this.fileStream);
+
+                List<FileCabinetRecord> result = new ();
+
+                foreach (FileCabinetRecord i in fileEnum)
+                {
+                    result.Add(i);
+                }
+
+                return result;
             }
 
-            return iterator;
+            return new FileCabinetRecord[1];
         }
 
         /// <summary>
@@ -205,16 +224,23 @@ namespace FileCabinetApp
         /// <returns>
         /// The read only collection of records which consist of this last name.
         /// </returns>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            IRecordIterator iterator = new FilesystemIterator();
-
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                iterator = new FilesystemIterator(this.lastNameDictionary, lastName.ToUpperInvariant(), this.fileStream);
+                FilesystemEnumerable fileEnum = new FilesystemEnumerable(this.lastNameDictionary[lastName.ToUpperInvariant()], this.fileStream);
+
+                List<FileCabinetRecord> result = new ();
+
+                foreach (FileCabinetRecord i in fileEnum)
+                {
+                    result.Add(i);
+                }
+
+                return result;
             }
 
-            return iterator;
+            return new FileCabinetRecord[1];
         }
 
         /// <summary>
@@ -316,6 +342,12 @@ namespace FileCabinetApp
         /// <param name="recordId"> The id if record for remove.</param>
         public void RemoveRecord(int recordId)
         {
+            if (recordId <= 0)
+            {
+                Console.WriteLine("Invelid record ID");
+                return;
+            }
+
             int isDeleted = 1;
             long startByteOfRecordInFile = (recordId - 1) * BytesInRecord;
             this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);

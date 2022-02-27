@@ -151,16 +151,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            IRecordIterator iterator = new MemoryIterator();
+            List<FileCabinetRecord> recordsByKey = new ();
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                iterator = new MemoryIterator(this.firstNameDictionary, firstName.ToUpperInvariant());
+                recordsByKey = this.firstNameDictionary[firstName.ToUpperInvariant()];
             }
 
-            return iterator;
+            return recordsByKey;
         }
 
         /// <summary>Finds the records by last name.</summary>
@@ -168,16 +168,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            IRecordIterator iterator = new MemoryIterator();
+            List<FileCabinetRecord> recordsByKey = new ();
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                iterator = new MemoryIterator(this.lastNameDictionary, lastName.ToUpperInvariant());
+                recordsByKey = this.lastNameDictionary[lastName.ToUpperInvariant()];
             }
 
-            return iterator;
+            return recordsByKey;
         }
 
         /// <summary>Finds the records by birth day.</summary>
@@ -185,24 +185,24 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public IRecordIterator FindByDayOfBirth(string birthDayParameter)
+        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            IRecordIterator iterator = new MemoryIterator();
+            List<FileCabinetRecord> recordsByKey = new ();
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
             if (!isDateTime)
             {
                 Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-                return iterator;
+                return recordsByKey;
             }
 
             string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture).ToUpperInvariant();
-            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter))
+            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
             {
-                iterator = new MemoryIterator(this.dateOfBirthDictionary, correctFormatOfParameter);
+                recordsByKey = this.dateOfBirthDictionary[correctFormatOfParameter];
             }
 
-            return iterator;
+            return recordsByKey;
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
