@@ -82,7 +82,7 @@ namespace FileCabinetApp.CommandHandlers
                     return;
             }
 
-            if (resultOfSearch != null)
+            if (resultOfSearch != Array.Empty<FileCabinetRecord>())
             {
                 this.printer(resultOfSearch);
             }

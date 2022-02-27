@@ -761,12 +761,6 @@
             </summary>
             <returns>The enummerator for current collection.</returns>
         </member>
-        <member name="M:FileCabinetApp.FilesystemEnumerable.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            Gets the enummerator for current collection.
-            </summary>
-            <returns>The enummerator for current collection.</returns>
-        </member>
         <member name="T:FileCabinetApp.FilesystemIterator">
             <summary>
             Contains of methods to iteration of data in the storage.

@@ -167,7 +167,7 @@ namespace FileCabinetApp
             if (!isDateTime)
             {
                 Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-                return new FileCabinetRecord[1];
+                return Array.Empty<FileCabinetRecord>();
             }
 
             string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -185,10 +185,8 @@ namespace FileCabinetApp
 
                 return result;
             }
-            else
-            {
-                return new FileCabinetRecord[1];
-            }
+
+            return Array.Empty<FileCabinetRecord>();
         }
 
         /// <summary>
@@ -214,7 +212,7 @@ namespace FileCabinetApp
                 return result;
             }
 
-            return new FileCabinetRecord[1];
+            return Array.Empty<FileCabinetRecord>();
         }
 
         /// <summary>
@@ -240,7 +238,7 @@ namespace FileCabinetApp
                 return result;
             }
 
-            return new FileCabinetRecord[1];
+            return new List<FileCabinetRecord>();
         }
 
         /// <summary>
