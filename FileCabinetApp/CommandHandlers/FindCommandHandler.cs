@@ -64,7 +64,7 @@ namespace FileCabinetApp.CommandHandlers
                 return;
             }
 
-            ReadOnlyCollection<FileCabinetRecord> resultOfSearch;
+            IEnumerable<FileCabinetRecord> resultOfSearch;
 
             switch (command)
             {
@@ -82,9 +82,9 @@ namespace FileCabinetApp.CommandHandlers
                     return;
             }
 
-            if (resultOfSearch.Count != 0)
+            if (resultOfSearch != Array.Empty<FileCabinetRecord>())
             {
-                this.printer(resultOfSearch.ToArray());
+                this.printer(resultOfSearch);
             }
             else
             {

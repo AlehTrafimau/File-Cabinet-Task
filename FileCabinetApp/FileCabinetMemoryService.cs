@@ -24,7 +24,7 @@ namespace FileCabinetApp
 
             AddToDictionary(this.firstNameDictionary, newRecord.FirstName, newRecord);
             AddToDictionary(this.lastNameDictionary, newRecord.LastName, newRecord);
-            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecord);
+            AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), newRecord);
 
             return newRecord.Id;
         }
@@ -44,7 +44,7 @@ namespace FileCabinetApp
 
             RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, recordId);
             RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, recordId);
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), recordId);
+            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordId);
             this.usersRecords.RemoveAt(indexOfRemoveRecord);
             Console.WriteLine($"Record #{recordId} is removed.");
         }
@@ -106,7 +106,7 @@ namespace FileCabinetApp
 
                     AddToDictionary(this.firstNameDictionary, newRecords[i].FirstName, newRecords[i]);
                     AddToDictionary(this.lastNameDictionary, newRecords[i].LastName, newRecords[i]);
-                    AddToDictionary(this.dateOfBirthDictionary, newRecords[i].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i]);
+                    AddToDictionary(this.dateOfBirthDictionary, newRecords[i].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), newRecords[i]);
                 }
                 else
                 {
@@ -117,8 +117,8 @@ namespace FileCabinetApp
                     RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRecord].LastName, newRecords[i].Id);
                     AddToDictionary(this.lastNameDictionary, newRecords[i].LastName, newRecords[i]);
 
-                    RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRecord].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i].Id);
-                    AddToDictionary(this.dateOfBirthDictionary, newRecords[i].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), newRecords[i]);
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), newRecords[i].Id);
+                    AddToDictionary(this.dateOfBirthDictionary, newRecords[i].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), newRecords[i]);
 
                     this.usersRecords[indexOfRecord] = newRecords[i];
                 }
@@ -139,8 +139,8 @@ namespace FileCabinetApp
             RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[recordIndex].LastName, editedRecord.Id);
             AddToDictionary(this.lastNameDictionary, editedRecord.LastName, editedRecord);
 
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[recordIndex].DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord.Id);
-            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture), editedRecord);
+            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[recordIndex].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord.Id);
+            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord);
 
             this.usersRecords[recordIndex] = editedRecord;
             Console.WriteLine($"Record #{editedRecord.Id} is updated");
@@ -151,16 +151,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this first name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> result = new ();
+            List<FileCabinetRecord> recordsByKey = new ();
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                result = this.firstNameDictionary[firstName.ToUpperInvariant()];
+                recordsByKey = this.firstNameDictionary[firstName.ToUpperInvariant()];
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(result);
+            return recordsByKey;
         }
 
         /// <summary>Finds the records by last name.</summary>
@@ -168,18 +168,16 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this last name.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            List<FileCabinetRecord> result = new ();
-            foreach (FileCabinetRecord currentRecord in this.usersRecords)
+            List<FileCabinetRecord> recordsByKey = new ();
+
+            if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                if (currentRecord.LastName != null && currentRecord.LastName.ToUpperInvariant() == lastName.ToUpperInvariant())
-                {
-                    result.Add(currentRecord);
-                }
+                recordsByKey = this.lastNameDictionary[lastName.ToUpperInvariant()];
             }
 
-            return new ReadOnlyCollection<FileCabinetRecord>(result);
+            return recordsByKey;
         }
 
         /// <summary>Finds the records by birth day.</summary>
@@ -187,26 +185,24 @@ namespace FileCabinetApp
         /// <returns>
         /// The list of records which consist of this birth date.
         /// </returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
+        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
         {
-            List<FileCabinetRecord> result = new ();
+            List<FileCabinetRecord> recordsByKey = new ();
             bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
 
-            if (isDateTime)
+            if (!isDateTime)
             {
-                foreach (FileCabinetRecord currentRecord in this.usersRecords)
-                {
-                    if (currentRecord.DateOfBirth == dayOfBirth)
-                    {
-                        result.Add(currentRecord);
-                    }
-                }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(result);
+                Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
+                return recordsByKey;
             }
 
-            Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-            return new ReadOnlyCollection<FileCabinetRecord>(result);
+            string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture).ToUpperInvariant();
+            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
+            {
+                recordsByKey = this.dateOfBirthDictionary[correctFormatOfParameter];
+            }
+
+            return recordsByKey;
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
