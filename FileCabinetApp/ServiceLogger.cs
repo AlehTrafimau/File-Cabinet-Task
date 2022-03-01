@@ -53,6 +53,17 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Writes information about edit operation to file system storage.
+        /// </summary>
+        /// <param name="insertRecord">The id of record for edit.</param>
+        public override void InsertRecord(FileCabinetRecord insertRecord)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Insert() with Id = '{insertRecord.Id}', FirstName = '{insertRecord.FirstName}', LastName = '{insertRecord.LastName}', DateOfBirth = '{insertRecord.DateOfBirth}', SerieOfPassNumber = '{insertRecord.SerieOfPassNumber}', PassNumber = '{insertRecord.PassNumber}', BankAccount = '{insertRecord.BankAccount}'");
+            base.InsertRecord(insertRecord);
+            this.streamWriter.Flush();
+        }
+
+        /// <summary>
         /// Writes information about find by date of birth operation to file system storage.
         /// </summary>
         /// <param name="birthDayParameter">The date parameter.</param>

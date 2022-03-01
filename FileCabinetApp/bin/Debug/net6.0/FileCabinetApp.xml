@@ -201,6 +201,24 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.InsertCommandHandler">
+            <summary>
+            dfdf.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.InsertCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+            <param name="recordValidator">Sets rules of validation.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handlings the input request or transmits further.
+            </summary>
+            <param name="handlingRequest">The input request.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
             <summary>
             Display all records in the storage.
@@ -430,6 +448,12 @@
             The Id number of the new record in the default storage.
             </returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Inserts the new record to the current storage.
+            </summary>
+            <param name="insertRecord">The record for insert.</param>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
             <summary>
             Edits the exist record by Id number.
@@ -546,6 +570,12 @@
             Restores records from file system to this list of users records.
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Inserts the new record to the current storage.
+            </summary>
+            <param name="insertRecord">The record for insert.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
             <summary>Edits the exist record by Id number.</summary>
@@ -989,6 +1019,12 @@
             Defragments records in file system repository.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Inserts the new record to the current storage.
+            </summary>
+            <param name="insertRecord">The record for insert.</param>
+        </member>
         <member name="T:FileCabinetApp.IRecordIterator">
             <summary>
             Contains of methods to iteration of data in the storage.
@@ -1089,6 +1125,12 @@
             </summary>
             <param name="editRecordId">The id of record for edit.</param>
             <param name="editedRecord">The edited paremeters of record.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes information about edit operation to file system storage.
+            </summary>
+            <param name="insertRecord">The id of record for edit.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.FindByDayOfBirth(System.String)">
             <summary>
@@ -1218,6 +1260,12 @@
             The count of created records.
             </returns>
         </member>
+        <member name="M:FileCabinetApp.ServiceMeter.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Elemenates time of running insert operation.
+            </summary>
+            <param name="insertRecord">The record for insert to current storage.</param>
+        </member>
         <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
             <summary>
             Makes the snapshot.
@@ -1270,6 +1318,13 @@
             </summary>
             <param name="source">The source.</param>
             <returns>The result of convert to short type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.IntegerConvert(System.String)">
+            <summary>
+            Converts string source to int type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to int type.</returns>
         </member>
         <member name="M:FileCabinetApp.StringConverter.DecimalConvert(System.String)">
             <summary>

@@ -125,6 +125,29 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Inserts the new record to the current storage.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert.</param>
+        public void InsertRecord(FileCabinetRecord insertRecord)
+        {
+            if (this.usersRecords.Count >= insertRecord.Id)
+            {
+                this.usersRecords.Insert(insertRecord.Id - 1, insertRecord);
+                AddToDictionary(this.firstNameDictionary, insertRecord.FirstName, insertRecord);
+                AddToDictionary(this.lastNameDictionary, insertRecord.LastName, insertRecord);
+                AddToDictionary(this.dateOfBirthDictionary, insertRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), insertRecord);
+                for (int i = insertRecord.Id; i < this.usersRecords.Count; i++)
+                {
+                    this.usersRecords[i].Id += 1;
+                }
+            }
+            else
+            {
+                this.CreateRecord(insertRecord);
+            }
+        }
+
         /// <summary>Edits the exist record by Id number.</summary>
         /// <param name="editRecordId">The id of record for edit.</param>
         /// <param name="editedRecord">The edited paremeters of record.</param>
@@ -220,6 +243,10 @@ namespace FileCabinetApp
         private static void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, int recordId)
         {
             key = key.ToUpperInvariant();
+            if (!dictionary.ContainsKey(key))
+            {
+                return;
+            }
 
             for (int i = 0; i < dictionary[key].Count; i++)
             {

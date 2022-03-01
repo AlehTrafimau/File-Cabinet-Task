@@ -36,7 +36,7 @@ namespace FileCabinetApp
         /// </returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            short isDeleted = 0;
+            short statusOfRecord = 0;
             this.fileStream.Seek(0, SeekOrigin.End);
             long recordPosition = this.fileStream.Position;
             int lastRecordInFile = (int)(this.fileStream.Position / BytesInRecord);
@@ -44,49 +44,52 @@ namespace FileCabinetApp
             AddToDictionary(this.firstNameDictionary, newRecord.FirstName, recordPosition);
             AddToDictionary(this.lastNameDictionary, newRecord.LastName, recordPosition);
             AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordPosition);
-
-            byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.FirstName);
-            Array.Resize(ref input, 120);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.LastName);
-            Array.Resize(ref input, 120);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Day.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Month.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Year.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.SerieOfPassNumber.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.PassNumber.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(newRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 16);
-            this.fileStream.Write(input, 0, input.Length);
-            this.fileStream.Flush();
+            this.WriteRecordToFile(newRecord, statusOfRecord);
 
             return newRecord.Id;
+        }
+
+        /// <summary>
+        /// Inserts the new record to the current storage.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert.</param>
+        public void InsertRecord(FileCabinetRecord insertRecord)
+        {
+            long firstByteInsertRecordInFile = (insertRecord.Id - 1) * BytesInRecord;
+            this.fileStream.Seek(firstByteInsertRecordInFile, SeekOrigin.Begin);
+            List<(FileCabinetRecord, bool)> recordsAfterInsertRecord = new ();
+            while (this.fileStream.Position != this.fileStream.Length)
+            {
+                var record = this.ReadRecordFromFile(firstByteInsertRecordInFile);
+                recordsAfterInsertRecord.Add(record);
+                firstByteInsertRecordInFile += BytesInRecord;
+                this.RemoveFromDictionaries(record.Item1.Id);
+            }
+
+            firstByteInsertRecordInFile = (insertRecord.Id - 1) * BytesInRecord;
+            this.fileStream.Seek(firstByteInsertRecordInFile, SeekOrigin.Begin);
+            this.WriteRecordToFile(insertRecord, 0);
+            AddToDictionary(this.firstNameDictionary, insertRecord.FirstName, firstByteInsertRecordInFile);
+            AddToDictionary(this.lastNameDictionary, insertRecord.LastName, firstByteInsertRecordInFile);
+            AddToDictionary(this.dateOfBirthDictionary, insertRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), firstByteInsertRecordInFile);
+
+            foreach (var i in recordsAfterInsertRecord)
+            {
+                long recordPosition = this.fileStream.Position;
+                i.Item1.Id += 1;
+                if (i.Item2)
+                {
+                    this.WriteRecordToFile(i.Item1, 1);
+                }
+                else
+                {
+                    this.WriteRecordToFile(i.Item1, 0);
+                }
+
+                AddToDictionary(this.firstNameDictionary, i.Item1.FirstName, recordPosition);
+                AddToDictionary(this.lastNameDictionary, i.Item1.LastName, recordPosition);
+                AddToDictionary(this.dateOfBirthDictionary, i.Item1.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordPosition);
+            }
         }
 
         /// <summary>
@@ -97,59 +100,27 @@ namespace FileCabinetApp
         public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
         {
             long startByteOfRecordInFile = (editRecordId - 1) * BytesInRecord;
+            this.RemoveFromDictionaries(editRecordId);
             this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
+            long recordPosition = this.fileStream.Position;
             editedRecord.Id = editRecordId;
 
             byte[] array = new byte[2];
             this.fileStream.Read(array, 0, array.Length);
-            int isDeleted = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+            short statusOfRecord = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
 
-            if (isDeleted == 1)
+            if (statusOfRecord == 1)
             {
                 Console.WriteLine($"Invalid operation. The record #{editRecordId} is removed.");
                 this.fileStream.Seek(0, SeekOrigin.End);
-                isDeleted = 0;
-                byte[] recordStatus = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
-                Array.Resize(ref recordStatus, 2);
-                this.fileStream.Write(recordStatus, 0, recordStatus.Length);
+                statusOfRecord = 0;
             }
 
-            byte[] input = Encoding.Default.GetBytes(editedRecord.Id.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.FirstName);
-            Array.Resize(ref input, 120);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.LastName);
-            Array.Resize(ref input, 120);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Day.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Month.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.DateOfBirth.Year.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 4);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.SerieOfPassNumber.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.PassNumber.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-
-            input = Encoding.Default.GetBytes(editedRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 16);
-            this.fileStream.Write(input, 0, input.Length);
-
+            this.fileStream.Seek(-2, SeekOrigin.Current);
+            this.WriteRecordToFile(editedRecord, statusOfRecord);
+            AddToDictionary(this.firstNameDictionary, editedRecord.FirstName, recordPosition);
+            AddToDictionary(this.lastNameDictionary, editedRecord.LastName, recordPosition);
+            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordPosition);
             Console.WriteLine($"Record #{editRecordId} is updated");
         }
 
@@ -252,55 +223,27 @@ namespace FileCabinetApp
             List<FileCabinetRecord> recordsFromFileSystem = new ();
             this.fileStream.Seek(0, SeekOrigin.Begin);
             long numberOfRecordInFile = this.fileStream.Length / BytesInRecord;
-            short isDeleted;
+            short statusOfRecord;
 
             while (numberOfRecordInFile > 0)
             {
-                FileCabinetRecord currentRecord = new ();
                 byte[] array = new byte[2];
                 this.fileStream.Read(array, 0, array.Length);
-                isDeleted = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                statusOfRecord = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
 
-                if (isDeleted == 1)
+                if (statusOfRecord == 1)
                 {
                     this.fileStream.Seek(276, SeekOrigin.Current);
                     numberOfRecordInFile--;
                     continue;
                 }
 
-                Array.Resize(ref array, 4);
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+                var currentRecord = this.ReadRecordFromFile(this.fileStream.Position - 2);
+                if (!currentRecord.Item2)
+                {
+                    recordsFromFileSystem.Add(currentRecord.Item1);
+                }
 
-                Array.Resize(ref array, 120);
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.FirstName = Encoding.Default.GetString(array).Trim(default(char));
-
-                Array.Clear(array);
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.LastName = Encoding.Default.GetString(array).Trim(default(char));
-
-                Array.Resize(ref array, 4);
-                this.fileStream.Read(array, 0, array.Length);
-                int day = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-                this.fileStream.Read(array, 0, array.Length);
-                int month = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-                this.fileStream.Read(array, 0, array.Length);
-                int year = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-                currentRecord.DateOfBirth = new DateTime(year, month, day);
-
-                Array.Resize(ref array, 2);
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.SerieOfPassNumber = char.Parse(Encoding.Default.GetString(array).Trim(default(char)));
-
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.PassNumber = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-
-                Array.Resize(ref array, 16);
-                this.fileStream.Read(array, 0, array.Length);
-                currentRecord.BankAccount = decimal.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-
-                recordsFromFileSystem.Add(currentRecord);
                 numberOfRecordInFile--;
             }
 
@@ -403,10 +346,17 @@ namespace FileCabinetApp
         private void RemoveFromDictionaries(int recordId)
         {
             long indexOfRecord = (recordId - 1) * BytesInRecord;
-            FileCabinetRecord removedRecord = this.ReadRecordFromFile(indexOfRecord);
-
+            FileCabinetRecord removedRecord = this.ReadRecordFromFile(indexOfRecord).Item1;
             string firstNameKey = removedRecord.FirstName.ToUpperInvariant();
-            this.firstNameDictionary[firstNameKey].Remove(indexOfRecord);
+
+            if (this.firstNameDictionary.ContainsKey(firstNameKey))
+            {
+                this.firstNameDictionary[firstNameKey].Remove(indexOfRecord);
+            }
+            else
+            {
+                return;
+            }
 
             if (this.firstNameDictionary[firstNameKey].Count == 0)
             {
@@ -435,7 +385,7 @@ namespace FileCabinetApp
             this.fileStream.Seek(0, SeekOrigin.Begin);
             long numberOfRecordInFile = this.fileStream.Length / BytesInRecord;
             short isDeleted;
-            long startOfRecordByte = 0;
+            long startOfRecordByte;
 
             while (numberOfRecordInFile > 0)
             {
@@ -480,12 +430,20 @@ namespace FileCabinetApp
             }
         }
 
-        private FileCabinetRecord ReadRecordFromFile(long firstByteOfRecord)
+        private (FileCabinetRecord, bool) ReadRecordFromFile(long firstByteOfRecord)
         {
             FileCabinetRecord recordsFromFileSystem = new ();
-            this.fileStream.Seek(firstByteOfRecord + 2, SeekOrigin.Begin);
+            bool isRemoved = false;
+            this.fileStream.Seek(firstByteOfRecord, SeekOrigin.Begin);
+            byte[] array = new byte[2];
+            this.fileStream.Read(array, 0, array.Length);
+            int statusOfRecord = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
+            if (statusOfRecord == 1)
+            {
+                isRemoved = true;
+            }
 
-            byte[] array = new byte[4];
+            Array.Resize(ref array, 4);
             this.fileStream.Read(array, 0, array.Length);
             recordsFromFileSystem.Id = int.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
 
@@ -517,7 +475,51 @@ namespace FileCabinetApp
             this.fileStream.Read(array, 0, array.Length);
             recordsFromFileSystem.BankAccount = decimal.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
 
-            return recordsFromFileSystem;
+            return (recordsFromFileSystem, isRemoved);
+        }
+
+        private void WriteRecordToFile(FileCabinetRecord newRecord, short statusOfRecord)
+        {
+            byte[] input = Encoding.Default.GetBytes(statusOfRecord.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.Id.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.FirstName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.LastName);
+            Array.Resize(ref input, 120);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Day.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Month.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.DateOfBirth.Year.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 4);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.SerieOfPassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.PassNumber.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 2);
+            this.fileStream.Write(input, 0, input.Length);
+
+            input = Encoding.Default.GetBytes(newRecord.BankAccount.ToString(CultureInfo.InvariantCulture));
+            Array.Resize(ref input, 16);
+            this.fileStream.Write(input, 0, input.Length);
+            this.fileStream.Flush();
         }
     }
 }

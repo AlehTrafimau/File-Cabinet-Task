@@ -82,6 +82,28 @@
         }
 
         /// <summary>
+        /// Converts string source to int type.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>The result of convert to int type.</returns>
+        public static Tuple<bool, string, int> IntegerConvert(string source)
+        {
+            bool convertToShort = int.TryParse(source, out int intTypeNumber);
+            Tuple<bool, string, int> result;
+
+            if (convertToShort)
+            {
+                result = new (true, string.Empty, intTypeNumber);
+            }
+            else
+            {
+                result = new (false, "this parameter is not int type number", intTypeNumber);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Convert string source to decimal type.
         /// </summary>
         /// <param name="source">The source.</param>

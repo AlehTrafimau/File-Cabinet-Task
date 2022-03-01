@@ -110,6 +110,7 @@ namespace FileCabinetApp
             var statHandler = new StatCommandHandler(fileCabinetService);
             var findHandler = new FindCommandHandler(fileCabinetService, Print);
             var importHandler = new ImportCommandHandler(fileCabinetService);
+            var insertHandler = new InsertCommandHandler(fileCabinetService, recordValidator);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var listHandler = new ListCommandHandler(fileCabinetService, Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
@@ -121,7 +122,8 @@ namespace FileCabinetApp
             removeHandler.SetNext(statHandler);
             statHandler.SetNext(findHandler);
             findHandler.SetNext(importHandler);
-            importHandler.SetNext(exportHandler);
+            importHandler.SetNext(insertHandler);
+            insertHandler.SetNext(exportHandler);
             exportHandler.SetNext(listHandler);
             listHandler.SetNext(purgeHandler);
             purgeHandler.SetNext(exitHandler);

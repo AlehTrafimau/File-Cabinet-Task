@@ -94,5 +94,11 @@ namespace FileCabinetApp
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Inserts the new record to the current storage.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert.</param>
+        public void InsertRecord(FileCabinetRecord insertRecord);
     }
 }

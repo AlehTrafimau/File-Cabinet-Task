@@ -141,6 +141,19 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Elemenates time of running insert operation.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert to current storage.</param>
+        public virtual void InsertRecord(FileCabinetRecord insertRecord)
+        {
+            this.stopWatch.Restart();
+            this.service.InsertRecord(insertRecord);
+            this.stopWatch.Stop();
+            TimeSpan timeSpan = this.stopWatch.Elapsed;
+            Console.WriteLine($"Insert method execution duration is {timeSpan.Ticks} ticks.");
+        }
+
+        /// <summary>
         /// Makes the snapshot.
         /// </summary>
         /// <returns>
