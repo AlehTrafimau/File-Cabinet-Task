@@ -43,6 +43,11 @@ namespace FileCabinetApp
             return newRecordId;
         }
 
+        public void Delete(string fieldName, string value)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Elemenates time of running edit operation.
         /// </summary>

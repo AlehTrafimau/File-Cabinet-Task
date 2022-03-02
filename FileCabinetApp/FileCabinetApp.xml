@@ -86,6 +86,23 @@
             </summary>
             <param name="records">The sequence of record for display.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler">
+            <summary>
+            Deletes record from current storage by input conditions.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DeleteCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DeleteCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handlings the input request or transmits further.
+            </summary>
+            <param name="handlingRequest">The input request.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
             <summary>
             Edits record note in sevice according input ID.
@@ -529,6 +546,13 @@
             Defragments records in file system repository.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Delete(System.String,System.String)">
+            <summary>
+            Deletes record from current storage by input conditions.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service to create, storage, edit, find and display records about users.
@@ -602,6 +626,13 @@
             <returns>
             The list of records which consist of this birth date.
             </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Delete(System.String,System.String)">
+            <summary>
+            Deletes record from current storage by input conditions.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -1024,6 +1055,11 @@
             Inserts the new record to the current storage.
             </summary>
             <param name="insertRecord">The record for insert.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Delete(System.String,System.String)">
+            <summary>
+            fdf.
+            </summary>
         </member>
         <member name="T:FileCabinetApp.IRecordIterator">
             <summary>

@@ -100,5 +100,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="insertRecord">The record for insert.</param>
         public void InsertRecord(FileCabinetRecord insertRecord);
+
+        /// <summary>
+        /// fdf.
+        /// </summary>
+        public void Delete(string fieldName, string value);
     }
 }

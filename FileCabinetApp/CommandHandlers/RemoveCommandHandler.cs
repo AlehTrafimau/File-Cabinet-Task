@@ -46,11 +46,6 @@ namespace FileCabinetApp.CommandHandlers
             if (parameters != string.Empty && Regex.IsMatch(parameters, @"^(0*[1-9]{1}\d*)$"))
             {
                 requestedIdRecord = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (this.fileCabinetService.GetStat().Item1 < requestedIdRecord || requestedIdRecord < 1)
-                {
-                    Console.WriteLine($"#{requestedIdRecord} record is not found");
-                    return;
-                }
             }
 
             this.fileCabinetService.RemoveRecord(requestedIdRecord);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 
 namespace FileCabinetApp
 {
@@ -18,7 +19,7 @@ namespace FileCabinetApp
         /// <returns>The Id number of the new record.</returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            newRecord.Id = this.usersRecords.Count + 1;
+            newRecord.Id = this.usersRecords.Count > 0 ? this.usersRecords[^1].Id + 1 : 1;
 
             this.usersRecords.Add(newRecord);
 
@@ -35,10 +36,20 @@ namespace FileCabinetApp
         /// <param name="recordId"> The id if record for remove.</param>
         public void RemoveRecord(int recordId)
         {
-            int indexOfRemoveRecord = recordId - 1;
-            if (this.usersRecords[indexOfRemoveRecord].Id != recordId)
+            int indexOfRemoveRecord = -1;
+
+            for (int i = 0; i < this.usersRecords.Count; i++)
             {
-                Console.WriteLine($"Record #{recordId} doesn't exists.");
+                if (this.usersRecords[i].Id == recordId)
+                {
+                    indexOfRemoveRecord = i;
+                    break;
+                }
+            }
+
+            if (indexOfRemoveRecord == -1)
+            {
+                Console.WriteLine($"Record #{recordId} doesn't exists");
                 return;
             }
 
@@ -98,7 +109,7 @@ namespace FileCabinetApp
 
             for (int i = 0; i < newRecords.Count; i++)
             {
-                int lastElementId = this.usersRecords.Count;
+                int lastElementId = this.usersRecords.Count > 0 ? this.usersRecords[^1].Id : 0;
                 if (newRecords[i].Id > lastElementId)
                 {
                     newRecords[i].Id = lastElementId + 1;
@@ -226,6 +237,168 @@ namespace FileCabinetApp
             }
 
             return recordsByKey;
+        }
+
+        /// <summary>
+        /// Deletes record from current storage by input conditions.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public void Delete(string fieldName, string value)
+        {
+            if (fieldName == null || value == null)
+            {
+                Console.WriteLine("Parameters are invalid");
+                return;
+            }
+
+            void DeleteById(params int[] recordsId)
+            {
+                foreach (var id in recordsId)
+                {
+                    int indexOfRemoveRecord = -1;
+
+                    for (int i = 0; i < this.usersRecords.Count; i++)
+                    {
+                        if (this.usersRecords[i].Id == id)
+                        {
+                            indexOfRemoveRecord = i;
+                            break;
+                        }
+                    }
+
+                    if (indexOfRemoveRecord == -1)
+                    {
+                        Console.WriteLine($"Record #{id} doesn't exists");
+                        return;
+                    }
+
+                    RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, id);
+                    RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, id);
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), id);
+                    this.usersRecords.RemoveAt(indexOfRemoveRecord);
+                }
+            }
+
+            static void PrintMessage(int[] recordsId)
+            {
+                string resultMessage = "Record ";
+                foreach (var i in recordsId)
+                {
+                    resultMessage += $"#{i} ";
+                }
+
+                Console.WriteLine(resultMessage + "are deleted");
+            }
+
+            switch (fieldName)
+            {
+                case "ID":
+                    bool isDigit = int.TryParse(value, out int valueOfId);
+                    if (isDigit)
+                    {
+                        DeleteById(valueOfId);
+                        Console.WriteLine($"Record #{valueOfId} is deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Id value must be a digit");
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    if (this.firstNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        int[] result = this.firstNameDictionary[value.ToUpperInvariant()].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this first name are not found");
+                    }
+
+                    break;
+                case "LASTNAME":
+                    if (this.lastNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        int[] result = this.lastNameDictionary[value.ToUpperInvariant()].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this last name are not found");
+                    }
+
+                    break;
+                case "DATEOFBIRTH":
+                    Tuple<bool, string, DateTime> date = StringConverter.DateTimeConvert(value);
+                    string dateOfBirth = " ";
+                    if (date.Item1)
+                    {
+                        dateOfBirth = date.Item3.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+                    if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    {
+                        int[] result = this.dateOfBirthDictionary[dateOfBirth].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this field are not found");
+                    }
+
+                    break;
+                case "SERIEOFPASSNUMBER":
+                    Tuple<bool, string, char> serieOfPassnumber = StringConverter.CharConvert(value);
+                    if (serieOfPassnumber.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.SerieOfPassNumber == serieOfPassnumber.Item3).Select(person => person.Id).ToArray<int>();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(serieOfPassnumber.Item2);
+                    }
+
+                    break;
+                case "PASSNUMBER":
+                    Tuple<bool, string, int> passNumber = StringConverter.IntegerConvert(value);
+
+                    if (passNumber.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.PassNumber == passNumber.Item3).Select(person => person.Id).ToArray<int>();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(passNumber.Item2);
+                    }
+
+                    break;
+                case "BANKACCOUNT":
+                    Tuple<bool, string, decimal> bankAccount = StringConverter.DecimalConvert(value);
+                    if (bankAccount.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.PassNumber == bankAccount.Item3).Select(person => person.Id).ToArray();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(bankAccount.Item2);
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine($"The record haven't got this field {fieldName}");
+                    break;
+            }
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)

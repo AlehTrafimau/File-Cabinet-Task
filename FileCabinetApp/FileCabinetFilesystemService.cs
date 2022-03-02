@@ -12,9 +12,9 @@ namespace FileCabinetApp
     internal class FileCabinetFileSystemService : IFileCabinetService
     {
         private const int BytesInRecord = 278;
-        private readonly Dictionary<string, List<long>> firstNameDictionary = new ();
-        private readonly Dictionary<string, List<long>> lastNameDictionary = new ();
-        private readonly Dictionary<string, List<long>> dateOfBirthDictionary = new ();
+        private Dictionary<string, List<long>> firstNameDictionary;
+        private Dictionary<string, List<long>> lastNameDictionary;
+        private Dictionary<string, List<long>> dateOfBirthDictionary;
         private FileStream fileStream;
 
         /// <summary>
@@ -310,8 +310,11 @@ namespace FileCabinetApp
 
             for (int i = 0; i < newRecords.Count; i++)
             {
-                this.EditRecord(newRecords[i].Id, newRecords[i]);
+                long position = (newRecords[i].Id - 1) * BytesInRecord;
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+                this.WriteRecordToFile(newRecords[i], 0);
             }
+            this.InitializeDictionaries();
         }
 
         /// <summary>
@@ -345,6 +348,11 @@ namespace FileCabinetApp
 
         private void RemoveFromDictionaries(int recordId)
         {
+            if (recordId > this.fileStream.Length / BytesInRecord)
+            {
+                return;
+            }
+
             long indexOfRecord = (recordId - 1) * BytesInRecord;
             FileCabinetRecord removedRecord = this.ReadRecordFromFile(indexOfRecord).Item1;
             string firstNameKey = removedRecord.FirstName.ToUpperInvariant();
@@ -378,6 +386,8 @@ namespace FileCabinetApp
             {
                 this.dateOfBirthDictionary.Remove(dateOfBirthKey);
             }
+
+            Console.WriteLine($"Record #{recordId} is removed.");
         }
 
         private void InitializeDictionaries()
@@ -386,6 +396,9 @@ namespace FileCabinetApp
             long numberOfRecordInFile = this.fileStream.Length / BytesInRecord;
             short isDeleted;
             long startOfRecordByte;
+            this.firstNameDictionary = new();
+            this.lastNameDictionary = new();
+            this.dateOfBirthDictionary = new();
 
             while (numberOfRecordInFile > 0)
             {
@@ -520,6 +533,195 @@ namespace FileCabinetApp
             Array.Resize(ref input, 16);
             this.fileStream.Write(input, 0, input.Length);
             this.fileStream.Flush();
+        }
+
+        /// <summary>
+        /// Deletes record from current storage by input conditions.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public void Delete(string fieldName, string value)
+        {
+            if (fieldName == null || value == null)
+            {
+                Console.WriteLine("Parameters are invalid");
+                return;
+            }
+
+            void DeleteById(params long[] recordsPosition)
+            {
+                foreach (var position in recordsPosition)
+                {
+                    int isDeleted = 1;
+                    this.fileStream.Seek(position, SeekOrigin.Begin);
+                    byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
+                    Array.Resize(ref input, 2);
+                    this.fileStream.Write(input, 0, input.Length);
+                    this.fileStream.Flush();
+                }
+            }
+
+            static void PrintMessage(long[] recordsId)
+            {
+                string resultMessage = "Record ";
+                foreach (var i in recordsId)
+                {
+                    resultMessage += $"#{(i / BytesInRecord) + 1} ";
+                }
+
+                Console.WriteLine(resultMessage + "are deleted");
+            }
+
+            switch (fieldName)
+            {
+                case "ID":
+                    bool isDigit = int.TryParse(value, out int valueOfId);
+                    if (isDigit)
+                    {
+                        DeleteById((valueOfId -1) * BytesInRecord);
+                        Console.WriteLine($"Record #{valueOfId} is deleted.");
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Id value must be a digit");
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    if (this.firstNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        long[] result = this.firstNameDictionary[value.ToUpperInvariant()].ToArray();
+                        DeleteById(result);
+                        PrintMessage(result);
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this first name are not found");
+                    }
+
+                    break;
+                case "LASTNAME":
+                    if (this.lastNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        long[] result = this.lastNameDictionary[value.ToUpperInvariant()].ToArray<long>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this last name are not found");
+                    }
+
+                    break;
+                case "DATEOFBIRTH":
+                    Tuple<bool, string, DateTime> date = StringConverter.DateTimeConvert(value);
+                    string dateOfBirth = " ";
+                    if (date.Item1)
+                    {
+                        dateOfBirth = date.Item3.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+                    if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    {
+                        long[] result = this.dateOfBirthDictionary[dateOfBirth].ToArray<long>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this field are not found");
+                    }
+
+                    break;
+                case "SERIEOFPASSNUMBER":
+                    Tuple<bool, string, char> serieOfPassnumber = StringConverter.CharConvert(value);
+                    if (serieOfPassnumber.Item1)
+                    {
+                        this.fileStream.Seek(0, SeekOrigin.Begin);
+                        List<long> mesage = new ();
+                        while (this.fileStream.Position != this.fileStream.Length)
+                        {
+                            long curretnPosition = this.fileStream.Position;
+                            (FileCabinetRecord, bool) record = this.ReadRecordFromFile(curretnPosition);
+                            if (!record.Item2 && record.Item1.SerieOfPassNumber == serieOfPassnumber.Item3)
+                            {
+                                this.fileStream.Seek(curretnPosition, SeekOrigin.Begin);
+                                mesage.Add(curretnPosition);
+                                this.WriteRecordToFile(record.Item1, 1);
+                            }
+                        }
+
+                        PrintMessage(mesage.ToArray<long>());
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine(serieOfPassnumber.Item2);
+                    }
+
+                    break;
+                case "PASSNUMBER":
+                    Tuple<bool, string, int> passNumber = StringConverter.IntegerConvert(value);
+                    if (passNumber.Item1)
+                    {
+                        this.fileStream.Seek(0, SeekOrigin.Begin);
+                        List<long> mesage = new ();
+                        while (this.fileStream.Position != this.fileStream.Length)
+                        {
+                            long curretnPosition = this.fileStream.Position;
+                            (FileCabinetRecord, bool) record = this.ReadRecordFromFile(curretnPosition);
+                            if (!record.Item2 && record.Item1.PassNumber == passNumber.Item3)
+                            {
+                                this.fileStream.Seek(curretnPosition, SeekOrigin.Begin);
+                                mesage.Add(curretnPosition);
+                                this.WriteRecordToFile(record.Item1, 1);
+                            }
+                        }
+
+                        PrintMessage(mesage.ToArray<long>());
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine(passNumber.Item2);
+                    }
+
+                    break;
+                case "BANKACCOUNT":
+                    Tuple<bool, string, decimal> bankAccount = StringConverter.DecimalConvert(value);
+                    if (bankAccount.Item1)
+                    {
+                        this.fileStream.Seek(0, SeekOrigin.Begin);
+                        List<long> mesage = new ();
+                        while (this.fileStream.Position != this.fileStream.Length)
+                        {
+                            long curretnPosition = this.fileStream.Position;
+                            (FileCabinetRecord, bool) record = this.ReadRecordFromFile(curretnPosition);
+                            if (!record.Item2 && record.Item1.BankAccount == bankAccount.Item3)
+                            {
+                                this.fileStream.Seek(curretnPosition, SeekOrigin.Begin);
+                                mesage.Add(curretnPosition);
+                                this.WriteRecordToFile(record.Item1, 1);
+                            }
+                        }
+
+                        PrintMessage(mesage.ToArray<long>());
+                        this.InitializeDictionaries();
+                    }
+                    else
+                    {
+                        Console.WriteLine(bankAccount.Item2);
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine($"The record haven't got this field {fieldName}");
+                    break;
+            }
         }
     }
 }
