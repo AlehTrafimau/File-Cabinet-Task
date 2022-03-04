@@ -27,7 +27,10 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
             new string[] { "import", "imports records data from file system", "The 'export' command imports records data from file system" },
             new string[] { "find", "finds all records in the storage by special parameters", "The 'find' command Finds all records in the storage by special parameters" },
-            new string[] { "remove", "removes the specified record from the storage.", "The 'remove' Removes the specified record from the storage." },
+            new string[] { "remove", "removes the specified record from the storage.", "The 'remove' removes the specified record from the storage." },
+            new string[] { "insert", "inserts the new record to the storage.", "The 'insert' inserts the new record to the storage." },
+            new string[] { "delete", "deletes records from the storage which match input condition.", "The 'delete' deletes records from the storage which match input condition." },
+            new string[] { "update", "updates record from current storage by input parameters.", "The 'update' updates record from current storage by input parameters." },
         };
 
         /// <summary>
