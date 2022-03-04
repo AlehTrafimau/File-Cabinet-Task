@@ -401,6 +401,108 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Updates record from current storage by input parameters.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
+        {
+            FileCabinetRecord[]? findResult = Array.Empty<FileCabinetRecord>();
+            findResult = findConditions.Id != default ? this.usersRecords.Where(record => record.Id == findConditions.Id).ToArray() : findResult;
+            if (findResult == null)
+            {
+                findResult = findConditions.FirstName != string.Empty ? this.usersRecords.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.FirstName != string.Empty ? findResult.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
+            }
+
+            if (findResult == null)
+            {
+                findResult = findConditions.LastName != string.Empty ? this.usersRecords.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.LastName != string.Empty ? findResult.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
+            }
+
+            if (findResult == null)
+            {
+                findResult = findConditions.DateOfBirth != default ? this.usersRecords.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.DateOfBirth != default ? findResult.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
+            }
+
+            if (findResult == null)
+            {
+                findResult = findConditions.SerieOfPassNumber != default ? this.usersRecords.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.SerieOfPassNumber != default ? findResult.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
+            }
+
+            if (findResult == null)
+            {
+                findResult = findConditions.PassNumber != default ? this.usersRecords.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.PassNumber != default ? findResult.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
+            }
+
+            if (findResult == null)
+            {
+                findResult = findConditions.BankAccount != default ? this.usersRecords.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.BankAccount != default ? findResult.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
+            }
+
+            int[]? selectedRecordsId = findResult != null ? findResult.Select(record => record.Id).ToArray() : null;
+
+            if (selectedRecordsId != null)
+            {
+                foreach (var i in selectedRecordsId)
+                {
+                    if (newParameters.FirstName != string.Empty)
+                    {
+                        this.usersRecords[i - 1].FirstName = newParameters.FirstName;
+                    }
+
+                    if (newParameters.LastName != string.Empty)
+                    {
+                        this.usersRecords[i - 1].LastName = newParameters.LastName;
+                    }
+
+                    if (newParameters.DateOfBirth != default)
+                    {
+                        this.usersRecords[i - 1].DateOfBirth = newParameters.DateOfBirth;
+                    }
+
+                    if (newParameters.SerieOfPassNumber != default)
+                    {
+                        this.usersRecords[i - 1].SerieOfPassNumber = newParameters.SerieOfPassNumber;
+                    }
+
+                    if (newParameters.PassNumber != default)
+                    {
+                        this.usersRecords[i - 1].PassNumber = newParameters.PassNumber;
+                    }
+
+                    if (newParameters.BankAccount != default)
+                    {
+                        this.usersRecords[i - 1].BankAccount = newParameters.BankAccount;
+                    }
+                }
+            }
+        }
+
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
         {
             if (dictionary.ContainsKey(parameter.ToUpperInvariant()))

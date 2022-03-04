@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FileCabinetApp
 {
@@ -184,6 +179,30 @@ namespace FileCabinetApp
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Restore() with count of records = '{snapshot.Records.Count}'");
             base.Restore(snapshot);
+            this.streamWriter.Flush();
+        }
+
+        /// <summary>
+        /// Writes information about update operation to file system storage.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public override void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Update()");
+            base.Update(newParameters, findConditions);
+            this.streamWriter.Flush();
+        }
+
+        /// <summary>
+        /// Writes information about delete operation to file system storage.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public override void Delete(string fieldName, string value)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Delete() record which contains {fieldName} = {value}");
+            base.Delete(fieldName, value);
             this.streamWriter.Flush();
         }
     }

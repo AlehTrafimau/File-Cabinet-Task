@@ -43,11 +43,6 @@ namespace FileCabinetApp
             return newRecordId;
         }
 
-        public void Delete(string fieldName, string value)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Elemenates time of running edit operation.
         /// </summary>
@@ -171,7 +166,7 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Elemenates time of running remove opeation.
+        /// Elemenates time of running remove operation.
         /// </summary>
         /// <param name="recordId"> The id if record for remove.</param>
         public virtual void RemoveRecord(int recordId)
@@ -184,7 +179,7 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Elemenates time of running remove opeation.
+        /// Elemenates time of running restore operation.
         /// </summary>
         /// <param name="snapshot"> The snapshot of import records.</param>
         public virtual void Restore(FileCabinetServiceSnapshot snapshot)
@@ -194,6 +189,34 @@ namespace FileCabinetApp
             this.stopWatch.Stop();
             TimeSpan timeSpan = this.stopWatch.Elapsed;
             Console.WriteLine($"Restore method execution duration is {timeSpan.Ticks} ticks.");
+        }
+
+        /// <summary>
+        /// Elemenates time of running update operation.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public virtual void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
+        {
+            this.stopWatch.Restart();
+            this.service.Update(newParameters, findConditions);
+            this.stopWatch.Stop();
+            TimeSpan timeSpan = this.stopWatch.Elapsed;
+            Console.WriteLine($"Update method execution duration is {timeSpan.Ticks} ticks.");
+        }
+
+        /// <summary>
+        /// Elemenates time of running delete operation.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public virtual void Delete(string fieldName, string value)
+        {
+            this.stopWatch.Restart();
+            this.service.Delete(fieldName, value);
+            this.stopWatch.Stop();
+            TimeSpan timeSpan = this.stopWatch.Elapsed;
+            Console.WriteLine($"Delete method execution duration is {timeSpan.Ticks} ticks.");
         }
     }
 }

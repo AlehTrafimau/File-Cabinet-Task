@@ -102,8 +102,17 @@ namespace FileCabinetApp
         public void InsertRecord(FileCabinetRecord insertRecord);
 
         /// <summary>
-        /// fdf.
+        /// Deletes record from current storage by input conditions.
         /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
         public void Delete(string fieldName, string value);
+
+        /// <summary>
+        /// Updates record from current storage by input parameters.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions);
     }
 }
