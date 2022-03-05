@@ -789,40 +789,6 @@
             </summary>
             <returns>The enummerator for current collection.</returns>
         </member>
-        <member name="T:FileCabinetApp.FilesystemIterator">
-            <summary>
-            Contains of methods to iteration of data in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.#ctor(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Int64}},System.String,System.IO.FileStream)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FilesystemIterator"/> class.
-            </summary>
-            <param name="dictionary">The current dictionary for iterate its records by input key.</param>
-            <param name="key">The key for search to the dictionary.</param>
-            <param name="fileStream">The file stream instance for read record from filesystem.</param>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FilesystemIterator"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.GetNext">
-            <summary>
-            Returns the next record in current file cabinet storage.
-            </summary>
-            <returns>
-            The next record.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.HasMore">
-            <summary>
-            Stores information about exist of a record in the current storage.
-            </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
-        </member>
         <member name="T:FileCabinetApp.FilesystemRecordEnumerator">
             <summary>
             Implements IEnumerator for filesystem cabinet service.
@@ -1024,27 +990,6 @@
             <param name="newParameters">The record which consist of new parameters.</param>
             <param name="findConditions">The record which consist of fields as find conditions.</param>
         </member>
-        <member name="T:FileCabinetApp.IRecordIterator">
-            <summary>
-            Contains of methods to iteration of data in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.IRecordIterator.GetNext">
-            <summary>
-            Returns the next record in current file cabinet storage.
-            </summary>
-            <returns>
-            The next record.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IRecordIterator.HasMore">
-            <summary>
-            Stores information about exist of a record in the current storage.
-            </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
-        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             Consists a function to record validate.
@@ -1056,39 +1001,6 @@
             </summary>
             <param name="record">The file cabinet record instance for validation.</param>
             <returns>The result of record validation.</returns>
-        </member>
-        <member name="T:FileCabinetApp.MemoryIterator">
-            <summary>
-            Contains of methods to iteration of data in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.#ctor(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.MemoryIterator"/> class.
-            </summary>
-            <param name="dictionary">The current dictionary for iterate its records by input key.</param>
-            <param name="key">The key for search to the dictionary.</param>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.MemoryIterator"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.GetNext">
-            <summary>
-            Returns the next record in current file cabinet storage.
-            </summary>
-            <returns>
-            The next record.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.HasMore">
-            <summary>
-            Stores information about exist of a record in the current storage.
-            </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
