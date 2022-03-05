@@ -20,12 +20,6 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord);
 
         /// <summary>
-        /// Removes the record from repository.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId);
-
-        /// <summary>
         /// Adds new record from file system to current repository.
         /// </summary>
         /// <param name="snapshot">The new records for add.</param>
@@ -46,13 +40,6 @@ namespace FileCabinetApp
         /// The number of created records.
         /// </returns>
         public (int, int) GetStat();
-
-        /// <summary>
-        /// Edits the exist record by Id number.
-        /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord);
 
         /// <summary>
         /// Finds the records by first name.
@@ -94,5 +81,25 @@ namespace FileCabinetApp
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Inserts the new record to the current storage.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert.</param>
+        public void InsertRecord(FileCabinetRecord insertRecord);
+
+        /// <summary>
+        /// Deletes record from current storage by input conditions.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public void Delete(string fieldName, string value);
+
+        /// <summary>
+        /// Updates record from current storage by input parameters.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions);
     }
 }

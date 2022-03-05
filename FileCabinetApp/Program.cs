@@ -15,6 +15,7 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "LIST", "FIND", "PURGE", "INSERT", "EXIT" };
 
         private static bool isRunning = true;
 
@@ -45,7 +46,15 @@ namespace FileCabinetApp
                     const int parametersIndex = 1;
                     var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
                     var commandhandler = CreateCommandHandlers();
-                    commandhandler.Handle(new AppCommandRequest(command, parameters));
+                    AppCommandRequest commandDefiner = new AppCommandRequest(command, parameters, availableCommand);
+                    if (commandDefiner.CheckCommand())
+                    {
+                        commandhandler.Handle(commandDefiner);
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             while (isRunning);
@@ -87,41 +96,31 @@ namespace FileCabinetApp
             }
         }
 
-        private static void Print(IEnumerable<FileCabinetRecord> records)
-        {
-            if (records != null)
-            {
-                foreach (FileCabinetRecord currentRecord in records)
-                {
-                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}," +
-                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.BankAccount}$");
-                }
-            }
-        }
-
         private static ICommandHandler CreateCommandHandlers()
         {
             var recordPrinter = new DefaultRecordPrinter();
 
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
-            var editHandler = new EditCommandHandler(fileCabinetService, recordValidator);
-            var removeHandler = new RemoveCommandHandler(fileCabinetService);
             var statHandler = new StatCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService, Print);
+            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter.Print);
             var importHandler = new ImportCommandHandler(fileCabinetService);
+            var deleteHandler = new DeleteCommandHandler(fileCabinetService);
+            var insertHandler = new InsertCommandHandler(fileCabinetService, recordValidator);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService, Print);
+            var updateHandler = new UpdateCommandHandler(fileCabinetService);
+            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter.Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var exitHandler = new ExitCommandHandler((bool run) => isRunning = run);
 
             helpHandler.SetNext(createHandler);
-            createHandler.SetNext(editHandler);
-            editHandler.SetNext(removeHandler);
-            removeHandler.SetNext(statHandler);
+            createHandler.SetNext(statHandler);
             statHandler.SetNext(findHandler);
-            findHandler.SetNext(importHandler);
-            importHandler.SetNext(exportHandler);
+            findHandler.SetNext(deleteHandler);
+            deleteHandler.SetNext(importHandler);
+            importHandler.SetNext(insertHandler);
+            insertHandler.SetNext(updateHandler);
+            updateHandler.SetNext(exportHandler);
             exportHandler.SetNext(listHandler);
             listHandler.SetNext(purgeHandler);
             purgeHandler.SetNext(exitHandler);

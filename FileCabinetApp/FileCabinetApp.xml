@@ -6,15 +6,16 @@
     <members>
         <member name="T:FileCabinetApp.CommandHandlers.AppCommandRequest">
             <summary>
-            Consists of a set of paremeters for record operation.
+            Sets user's command and parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.#ctor(System.String,System.String)">
+        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.#ctor(System.String,System.String,System.String[])">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.AppCommandRequest"/> class.
             </summary>
             <param name="command">Command for handlers.</param>
             <param name="parameters">Additional parameters for handlers of command.</param>
+            <param name="availableCommand">The list of available commands this program.</param>
         </member>
         <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
             <summary>
@@ -31,6 +32,14 @@
             <value>
             Additional parameters for handlers of command.
             </value>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.CheckCommand">
+            <summary>
+            Check input command.
+            </summary>
+            <returns>
+            True, if input command is exists in the list of the available command, or false, otherwise.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
             <summary>
@@ -86,19 +95,18 @@
             </summary>
             <param name="records">The sequence of record for display.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
+        <member name="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler">
             <summary>
-            Edits record note in sevice according input ID.
+            Deletes record from current storage by input conditions.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordValidator)">
+        <member name="M:FileCabinetApp.CommandHandlers.DeleteCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
             <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-            <param name="recordValidator">Sets rules of validation.</param>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+        <member name="M:FileCabinetApp.CommandHandlers.DeleteCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Handlings the input request or transmits further.
             </summary>
@@ -201,6 +209,35 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.InsertCommandHandler">
+            <summary>
+            dfdf.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.InsertCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+            <param name="recordValidator">Sets rules of validation.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handlings the input request or transmits further.
+            </summary>
+            <param name="handlingRequest">The input request.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.IRecordPrinter">
+            <summary>
+            Define the function to display records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Display the list of records.
+            </summary>
+            <param name="records">The list of records.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
             <summary>
             Display all records in the storage.
@@ -231,23 +268,6 @@
             <param name="fileCabinetService">The instance of file cabinet service instance.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Handlings the input request or transmits further.
-            </summary>
-            <param name="handlingRequest">The input request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
-            <summary>
-            Removes the specified record from the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Handlings the input request or transmits further.
             </summary>
@@ -287,6 +307,23 @@
             <param name="fileCabinetService">The instance of file cabinet service instance.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handlings the input request or transmits further.
+            </summary>
+            <param name="handlingRequest">The input request.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.UpdateCommandHandler">
+            <summary>
+            Updates the record for input data.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.UpdateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Handlings the input request or transmits further.
             </summary>
@@ -430,12 +467,11 @@
             The Id number of the new record in the default storage.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Edits the exist record by Id number.
+            Inserts the new record to the current storage.
             </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited record.</param>
+            <param name="insertRecord">The record for insert.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByDayOfBirth(System.String)">
             <summary>
@@ -488,12 +524,6 @@
             The snapshot of current content of file system repository.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from current repositiry.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Restores records from file system to the current repository.
@@ -505,6 +535,20 @@
             Defragments records in file system repository.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Delete(System.String,System.String)">
+            <summary>
+            Deletes record from current storage by input conditions.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.Update(FileCabinetApp.FileCabinetRecord,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Updates record from current storage by input parameters.
+            </summary>
+            <param name="newParameters">The record which consist of new parameters.</param>
+            <param name="findConditions">The record which consist of fields as find conditions.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service to create, storage, edit, find and display records about users.
@@ -514,12 +558,6 @@
             <summary>Creates the new record and adds to list.</summary>
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from current repositiry.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
             <summary>Gets all records which created.</summary>
@@ -547,10 +585,11 @@
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>Edits the exist record by Id number.</summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Inserts the new record to the current storage.
+            </summary>
+            <param name="insertRecord">The record for insert.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
             <summary>Finds the records by first name.</summary>
@@ -572,6 +611,20 @@
             <returns>
             The list of records which consist of this birth date.
             </returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Delete(System.String,System.String)">
+            <summary>
+            Deletes record from current storage by input conditions.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Update(FileCabinetApp.FileCabinetRecord,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Updates record from current storage by input parameters.
+            </summary>
+            <param name="newParameters">The record which consist of new parameters.</param>
+            <param name="findConditions">The record which consist of fields as find conditions.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -761,40 +814,6 @@
             </summary>
             <returns>The enummerator for current collection.</returns>
         </member>
-        <member name="T:FileCabinetApp.FilesystemIterator">
-            <summary>
-            Contains of methods to iteration of data in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.#ctor(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.Int64}},System.String,System.IO.FileStream)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FilesystemIterator"/> class.
-            </summary>
-            <param name="dictionary">The current dictionary for iterate its records by input key.</param>
-            <param name="key">The key for search to the dictionary.</param>
-            <param name="fileStream">The file stream instance for read record from filesystem.</param>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FilesystemIterator"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.GetNext">
-            <summary>
-            Returns the next record in current file cabinet storage.
-            </summary>
-            <returns>
-            The next record.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FilesystemIterator.HasMore">
-            <summary>
-            Stores information about exist of a record in the current storage.
-            </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
-        </member>
         <member name="T:FileCabinetApp.FilesystemRecordEnumerator">
             <summary>
             Implements IEnumerator for filesystem cabinet service.
@@ -916,12 +935,6 @@
             <param name="newRecord"> The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from repository.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Adds new record from file system to current repository.
@@ -943,13 +956,6 @@
             <returns>
             The number of created records.
             </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Edits the exist record by Id number.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited record.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
             <summary>
@@ -989,26 +995,25 @@
             Defragments records in file system repository.
             </summary>
         </member>
-        <member name="T:FileCabinetApp.IRecordIterator">
+        <member name="M:FileCabinetApp.IFileCabinetService.InsertRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Contains of methods to iteration of data in the storage.
+            Inserts the new record to the current storage.
             </summary>
+            <param name="insertRecord">The record for insert.</param>
         </member>
-        <member name="M:FileCabinetApp.IRecordIterator.GetNext">
+        <member name="M:FileCabinetApp.IFileCabinetService.Delete(System.String,System.String)">
             <summary>
-            Returns the next record in current file cabinet storage.
+            Deletes record from current storage by input conditions.
             </summary>
-            <returns>
-            The next record.
-            </returns>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
         </member>
-        <member name="M:FileCabinetApp.IRecordIterator.HasMore">
+        <member name="M:FileCabinetApp.IFileCabinetService.Update(FileCabinetApp.FileCabinetRecord,FileCabinetApp.FileCabinetRecord)">
             <summary>
-            Stores information about exist of a record in the current storage.
+            Updates record from current storage by input parameters.
             </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
+            <param name="newParameters">The record which consist of new parameters.</param>
+            <param name="findConditions">The record which consist of fields as find conditions.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
@@ -1021,39 +1026,6 @@
             </summary>
             <param name="record">The file cabinet record instance for validation.</param>
             <returns>The result of record validation.</returns>
-        </member>
-        <member name="T:FileCabinetApp.MemoryIterator">
-            <summary>
-            Contains of methods to iteration of data in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.#ctor(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord}},System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.MemoryIterator"/> class.
-            </summary>
-            <param name="dictionary">The current dictionary for iterate its records by input key.</param>
-            <param name="key">The key for search to the dictionary.</param>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.MemoryIterator"/> class.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.GetNext">
-            <summary>
-            Returns the next record in current file cabinet storage.
-            </summary>
-            <returns>
-            The next record.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.MemoryIterator.HasMore">
-            <summary>
-            Stores information about exist of a record in the current storage.
-            </summary>
-            <returns>
-            True if the current storage has a next record, and false otherwise.
-            </returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -1083,12 +1055,11 @@
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.ServiceLogger.InsertRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Writes information about edit operation to file system storage.
             </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
+            <param name="insertRecord">The id of record for edit.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceLogger.FindByDayOfBirth(System.String)">
             <summary>
@@ -1133,17 +1104,25 @@
             The count of created records.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.RemoveRecord(System.Int32)">
-            <summary>
-            Writes information about remove record operation to file system storage.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Writes information about restore operation to file system storage.
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Update(FileCabinetApp.FileCabinetRecord,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Writes information about update operation to file system storage.
+            </summary>
+            <param name="newParameters">The record which consist of new parameters.</param>
+            <param name="findConditions">The record which consist of fields as find conditions.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Delete(System.String,System.String)">
+            <summary>
+            Writes information about delete operation to file system storage.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
         </member>
         <member name="T:FileCabinetApp.ServiceMeter">
             <summary>
@@ -1167,13 +1146,6 @@
             </summary>
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Elemenates time of running edit operation.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.FindByDayOfBirth(System.String)">
             <summary>
@@ -1218,6 +1190,12 @@
             The count of created records.
             </returns>
         </member>
+        <member name="M:FileCabinetApp.ServiceMeter.InsertRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Elemenates time of running insert operation.
+            </summary>
+            <param name="insertRecord">The record for insert to current storage.</param>
+        </member>
         <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
             <summary>
             Makes the snapshot.
@@ -1226,17 +1204,25 @@
             The snapshot of current state of the cabinet service.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
-            <summary>
-            Elemenates time of running remove opeation.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
-            Elemenates time of running remove opeation.
+            Elemenates time of running restore operation.
             </summary>
             <param name="snapshot"> The snapshot of import records.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Update(FileCabinetApp.FileCabinetRecord,FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Elemenates time of running update operation.
+            </summary>
+            <param name="newParameters">The record which consist of new parameters.</param>
+            <param name="findConditions">The record which consist of fields as find conditions.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Delete(System.String,System.String)">
+            <summary>
+            Elemenates time of running delete operation.
+            </summary>
+            <param name="fieldName">The name of record field.</param>
+            <param name="value">The value of record field.</param>
         </member>
         <member name="T:FileCabinetApp.StringConverter">
             <summary>
@@ -1270,6 +1256,13 @@
             </summary>
             <param name="source">The source.</param>
             <returns>The result of convert to short type.</returns>
+        </member>
+        <member name="M:FileCabinetApp.StringConverter.IntegerConvert(System.String)">
+            <summary>
+            Converts string source to int type.
+            </summary>
+            <param name="source">The source.</param>
+            <returns>The result of convert to int type.</returns>
         </member>
         <member name="M:FileCabinetApp.StringConverter.DecimalConvert(System.String)">
             <summary>

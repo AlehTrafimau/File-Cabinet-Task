@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FileCabinetApp
 {
@@ -43,12 +38,11 @@ namespace FileCabinetApp
         /// <summary>
         /// Writes information about edit operation to file system storage.
         /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited paremeters of record.</param>
-        public override void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
+        /// <param name="insertRecord">The id of record for edit.</param>
+        public override void InsertRecord(FileCabinetRecord insertRecord)
         {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Create() with Id = '{editRecordId}', FirstName = '{editedRecord.FirstName}', LastName = '{editedRecord.LastName}', DateOfBirth = '{editedRecord.DateOfBirth}', SerieOfPassNumber = '{editedRecord.SerieOfPassNumber}', PassNumber = '{editedRecord.PassNumber}', BankAccount = '{editedRecord.BankAccount}'");
-            base.EditRecord(editRecordId, editedRecord);
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Insert() with Id = '{insertRecord.Id}', FirstName = '{insertRecord.FirstName}', LastName = '{insertRecord.LastName}', DateOfBirth = '{insertRecord.DateOfBirth}', SerieOfPassNumber = '{insertRecord.SerieOfPassNumber}', PassNumber = '{insertRecord.PassNumber}', BankAccount = '{insertRecord.BankAccount}'");
+            base.InsertRecord(insertRecord);
             this.streamWriter.Flush();
         }
 
@@ -155,17 +149,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Writes information about remove record operation to file system storage.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public override void RemoveRecord(int recordId)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Remove() with ID = '{recordId}'");
-            base.RemoveRecord(recordId);
-            this.streamWriter.Flush();
-        }
-
-        /// <summary>
         /// Writes information about restore operation to file system storage.
         /// </summary>
         /// <param name="snapshot"> The snapshot of import records.</param>
@@ -173,6 +156,30 @@ namespace FileCabinetApp
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Restore() with count of records = '{snapshot.Records.Count}'");
             base.Restore(snapshot);
+            this.streamWriter.Flush();
+        }
+
+        /// <summary>
+        /// Writes information about update operation to file system storage.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public override void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Update()");
+            base.Update(newParameters, findConditions);
+            this.streamWriter.Flush();
+        }
+
+        /// <summary>
+        /// Writes information about delete operation to file system storage.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public override void Delete(string fieldName, string value)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Delete() record which contains {fieldName} = {value}");
+            base.Delete(fieldName, value);
             this.streamWriter.Flush();
         }
     }

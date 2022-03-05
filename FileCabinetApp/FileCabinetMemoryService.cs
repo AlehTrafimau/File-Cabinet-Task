@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 
 namespace FileCabinetApp
 {
@@ -18,7 +19,7 @@ namespace FileCabinetApp
         /// <returns>The Id number of the new record.</returns>
         public int CreateRecord(FileCabinetRecord newRecord)
         {
-            newRecord.Id = this.usersRecords.Count + 1;
+            newRecord.Id = this.usersRecords.Count > 0 ? this.usersRecords[^1].Id + 1 : 1;
 
             this.usersRecords.Add(newRecord);
 
@@ -27,26 +28,6 @@ namespace FileCabinetApp
             AddToDictionary(this.dateOfBirthDictionary, newRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), newRecord);
 
             return newRecord.Id;
-        }
-
-        /// <summary>
-        /// Removes the record from current repositiry.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId)
-        {
-            int indexOfRemoveRecord = recordId - 1;
-            if (this.usersRecords[indexOfRemoveRecord].Id != recordId)
-            {
-                Console.WriteLine($"Record #{recordId} doesn't exists.");
-                return;
-            }
-
-            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, recordId);
-            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, recordId);
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordId);
-            this.usersRecords.RemoveAt(indexOfRemoveRecord);
-            Console.WriteLine($"Record #{recordId} is removed.");
         }
 
         /// <summary>Gets all records which created.</summary>
@@ -98,7 +79,7 @@ namespace FileCabinetApp
 
             for (int i = 0; i < newRecords.Count; i++)
             {
-                int lastElementId = this.usersRecords.Count;
+                int lastElementId = this.usersRecords.Count > 0 ? this.usersRecords[^1].Id : 0;
                 if (newRecords[i].Id > lastElementId)
                 {
                     newRecords[i].Id = lastElementId + 1;
@@ -125,25 +106,27 @@ namespace FileCabinetApp
             }
         }
 
-        /// <summary>Edits the exist record by Id number.</summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited paremeters of record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
+        /// <summary>
+        /// Inserts the new record to the current storage.
+        /// </summary>
+        /// <param name="insertRecord">The record for insert.</param>
+        public void InsertRecord(FileCabinetRecord insertRecord)
         {
-            int recordIndex = editRecordId - 1;
-            editedRecord.Id = editRecordId;
-
-            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[recordIndex].FirstName, editedRecord.Id);
-            AddToDictionary(this.firstNameDictionary, editedRecord.FirstName, editedRecord);
-
-            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[recordIndex].LastName, editedRecord.Id);
-            AddToDictionary(this.lastNameDictionary, editedRecord.LastName, editedRecord);
-
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[recordIndex].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord.Id);
-            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord);
-
-            this.usersRecords[recordIndex] = editedRecord;
-            Console.WriteLine($"Record #{editedRecord.Id} is updated");
+            if (this.usersRecords.Count >= insertRecord.Id)
+            {
+                this.usersRecords.Insert(insertRecord.Id - 1, insertRecord);
+                AddToDictionary(this.firstNameDictionary, insertRecord.FirstName, insertRecord);
+                AddToDictionary(this.lastNameDictionary, insertRecord.LastName, insertRecord);
+                AddToDictionary(this.dateOfBirthDictionary, insertRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), insertRecord);
+                for (int i = insertRecord.Id; i < this.usersRecords.Count; i++)
+                {
+                    this.usersRecords[i].Id += 1;
+                }
+            }
+            else
+            {
+                this.CreateRecord(insertRecord);
+            }
         }
 
         /// <summary>Finds the records by first name.</summary>
@@ -205,6 +188,270 @@ namespace FileCabinetApp
             return recordsByKey;
         }
 
+        /// <summary>
+        /// Deletes record from current storage by input conditions.
+        /// </summary>
+        /// <param name="fieldName">The name of record field.</param>
+        /// <param name="value">The value of record field.</param>
+        public void Delete(string fieldName, string value)
+        {
+            if (fieldName == null || value == null)
+            {
+                Console.WriteLine("Parameters are invalid");
+                return;
+            }
+
+            void DeleteById(params int[] recordsId)
+            {
+                foreach (var id in recordsId)
+                {
+                    int indexOfRemoveRecord = -1;
+
+                    for (int i = 0; i < this.usersRecords.Count; i++)
+                    {
+                        if (this.usersRecords[i].Id == id)
+                        {
+                            indexOfRemoveRecord = i;
+                            break;
+                        }
+                    }
+
+                    if (indexOfRemoveRecord == -1)
+                    {
+                        Console.WriteLine($"Record #{id} doesn't exists");
+                        return;
+                    }
+
+                    RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, id);
+                    RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, id);
+                    RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), id);
+                    this.usersRecords.RemoveAt(indexOfRemoveRecord);
+                }
+            }
+
+            static void PrintMessage(int[] recordsId)
+            {
+                string resultMessage = "Record ";
+                foreach (var i in recordsId)
+                {
+                    resultMessage += $"#{i} ";
+                }
+
+                Console.WriteLine(resultMessage + "are deleted");
+            }
+
+            switch (fieldName)
+            {
+                case "ID":
+                    bool isDigit = int.TryParse(value, out int valueOfId);
+                    if (isDigit)
+                    {
+                        DeleteById(valueOfId);
+                        Console.WriteLine($"Record #{valueOfId} is deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Id value must be a digit");
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    if (this.firstNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        int[] result = this.firstNameDictionary[value.ToUpperInvariant()].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this first name are not found");
+                    }
+
+                    break;
+                case "LASTNAME":
+                    if (this.lastNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        int[] result = this.lastNameDictionary[value.ToUpperInvariant()].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this last name are not found");
+                    }
+
+                    break;
+                case "DATEOFBIRTH":
+                    Tuple<bool, string, DateTime> date = StringConverter.DateTimeConvert(value);
+                    string dateOfBirth = " ";
+                    if (date.Item1)
+                    {
+                        dateOfBirth = date.Item3.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    }
+
+                    if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    {
+                        int[] result = this.dateOfBirthDictionary[dateOfBirth].Select(record => record.Id).ToArray<int>();
+                        DeleteById(result);
+                        PrintMessage(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Records with this field are not found");
+                    }
+
+                    break;
+                case "SERIEOFPASSNUMBER":
+                    Tuple<bool, string, char> serieOfPassnumber = StringConverter.CharConvert(value);
+                    if (serieOfPassnumber.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.SerieOfPassNumber == serieOfPassnumber.Item3).Select(person => person.Id).ToArray<int>();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(serieOfPassnumber.Item2);
+                    }
+
+                    break;
+                case "PASSNUMBER":
+                    Tuple<bool, string, int> passNumber = StringConverter.IntegerConvert(value);
+
+                    if (passNumber.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.PassNumber == passNumber.Item3).Select(person => person.Id).ToArray<int>();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(passNumber.Item2);
+                    }
+
+                    break;
+                case "BANKACCOUNT":
+                    Tuple<bool, string, decimal> bankAccount = StringConverter.DecimalConvert(value);
+                    if (bankAccount.Item1)
+                    {
+                        int[] recordsId = this.usersRecords.Where(record => record.PassNumber == bankAccount.Item3).Select(person => person.Id).ToArray();
+                        DeleteById(recordsId);
+                        PrintMessage(recordsId);
+                    }
+                    else
+                    {
+                        Console.WriteLine(bankAccount.Item2);
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine($"The record haven't got this field {fieldName}");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Updates record from current storage by input parameters.
+        /// </summary>
+        /// <param name="newParameters">The record which consist of new parameters.</param>
+        /// <param name="findConditions">The record which consist of fields as find conditions.</param>
+        public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
+        {
+            FileCabinetRecord[] findResult = Array.Empty<FileCabinetRecord>();
+            findResult = findConditions.Id != default ? this.usersRecords.Where(record => record.Id == findConditions.Id).ToArray() : findResult;
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.FirstName != string.Empty ? this.usersRecords.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.FirstName != string.Empty ? findResult.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
+            }
+
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.LastName != string.Empty ? this.usersRecords.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.LastName != string.Empty ? findResult.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
+            }
+
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.DateOfBirth != default ? this.usersRecords.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.DateOfBirth != default ? findResult.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
+            }
+
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.SerieOfPassNumber != default ? this.usersRecords.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.SerieOfPassNumber != default ? findResult.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
+            }
+
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.PassNumber != default ? this.usersRecords.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.PassNumber != default ? findResult.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
+            }
+
+            if (findResult == Array.Empty<FileCabinetRecord>())
+            {
+                findResult = findConditions.BankAccount != default ? this.usersRecords.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
+            }
+            else
+            {
+                findResult = findConditions.BankAccount != default ? findResult.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
+            }
+
+            int[] selectedRecordsId = findResult != Array.Empty<FileCabinetRecord>() ? findResult.Select(record => record.Id).ToArray() : Array.Empty<int>();
+
+            if (selectedRecordsId != Array.Empty<int>())
+            {
+                foreach (var i in selectedRecordsId)
+                {
+                    if (newParameters.FirstName != string.Empty)
+                    {
+                        this.usersRecords[i - 1].FirstName = newParameters.FirstName;
+                    }
+
+                    if (newParameters.LastName != string.Empty)
+                    {
+                        this.usersRecords[i - 1].LastName = newParameters.LastName;
+                    }
+
+                    if (newParameters.DateOfBirth != default)
+                    {
+                        this.usersRecords[i - 1].DateOfBirth = newParameters.DateOfBirth;
+                    }
+
+                    if (newParameters.SerieOfPassNumber != default)
+                    {
+                        this.usersRecords[i - 1].SerieOfPassNumber = newParameters.SerieOfPassNumber;
+                    }
+
+                    if (newParameters.PassNumber != default)
+                    {
+                        this.usersRecords[i - 1].PassNumber = newParameters.PassNumber;
+                    }
+
+                    if (newParameters.BankAccount != default)
+                    {
+                        this.usersRecords[i - 1].BankAccount = newParameters.BankAccount;
+                    }
+                }
+            }
+        }
+
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
         {
             if (dictionary.ContainsKey(parameter.ToUpperInvariant()))
@@ -220,6 +467,10 @@ namespace FileCabinetApp
         private static void RemoveFromDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, int recordId)
         {
             key = key.ToUpperInvariant();
+            if (!dictionary.ContainsKey(key))
+            {
+                return;
+            }
 
             for (int i = 0; i < dictionary[key].Count; i++)
             {
