@@ -6,15 +6,16 @@
     <members>
         <member name="T:FileCabinetApp.CommandHandlers.AppCommandRequest">
             <summary>
-            Consists of a set of paremeters for record operation.
+            Sets user's command and parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.#ctor(System.String,System.String)">
+        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.#ctor(System.String,System.String,System.String[])">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.AppCommandRequest"/> class.
             </summary>
             <param name="command">Command for handlers.</param>
             <param name="parameters">Additional parameters for handlers of command.</param>
+            <param name="availableCommand">The list of available commands this program.</param>
         </member>
         <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
             <summary>
@@ -31,6 +32,14 @@
             <value>
             Additional parameters for handlers of command.
             </value>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.AppCommandRequest.CheckCommand">
+            <summary>
+            Check input command.
+            </summary>
+            <returns>
+            True, if input command is exists in the list of the available command, or false, otherwise.
+            </returns>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
             <summary>
@@ -218,6 +227,17 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.IRecordPrinter">
+            <summary>
+            Define the function to display records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Display the list of records.
+            </summary>
+            <param name="records">The list of records.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
             <summary>
             Display all records in the storage.
@@ -291,6 +311,11 @@
             Handlings the input request or transmits further.
             </summary>
             <param name="handlingRequest">The input request.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.UpdateCommandHandler">
+            <summary>
+            Updates the record for input data.
+            </summary>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
             <summary>

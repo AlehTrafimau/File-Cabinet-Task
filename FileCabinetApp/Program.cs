@@ -15,6 +15,7 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
+        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "LIST", "FIND", "PURGE", "INSERT", "EXIT" };
 
         private static bool isRunning = true;
 
@@ -45,7 +46,15 @@ namespace FileCabinetApp
                     const int parametersIndex = 1;
                     var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
                     var commandhandler = CreateCommandHandlers();
-                    commandhandler.Handle(new AppCommandRequest(command, parameters));
+                    AppCommandRequest commandDefiner = new AppCommandRequest(command, parameters, availableCommand);
+                    if (commandDefiner.CheckCommand())
+                    {
+                        commandhandler.Handle(commandDefiner);
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             while (isRunning);

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace FileCabinetApp.CommandHandlers
 {
+    /// <summary>
+    /// Updates the record for input data.
+    /// </summary>
     internal class UpdateCommandHandler : ServiceCommandHandlerBase
     {
         /// <summary>
