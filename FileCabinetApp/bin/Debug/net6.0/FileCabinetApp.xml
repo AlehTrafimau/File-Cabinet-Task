@@ -103,24 +103,6 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
-            <summary>
-            Edits record note in sevice according input ID.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordValidator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-            <param name="recordValidator">Sets rules of validation.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Handlings the input request or transmits further.
-            </summary>
-            <param name="handlingRequest">The input request.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
             <summary>
             Exits the application.
@@ -266,23 +248,6 @@
             <param name="fileCabinetService">The instance of file cabinet service instance.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Handlings the input request or transmits further.
-            </summary>
-            <param name="handlingRequest">The input request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
-            <summary>
-            Removes the specified record from the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>
             Handlings the input request or transmits further.
             </summary>
@@ -483,13 +448,6 @@
             </summary>
             <param name="insertRecord">The record for insert.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Edits the exist record by Id number.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited record.</param>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByDayOfBirth(System.String)">
             <summary>
             Finds the records by birth day.
@@ -541,12 +499,6 @@
             The snapshot of current content of file system repository.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from current repositiry.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Restores records from file system to the current repository.
@@ -582,12 +534,6 @@
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from current repositiry.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
             <summary>Gets all records which created.</summary>
             <returns>
@@ -619,11 +565,6 @@
             Inserts the new record to the current storage.
             </summary>
             <param name="insertRecord">The record for insert.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>Edits the exist record by Id number.</summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
             <summary>Finds the records by first name.</summary>
@@ -1003,12 +944,6 @@
             <param name="newRecord"> The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
-            <summary>
-            Removes the record from repository.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Adds new record from file system to current repository.
@@ -1030,13 +965,6 @@
             <returns>
             The number of created records.
             </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Edits the exist record by Id number.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited record.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
             <summary>
@@ -1190,13 +1118,6 @@
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Writes information about edit operation to file system storage.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.InsertRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             Writes information about edit operation to file system storage.
@@ -1246,12 +1167,6 @@
             The count of created records.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.RemoveRecord(System.Int32)">
-            <summary>
-            Writes information about remove record operation to file system storage.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             Writes information about restore operation to file system storage.
@@ -1294,13 +1209,6 @@
             </summary>
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            Elemenates time of running edit operation.
-            </summary>
-            <param name="editRecordId">The id of record for edit.</param>
-            <param name="editedRecord">The edited paremeters of record.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.FindByDayOfBirth(System.String)">
             <summary>
@@ -1358,12 +1266,6 @@
             <returns>
             The snapshot of current state of the cabinet service.
             </returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
-            <summary>
-            Elemenates time of running remove operation.
-            </summary>
-            <param name="recordId"> The id if record for remove.</param>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>

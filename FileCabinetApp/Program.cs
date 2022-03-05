@@ -87,41 +87,25 @@ namespace FileCabinetApp
             }
         }
 
-        private static void Print(IEnumerable<FileCabinetRecord> records)
-        {
-            if (records != null)
-            {
-                foreach (FileCabinetRecord currentRecord in records)
-                {
-                    Console.WriteLine($"#{currentRecord.Id}, {currentRecord.FirstName}, {currentRecord.LastName}, {currentRecord.DateOfBirth.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}," +
-                        $" pass number: {currentRecord.SerieOfPassNumber} {currentRecord.PassNumber}, currentBankAccount: {currentRecord.BankAccount}$");
-                }
-            }
-        }
-
         private static ICommandHandler CreateCommandHandlers()
         {
             var recordPrinter = new DefaultRecordPrinter();
 
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
-            var editHandler = new EditCommandHandler(fileCabinetService, recordValidator);
-            var removeHandler = new RemoveCommandHandler(fileCabinetService);
             var statHandler = new StatCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService, Print);
+            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter.Print);
             var importHandler = new ImportCommandHandler(fileCabinetService);
             var deleteHandler = new DeleteCommandHandler(fileCabinetService);
             var insertHandler = new InsertCommandHandler(fileCabinetService, recordValidator);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var updateHandler = new UpdateCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService, Print);
+            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter.Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var exitHandler = new ExitCommandHandler((bool run) => isRunning = run);
 
             helpHandler.SetNext(createHandler);
-            createHandler.SetNext(editHandler);
-            editHandler.SetNext(removeHandler);
-            removeHandler.SetNext(statHandler);
+            createHandler.SetNext(statHandler);
             statHandler.SetNext(findHandler);
             findHandler.SetNext(deleteHandler);
             deleteHandler.SetNext(importHandler);

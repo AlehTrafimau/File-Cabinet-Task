@@ -93,38 +93,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Edits the exist record by Id number.
-        /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
-        {
-            long startByteOfRecordInFile = (editRecordId - 1) * BytesInRecord;
-            this.RemoveFromDictionaries(editRecordId);
-            this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
-            long recordPosition = this.fileStream.Position;
-            editedRecord.Id = editRecordId;
-
-            byte[] array = new byte[2];
-            this.fileStream.Read(array, 0, array.Length);
-            short statusOfRecord = short.Parse(Encoding.Default.GetString(array), CultureInfo.InvariantCulture);
-
-            if (statusOfRecord == 1)
-            {
-                Console.WriteLine($"Invalid operation. The record #{editRecordId} is removed.");
-                this.fileStream.Seek(0, SeekOrigin.End);
-                statusOfRecord = 0;
-            }
-
-            this.fileStream.Seek(-2, SeekOrigin.Current);
-            this.WriteRecordToFile(editedRecord, statusOfRecord);
-            AddToDictionary(this.firstNameDictionary, editedRecord.FirstName, recordPosition);
-            AddToDictionary(this.lastNameDictionary, editedRecord.LastName, recordPosition);
-            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordPosition);
-            Console.WriteLine($"Record #{editRecordId} is updated");
-        }
-
-        /// <summary>
         /// Finds the records by birth day.
         /// </summary>
         /// <param name="birthDayParameter">The date parameter.</param>
@@ -275,29 +243,6 @@ namespace FileCabinetApp
         {
             FileCabinetServiceSnapshot newSnapshot = new (this.GetRecords().ToArray());
             return newSnapshot;
-        }
-
-        /// <summary>
-        /// Removes the record from current repositiry.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId)
-        {
-            if (recordId <= 0)
-            {
-                Console.WriteLine("Invelid record ID");
-                return;
-            }
-
-            int isDeleted = 1;
-            long startByteOfRecordInFile = (recordId - 1) * BytesInRecord;
-            this.fileStream.Seek(startByteOfRecordInFile, SeekOrigin.Begin);
-            byte[] input = Encoding.Default.GetBytes(isDeleted.ToString(CultureInfo.InvariantCulture));
-            Array.Resize(ref input, 2);
-            this.fileStream.Write(input, 0, input.Length);
-            this.fileStream.Flush();
-            this.RemoveFromDictionaries(recordId);
-            Console.WriteLine($"Record #{recordId} is removed.");
         }
 
         /// <summary>

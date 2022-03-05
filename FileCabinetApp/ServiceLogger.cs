@@ -38,18 +38,6 @@ namespace FileCabinetApp
         /// <summary>
         /// Writes information about edit operation to file system storage.
         /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited paremeters of record.</param>
-        public override void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Create() with Id = '{editRecordId}', FirstName = '{editedRecord.FirstName}', LastName = '{editedRecord.LastName}', DateOfBirth = '{editedRecord.DateOfBirth}', SerieOfPassNumber = '{editedRecord.SerieOfPassNumber}', PassNumber = '{editedRecord.PassNumber}', BankAccount = '{editedRecord.BankAccount}'");
-            base.EditRecord(editRecordId, editedRecord);
-            this.streamWriter.Flush();
-        }
-
-        /// <summary>
-        /// Writes information about edit operation to file system storage.
-        /// </summary>
         /// <param name="insertRecord">The id of record for edit.</param>
         public override void InsertRecord(FileCabinetRecord insertRecord)
         {
@@ -158,17 +146,6 @@ namespace FileCabinetApp
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Stat() returned: all records {result.Item1}, removed {result.Item2}");
             this.streamWriter.Flush();
             return result;
-        }
-
-        /// <summary>
-        /// Writes information about remove record operation to file system storage.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public override void RemoveRecord(int recordId)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Remove() with ID = '{recordId}'");
-            base.RemoveRecord(recordId);
-            this.streamWriter.Flush();
         }
 
         /// <summary>

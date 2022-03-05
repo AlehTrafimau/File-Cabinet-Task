@@ -44,20 +44,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Elemenates time of running edit operation.
-        /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited paremeters of record.</param>
-        public virtual void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
-        {
-            this.stopWatch.Restart();
-            this.service.EditRecord(editRecordId, editedRecord);
-            this.stopWatch.Stop();
-            TimeSpan timeSpan = this.stopWatch.Elapsed;
-            Console.WriteLine($"Edit method execution duration is {timeSpan.Ticks} ticks.");
-        }
-
-        /// <summary>
         /// Elemenates time of running find operation.
         /// </summary>
         /// <param name="birthDayParameter">The date parameter.</param>
@@ -163,19 +149,6 @@ namespace FileCabinetApp
         {
             FileCabinetServiceSnapshot newSnapshot = this.service.MakeSnapshot();
             return newSnapshot;
-        }
-
-        /// <summary>
-        /// Elemenates time of running remove operation.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public virtual void RemoveRecord(int recordId)
-        {
-            this.stopWatch.Restart();
-            this.service.RemoveRecord(recordId);
-            this.stopWatch.Stop();
-            TimeSpan timeSpan = this.stopWatch.Elapsed;
-            Console.WriteLine($"RemoveRecord method execution duration is {timeSpan.Ticks} ticks.");
         }
 
         /// <summary>

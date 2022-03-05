@@ -30,36 +30,6 @@ namespace FileCabinetApp
             return newRecord.Id;
         }
 
-        /// <summary>
-        /// Removes the record from current repositiry.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId)
-        {
-            int indexOfRemoveRecord = -1;
-
-            for (int i = 0; i < this.usersRecords.Count; i++)
-            {
-                if (this.usersRecords[i].Id == recordId)
-                {
-                    indexOfRemoveRecord = i;
-                    break;
-                }
-            }
-
-            if (indexOfRemoveRecord == -1)
-            {
-                Console.WriteLine($"Record #{recordId} doesn't exists");
-                return;
-            }
-
-            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[indexOfRemoveRecord].FirstName, recordId);
-            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[indexOfRemoveRecord].LastName, recordId);
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), recordId);
-            this.usersRecords.RemoveAt(indexOfRemoveRecord);
-            Console.WriteLine($"Record #{recordId} is removed.");
-        }
-
         /// <summary>Gets all records which created.</summary>
         /// <returns>
         /// The list of created records at the present time.
@@ -157,27 +127,6 @@ namespace FileCabinetApp
             {
                 this.CreateRecord(insertRecord);
             }
-        }
-
-        /// <summary>Edits the exist record by Id number.</summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited paremeters of record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord)
-        {
-            int recordIndex = editRecordId - 1;
-            editedRecord.Id = editRecordId;
-
-            RemoveFromDictionary(this.firstNameDictionary, this.usersRecords[recordIndex].FirstName, editedRecord.Id);
-            AddToDictionary(this.firstNameDictionary, editedRecord.FirstName, editedRecord);
-
-            RemoveFromDictionary(this.lastNameDictionary, this.usersRecords[recordIndex].LastName, editedRecord.Id);
-            AddToDictionary(this.lastNameDictionary, editedRecord.LastName, editedRecord);
-
-            RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[recordIndex].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord.Id);
-            AddToDictionary(this.dateOfBirthDictionary, editedRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), editedRecord);
-
-            this.usersRecords[recordIndex] = editedRecord;
-            Console.WriteLine($"Record #{editedRecord.Id} is updated");
         }
 
         /// <summary>Finds the records by first name.</summary>
@@ -408,9 +357,9 @@ namespace FileCabinetApp
         /// <param name="findConditions">The record which consist of fields as find conditions.</param>
         public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions)
         {
-            FileCabinetRecord[]? findResult = Array.Empty<FileCabinetRecord>();
+            FileCabinetRecord[] findResult = Array.Empty<FileCabinetRecord>();
             findResult = findConditions.Id != default ? this.usersRecords.Where(record => record.Id == findConditions.Id).ToArray() : findResult;
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.FirstName != string.Empty ? this.usersRecords.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
             }
@@ -419,7 +368,7 @@ namespace FileCabinetApp
                 findResult = findConditions.FirstName != string.Empty ? findResult.Where(record => record.FirstName.ToUpperInvariant() == findConditions.FirstName.ToUpperInvariant()).ToArray() : findResult;
             }
 
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.LastName != string.Empty ? this.usersRecords.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
             }
@@ -428,7 +377,7 @@ namespace FileCabinetApp
                 findResult = findConditions.LastName != string.Empty ? findResult.Where(record => record.LastName.ToUpperInvariant() == findConditions.LastName.ToUpperInvariant()).ToArray() : findResult;
             }
 
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.DateOfBirth != default ? this.usersRecords.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
             }
@@ -437,7 +386,7 @@ namespace FileCabinetApp
                 findResult = findConditions.DateOfBirth != default ? findResult.Where(record => record.DateOfBirth == findConditions.DateOfBirth).ToArray() : findResult;
             }
 
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.SerieOfPassNumber != default ? this.usersRecords.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
             }
@@ -446,7 +395,7 @@ namespace FileCabinetApp
                 findResult = findConditions.SerieOfPassNumber != default ? findResult.Where(record => record.SerieOfPassNumber == findConditions.SerieOfPassNumber).ToArray() : findResult;
             }
 
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.PassNumber != default ? this.usersRecords.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
             }
@@ -455,7 +404,7 @@ namespace FileCabinetApp
                 findResult = findConditions.PassNumber != default ? findResult.Where(record => record.PassNumber == findConditions.PassNumber).ToArray() : findResult;
             }
 
-            if (findResult == null)
+            if (findResult == Array.Empty<FileCabinetRecord>())
             {
                 findResult = findConditions.BankAccount != default ? this.usersRecords.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
             }
@@ -464,9 +413,9 @@ namespace FileCabinetApp
                 findResult = findConditions.BankAccount != default ? findResult.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
             }
 
-            int[]? selectedRecordsId = findResult != null ? findResult.Select(record => record.Id).ToArray() : null;
+            int[] selectedRecordsId = findResult != Array.Empty<FileCabinetRecord>() ? findResult.Select(record => record.Id).ToArray() : Array.Empty<int>();
 
-            if (selectedRecordsId != null)
+            if (selectedRecordsId != Array.Empty<int>())
             {
                 foreach (var i in selectedRecordsId)
                 {

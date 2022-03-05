@@ -20,12 +20,6 @@ namespace FileCabinetApp
         public int CreateRecord(FileCabinetRecord newRecord);
 
         /// <summary>
-        /// Removes the record from repository.
-        /// </summary>
-        /// <param name="recordId"> The id if record for remove.</param>
-        public void RemoveRecord(int recordId);
-
-        /// <summary>
         /// Adds new record from file system to current repository.
         /// </summary>
         /// <param name="snapshot">The new records for add.</param>
@@ -46,13 +40,6 @@ namespace FileCabinetApp
         /// The number of created records.
         /// </returns>
         public (int, int) GetStat();
-
-        /// <summary>
-        /// Edits the exist record by Id number.
-        /// </summary>
-        /// <param name="editRecordId">The id of record for edit.</param>
-        /// <param name="editedRecord">The edited record.</param>
-        public void EditRecord(int editRecordId, FileCabinetRecord editedRecord);
 
         /// <summary>
         /// Finds the records by first name.
