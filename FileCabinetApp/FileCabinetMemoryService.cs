@@ -13,6 +13,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
+        private Dictionary<string, List<FileCabinetRecord>> selectedRecords = new ();
 
         /// <summary>Creates the new record and adds to list.</summary>
         /// <param name="newRecord">The new record.</param>
@@ -127,6 +128,8 @@ namespace FileCabinetApp
             {
                 this.CreateRecord(insertRecord);
             }
+
+            this.selectedRecords.Clear();
         }
 
         /// <summary>
@@ -168,6 +171,8 @@ namespace FileCabinetApp
                     RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), id);
                     this.usersRecords.RemoveAt(indexOfRemoveRecord);
                 }
+
+                this.selectedRecords.Clear();
             }
 
             static void PrintMessage(int[] recordsId)
@@ -390,6 +395,8 @@ namespace FileCabinetApp
                         this.usersRecords[i - 1].BankAccount = newParameters.BankAccount;
                     }
                 }
+
+                this.selectedRecords.Clear();
             }
         }
 
@@ -399,11 +406,16 @@ namespace FileCabinetApp
         /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
         /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
         /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
-        public void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
+        public void SelectRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
         {
-            List<FileCabinetRecord> selectedRecordsByParameters = new ();
+            List<FileCabinetRecord> selectedRecordsByParameters = this.GetSelectedRecords(fieldsOfRecordForSelect, orderOfSelect);
+            if (selectedRecordsByParameters.Count != 0)
+            {
+                SelectPrinter.Printer(selectedRecordsByParameters, fieldsOfRecordsForDisplay);
+                return;
+            }
 
-            if (fieldsOfRecordForSelect == null)
+            if (fieldsOfRecordForSelect.Count == 0)
             {
                 selectedRecordsByParameters = this.usersRecords;
             }
@@ -438,6 +450,7 @@ namespace FileCabinetApp
                 return;
             }
 
+            this.MemoizeSelectedRecords(fieldsOfRecordForSelect, orderOfSelect, selectedRecordsByParameters);
             SelectPrinter.Printer(selectedRecordsByParameters, fieldsOfRecordsForDisplay);
         }
 
@@ -474,6 +487,41 @@ namespace FileCabinetApp
                     break;
                 }
             }
+        }
+
+        private static string KeyGenerate(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect)
+        {
+            List<string> key = new ();
+            foreach (var i in fieldsOfRecordForSelect)
+            {
+                key.Add($"{i.Item1}:{i.Item2}");
+            }
+
+            string keyOf = string.Join('|', key);
+            if (orderOfSelect == "or" || orderOfSelect == "and")
+            {
+                keyOf += orderOfSelect == "or" ? "or" : "and";
+            }
+
+            return keyOf;
+        }
+
+        private void MemoizeSelectedRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect, List<FileCabinetRecord> selectedRecords)
+        {
+            string key = KeyGenerate(fieldsOfRecordForSelect, orderOfSelect);
+            this.selectedRecords.Add(key, selectedRecords);
+        }
+
+        private List<FileCabinetRecord> GetSelectedRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect)
+        {
+            List<FileCabinetRecord> selectedRecords = new ();
+            string key = KeyGenerate(fieldsOfRecordForSelect, orderOfSelect);
+            if (this.selectedRecords.ContainsKey(key))
+            {
+                selectedRecords = this.selectedRecords[key];
+            }
+
+            return selectedRecords;
         }
     }
 }

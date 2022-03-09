@@ -81,6 +81,6 @@ namespace FileCabinetApp
         /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
         /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
         /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
-        public void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect);
+        public void SelectRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect);
     }
 }

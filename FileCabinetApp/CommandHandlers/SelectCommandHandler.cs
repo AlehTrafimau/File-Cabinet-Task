@@ -110,7 +110,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (commands.Length < 2)
             {
-                this.fileCabinetService.SelectRecords(null, validfieldsOfRecordForDisplay, string.Empty);
+                this.fileCabinetService.SelectRecords(new List<Tuple<string, string>>(), validfieldsOfRecordForDisplay, string.Empty);
                 return;
             }
 
