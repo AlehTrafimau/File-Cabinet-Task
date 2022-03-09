@@ -13,6 +13,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new ();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new ();
+        private Dictionary<string, List<FileCabinetRecord>> selectedRecords = new ();
 
         /// <summary>Creates the new record and adds to list.</summary>
         /// <param name="newRecord">The new record.</param>
@@ -127,65 +128,8 @@ namespace FileCabinetApp
             {
                 this.CreateRecord(insertRecord);
             }
-        }
 
-        /// <summary>Finds the records by first name.</summary>
-        /// <param name="firstName">The first name.</param>
-        /// <returns>
-        /// The list of records which consist of this first name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-
-            if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
-            {
-                recordsByKey = this.firstNameDictionary[firstName.ToUpperInvariant()];
-            }
-
-            return recordsByKey;
-        }
-
-        /// <summary>Finds the records by last name.</summary>
-        /// <param name="lastName">The last name.</param>
-        /// <returns>
-        /// The list of records which consist of this last name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-
-            if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
-            {
-                recordsByKey = this.lastNameDictionary[lastName.ToUpperInvariant()];
-            }
-
-            return recordsByKey;
-        }
-
-        /// <summary>Finds the records by birth day.</summary>
-        /// <param name="birthDayParameter">The date parameter.</param>
-        /// <returns>
-        /// The list of records which consist of this birth date.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-            bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
-
-            if (!isDateTime)
-            {
-                Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-                return recordsByKey;
-            }
-
-            string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture).ToUpperInvariant();
-            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
-            {
-                recordsByKey = this.dateOfBirthDictionary[correctFormatOfParameter];
-            }
-
-            return recordsByKey;
+            this.selectedRecords.Clear();
         }
 
         /// <summary>
@@ -227,6 +171,8 @@ namespace FileCabinetApp
                     RemoveFromDictionary(this.dateOfBirthDictionary, this.usersRecords[indexOfRemoveRecord].DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), id);
                     this.usersRecords.RemoveAt(indexOfRemoveRecord);
                 }
+
+                this.selectedRecords.Clear();
             }
 
             static void PrintMessage(int[] recordsId)
@@ -449,7 +395,63 @@ namespace FileCabinetApp
                         this.usersRecords[i - 1].BankAccount = newParameters.BankAccount;
                     }
                 }
+
+                this.selectedRecords.Clear();
             }
+        }
+
+        /// <summary>
+        /// Select record from current storage by input parameters.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public void SelectRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
+        {
+            List<FileCabinetRecord> selectedRecordsByParameters = this.GetSelectedRecords(fieldsOfRecordForSelect, orderOfSelect);
+            if (selectedRecordsByParameters.Count != 0)
+            {
+                SelectPrinter.Printer(selectedRecordsByParameters, fieldsOfRecordsForDisplay);
+                return;
+            }
+
+            if (fieldsOfRecordForSelect.Count == 0)
+            {
+                selectedRecordsByParameters = this.usersRecords;
+            }
+            else if (orderOfSelect.ToUpperInvariant() == "AND" || orderOfSelect.ToUpperInvariant() == string.Empty)
+            {
+                FileCabinetRecord[] records = this.usersRecords.ToArray<FileCabinetRecord>();
+                foreach (var i in fieldsOfRecordForSelect)
+                {
+                    records = RecordsSearcher.FindRecords(i, records);
+                }
+
+                selectedRecordsByParameters.AddRange(records);
+            }
+            else if (orderOfSelect.ToUpperInvariant() == "OR")
+            {
+                FileCabinetRecord[] records = Array.Empty<FileCabinetRecord>();
+                foreach (var i in fieldsOfRecordForSelect)
+                {
+                    records = RecordsSearcher.FindRecords(i, this.usersRecords.ToArray<FileCabinetRecord>());
+                    if (records != Array.Empty<FileCabinetRecord>())
+                    {
+                        break;
+                    }
+                }
+
+                selectedRecordsByParameters.AddRange(records);
+            }
+
+            if (selectedRecordsByParameters.Count == 0)
+            {
+                Console.WriteLine("Records are not found");
+                return;
+            }
+
+            this.MemoizeSelectedRecords(fieldsOfRecordForSelect, orderOfSelect, selectedRecordsByParameters);
+            SelectPrinter.Printer(selectedRecordsByParameters, fieldsOfRecordsForDisplay);
         }
 
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
@@ -485,6 +487,41 @@ namespace FileCabinetApp
                     break;
                 }
             }
+        }
+
+        private static string KeyGenerate(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect)
+        {
+            List<string> key = new ();
+            foreach (var i in fieldsOfRecordForSelect)
+            {
+                key.Add($"{i.Item1}:{i.Item2}");
+            }
+
+            string keyOf = string.Join('|', key);
+            if (orderOfSelect == "or" || orderOfSelect == "and")
+            {
+                keyOf += orderOfSelect == "or" ? "or" : "and";
+            }
+
+            return keyOf;
+        }
+
+        private void MemoizeSelectedRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect, List<FileCabinetRecord> selectedRecords)
+        {
+            string key = KeyGenerate(fieldsOfRecordForSelect, orderOfSelect);
+            this.selectedRecords.Add(key, selectedRecords);
+        }
+
+        private List<FileCabinetRecord> GetSelectedRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string orderOfSelect)
+        {
+            List<FileCabinetRecord> selectedRecords = new ();
+            string key = KeyGenerate(fieldsOfRecordForSelect, orderOfSelect);
+            if (this.selectedRecords.ContainsKey(key))
+            {
+                selectedRecords = this.selectedRecords[key];
+            }
+
+            return selectedRecords;
         }
     }
 }

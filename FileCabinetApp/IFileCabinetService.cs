@@ -42,33 +42,6 @@ namespace FileCabinetApp
         public (int, int) GetStat();
 
         /// <summary>
-        /// Finds the records by first name.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <returns>
-        /// The read only collection of records which consist of this first name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
-
-        /// <summary>
-        /// Finds the records by last name.
-        /// </summary>
-        /// <param name="lastName">The last name.</param>
-        /// <returns>
-        /// The read only collection of records which consist of this last name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
-
-        /// <summary>
-        /// Finds the records by birth day.
-        /// </summary>
-        /// <param name="birthDayParameter">The date parameter.</param>
-        /// <returns>
-        /// The read only collection of records which consist of this birth date.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter);
-
-        /// <summary>
         /// Makes the snapshot.
         /// </summary>
         /// <returns>The snapshot of current state of the cabinet service.</returns>
@@ -101,5 +74,13 @@ namespace FileCabinetApp
         /// <param name="newParameters">The record which consist of new parameters.</param>
         /// <param name="findConditions">The record which consist of fields as find conditions.</param>
         public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions);
+
+        /// <summary>
+        /// Select record from current storage by input parameters.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public void SelectRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect);
     }
 }

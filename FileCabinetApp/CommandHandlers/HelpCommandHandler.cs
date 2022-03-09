@@ -22,13 +22,12 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "stat", "prints notes statistics", "The 'stat' command prints notes' statistics." },
             new string[] { "create", "saves user's date and returns user's ID", "The 'create' command saves user's date and returns user's ID." },
             new string[] { "purge", "defragments records in file system", "The 'purge' command defragments records in file sustem" },
-            new string[] { "list", "prints all records of this service", "The 'help' command prints all records of this service." },
             new string[] { "export", "exports records data in special format", "The 'export' command exports records data in special format" },
             new string[] { "import", "imports records data from file system", "The 'export' command imports records data from file system" },
-            new string[] { "find", "finds all records in the storage by special parameters", "The 'find' command Finds all records in the storage by special parameters" },
             new string[] { "insert", "inserts the new record to the storage.", "The 'insert' inserts the new record to the storage." },
             new string[] { "delete", "deletes records from the storage which match input condition.", "The 'delete' deletes records from the storage which match input condition." },
             new string[] { "update", "updates record from current storage by input parameters.", "The 'update' updates record from current storage by input parameters." },
+            new string[] { "select", "selects records by input parameters", "The 'select' selects records by input parameters." },
         };
 
         /// <summary>
