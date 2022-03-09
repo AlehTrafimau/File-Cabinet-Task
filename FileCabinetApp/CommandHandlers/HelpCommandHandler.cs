@@ -29,6 +29,7 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "insert", "inserts the new record to the storage.", "The 'insert' inserts the new record to the storage." },
             new string[] { "delete", "deletes records from the storage which match input condition.", "The 'delete' deletes records from the storage which match input condition." },
             new string[] { "update", "updates record from current storage by input parameters.", "The 'update' updates record from current storage by input parameters." },
+            new string[] { "select", "selects records by input parameters", "The 'select' selects records by input parameters." },
         };
 
         /// <summary>

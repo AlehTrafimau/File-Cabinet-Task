@@ -452,6 +452,54 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Select record from current storage by input parameters.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
+        {
+            List<FileCabinetRecord> selectedRecordsByParameters = new ();
+
+            if (fieldsOfRecordForSelect == null)
+            {
+                selectedRecordsByParameters = this.usersRecords;
+            }
+            else if (orderOfSelect.ToUpperInvariant() == "AND" || orderOfSelect.ToUpperInvariant() == string.Empty)
+            {
+                FileCabinetRecord[] records = this.usersRecords.ToArray<FileCabinetRecord>();
+                foreach (var i in fieldsOfRecordForSelect)
+                {
+                    records = RecordsSearcher.FindRecords(i, records);
+                }
+
+                selectedRecordsByParameters.AddRange(records);
+            }
+            else if (orderOfSelect.ToUpperInvariant() == "OR")
+            {
+                FileCabinetRecord[] records = Array.Empty<FileCabinetRecord>();
+                foreach (var i in fieldsOfRecordForSelect)
+                {
+                    records = RecordsSearcher.FindRecords(i, this.usersRecords.ToArray<FileCabinetRecord>());
+                    if (records != Array.Empty<FileCabinetRecord>())
+                    {
+                        break;
+                    }
+                }
+
+                selectedRecordsByParameters.AddRange(records);
+            }
+
+            if (selectedRecordsByParameters.Count == 0)
+            {
+                Console.WriteLine("Records are not found");
+                return;
+            }
+
+            SelectPrinter.Printer(selectedRecordsByParameters, fieldsOfRecordsForDisplay);
+        }
+
         private static void AddToDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, string parameter, FileCabinetRecord record)
         {
             if (dictionary.ContainsKey(parameter.ToUpperInvariant()))

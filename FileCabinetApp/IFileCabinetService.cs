@@ -101,5 +101,13 @@ namespace FileCabinetApp
         /// <param name="newParameters">The record which consist of new parameters.</param>
         /// <param name="findConditions">The record which consist of fields as find conditions.</param>
         public void Update(FileCabinetRecord newParameters, FileCabinetRecord findConditions);
+
+        /// <summary>
+        /// Select record from current storage by input parameters.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect);
     }
 }

@@ -15,7 +15,7 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
-        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "LIST", "FIND", "PURGE", "INSERT", "EXIT" };
+        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "LIST", "FIND", "PURGE", "INSERT", "EXIT", "SELECT" };
 
         private static bool isRunning = true;
 
@@ -108,6 +108,7 @@ namespace FileCabinetApp
             var deleteHandler = new DeleteCommandHandler(fileCabinetService);
             var insertHandler = new InsertCommandHandler(fileCabinetService, recordValidator);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
+            var selecthandler = new SelectCommandHandler(fileCabinetService);
             var updateHandler = new UpdateCommandHandler(fileCabinetService);
             var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter.Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
@@ -119,7 +120,8 @@ namespace FileCabinetApp
             findHandler.SetNext(deleteHandler);
             deleteHandler.SetNext(importHandler);
             importHandler.SetNext(insertHandler);
-            insertHandler.SetNext(updateHandler);
+            insertHandler.SetNext(selecthandler);
+            selecthandler.SetNext(updateHandler);
             updateHandler.SetNext(exportHandler);
             exportHandler.SetNext(listHandler);
             listHandler.SetNext(purgeHandler);

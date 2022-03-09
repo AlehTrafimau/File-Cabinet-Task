@@ -182,5 +182,23 @@ namespace FileCabinetApp
             base.Delete(fieldName, value);
             this.streamWriter.Flush();
         }
+
+        /// <summary>
+        ///  Writes information about select operation to file system storage.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public override void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string? orderOfSelect)
+        {
+            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Select() by parameters where:");
+            foreach (var i in fieldsOfRecordForSelect ?? Enumerable.Empty<Tuple<string, string>>())
+            {
+                this.streamWriter.Write($"{i.Item1} = {i.Item2}\t");
+            }
+
+            base.SelectRecords(fieldsOfRecordForSelect, fieldsOfRecordsForDisplay, orderOfSelect);
+            this.streamWriter.Flush();
+        }
     }
 }

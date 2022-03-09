@@ -765,5 +765,10 @@ namespace FileCabinetApp
             this.fileStream.Write(input, 0, input.Length);
             this.fileStream.Flush();
         }
+
+        public void SelectRecords(List<Tuple<string, string>>? findParameters, string[] fieldsForPrint, string? conditionsOfFind)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

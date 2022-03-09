@@ -273,6 +273,30 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.SelectCommandHandler">
+            <summary>
+            Selects records by input parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.SelectCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>
+            Handlings the input request or transmits further.
+            </summary>
+            <param name="handlingRequest">The input request.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.IdentificateOfRecordFields(System.String[])">
+            <summary>
+            Identificates of valid field of record.
+            </summary>
+            <param name="fieldsOfRecordForSearch">The list of input paremeters.</param>
+            <returns>The list of valid fields name of record and its value.</returns>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
             <summary>
             Consinsts of a set of methods to work with handlers.
@@ -625,6 +649,14 @@
             </summary>
             <param name="newParameters">The record which consist of new parameters.</param>
             <param name="findConditions">The record which consist of fields as find conditions.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.SelectRecords(System.Collections.Generic.List{System.Tuple{System.String,System.String}},System.String[],System.String)">
+            <summary>
+            Select record from current storage by input parameters.
+            </summary>
+            <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+            <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+            <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -1015,6 +1047,14 @@
             <param name="newParameters">The record which consist of new parameters.</param>
             <param name="findConditions">The record which consist of fields as find conditions.</param>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.SelectRecords(System.Collections.Generic.List{System.Tuple{System.String,System.String}},System.String[],System.String)">
+            <summary>
+            Select record from current storage by input parameters.
+            </summary>
+            <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+            <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+            <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             Consists a function to record validate.
@@ -1035,6 +1075,18 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.SelectPrinter">
+            <summary>
+            Displays of data of records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.SelectPrinter.Printer(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord},System.String[])">
+            <summary>
+            Displays of necessary fields of records.
+            </summary>
+            <param name="selectedRecords">The list of selected records.</param>
+            <param name="fields">The list of necessary fields of records for display.</param>
         </member>
         <member name="T:FileCabinetApp.ServiceLogger">
             <summary>
@@ -1123,6 +1175,14 @@
             </summary>
             <param name="fieldName">The name of record field.</param>
             <param name="value">The value of record field.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.SelectRecords(System.Collections.Generic.List{System.Tuple{System.String,System.String}},System.String[],System.String)">
+            <summary>
+             Writes information about select operation to file system storage.
+            </summary>
+            <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+            <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+            <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
         </member>
         <member name="T:FileCabinetApp.ServiceMeter">
             <summary>
@@ -1223,6 +1283,14 @@
             </summary>
             <param name="fieldName">The name of record field.</param>
             <param name="value">The value of record field.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.SelectRecords(System.Collections.Generic.List{System.Tuple{System.String,System.String}},System.String[],System.String)">
+            <summary>
+            Elemenates time of running select operation.
+            </summary>
+            <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+            <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+            <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
         </member>
         <member name="T:FileCabinetApp.StringConverter">
             <summary>

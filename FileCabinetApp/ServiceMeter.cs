@@ -191,5 +191,20 @@ namespace FileCabinetApp
             TimeSpan timeSpan = this.stopWatch.Elapsed;
             Console.WriteLine($"Delete method execution duration is {timeSpan.Ticks} ticks.");
         }
+
+        /// <summary>
+        /// Elemenates time of running select operation.
+        /// </summary>
+        /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+        /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+        /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        public virtual void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string? orderOfSelect)
+        {
+            this.stopWatch.Restart();
+            this.service.SelectRecords(fieldsOfRecordForSelect, fieldsOfRecordsForDisplay, orderOfSelect);
+            this.stopWatch.Stop();
+            TimeSpan timeSpan = this.stopWatch.Elapsed;
+            Console.WriteLine($"Select method execution duration is {timeSpan.Ticks} ticks.");
+        }
     }
 }
