@@ -15,7 +15,7 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService();
         private static IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
-        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "LIST", "FIND", "PURGE", "INSERT", "EXIT", "SELECT" };
+        private static string[] availableCommand = { "CREATE", "DELETE", "UPDATE", "STAT", "HELP", "IMPORT", "EXPORT", "PURGE", "INSERT", "EXIT", "SELECT" };
 
         private static bool isRunning = true;
 
@@ -103,28 +103,24 @@ namespace FileCabinetApp
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
             var statHandler = new StatCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter.Print);
             var importHandler = new ImportCommandHandler(fileCabinetService);
             var deleteHandler = new DeleteCommandHandler(fileCabinetService);
             var insertHandler = new InsertCommandHandler(fileCabinetService, recordValidator);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var selecthandler = new SelectCommandHandler(fileCabinetService);
             var updateHandler = new UpdateCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter.Print);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var exitHandler = new ExitCommandHandler((bool run) => isRunning = run);
 
             helpHandler.SetNext(createHandler);
             createHandler.SetNext(statHandler);
-            statHandler.SetNext(findHandler);
-            findHandler.SetNext(deleteHandler);
+            statHandler.SetNext(deleteHandler);
             deleteHandler.SetNext(importHandler);
             importHandler.SetNext(insertHandler);
             insertHandler.SetNext(selecthandler);
             selecthandler.SetNext(updateHandler);
             updateHandler.SetNext(exportHandler);
-            exportHandler.SetNext(listHandler);
-            listHandler.SetNext(purgeHandler);
+            exportHandler.SetNext(purgeHandler);
             purgeHandler.SetNext(exitHandler);
 
             return helpHandler;

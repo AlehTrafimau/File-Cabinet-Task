@@ -47,72 +47,6 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Writes information about find by date of birth operation to file system storage.
-        /// </summary>
-        /// <param name="birthDayParameter">The date parameter.</param>
-        /// <returns>
-        /// The list of records which consist of this birth date.
-        /// </returns>
-        public override IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by day of birth with birth date = '{birthDayParameter}'");
-            IEnumerable<FileCabinetRecord> findResult = base.FindByDayOfBirth(birthDayParameter);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records:");
-
-            foreach (var record in findResult)
-            {
-                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
-            }
-
-            this.streamWriter.Flush();
-            return findResult;
-        }
-
-        /// <summary>
-        /// Writes information about find by first name operations to file system storage.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <returns>
-        /// The list of records which consist of this first name.
-        /// </returns>
-        public override IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by first name with birth date = '{firstName}'");
-            IEnumerable<FileCabinetRecord> findResult = base.FindByFirstName(firstName);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records:");
-
-            foreach (var record in findResult)
-            {
-                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
-            }
-
-            this.streamWriter.Flush();
-            return findResult;
-        }
-
-        /// <summary>
-        /// Writes information about find by last name operations to file system storage.
-        /// </summary>
-        /// <param name="lastName">The last name.</param>
-        /// <returns>
-        /// The list of records which consist of this last name.
-        /// </returns>
-        public override IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Find() by last name with birth date = '{lastName}'");
-            IEnumerable<FileCabinetRecord> findResult = base.FindByLastName(lastName);
-            this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Find() returned records.");
-
-            foreach (var record in findResult)
-            {
-                this.streamWriter.WriteLine($"Id = '{record.Id}', FirstName = '{record.FirstName}', LastName = '{record.LastName}', DateOfBirth = '{record.DateOfBirth}', SerieOfPassNumber = '{record.SerieOfPassNumber}', PassNumber = '{record.PassNumber}', BankAccount = '{record.BankAccount}'");
-            }
-
-            this.streamWriter.Flush();
-            return findResult;
-        }
-
-        /// <summary>
         /// Writes information about get record operation to file system storage.
         /// </summary>
         /// <returns>
@@ -189,7 +123,7 @@ namespace FileCabinetApp
         /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
         /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
         /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
-        public override void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string? orderOfSelect)
+        public override void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
         {
             this.streamWriter.WriteLine($"{DateTime.Now.ToString("g", CultureInfo.CurrentCulture)} - Calling Select() by parameters where:");
             foreach (var i in fieldsOfRecordForSelect ?? Enumerable.Empty<Tuple<string, string>>())

@@ -146,24 +146,6 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
-            <summary>
-            Finds all records in the storage by special parameters.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="printer">The handler of records to output to console.</param>
-            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Handlings the input request or transmits further.
-            </summary>
-            <param name="handlingRequest">The input request.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
             <summary>
             Prints all available commands this program.
@@ -237,24 +219,6 @@
             Display the list of records.
             </summary>
             <param name="records">The list of records.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
-            <summary>
-            Display all records in the storage.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="printer">The handler of records to output to console.</param>
-            <param name="fileCabinetService">The instance of file cabinet service instance.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>
-            Handlings the input request or transmits further.
-            </summary>
-            <param name="handlingRequest">The input request.</param>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
             <summary>
@@ -497,33 +461,6 @@
             </summary>
             <param name="insertRecord">The record for insert.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByDayOfBirth(System.String)">
-            <summary>
-            Finds the records by birth day.
-            </summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The read only collection of records which consist of this birth date.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByFirstName(System.String)">
-            <summary>
-            Finds the records by first name.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The read only collection of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetFileSystemService.FindByLastName(System.String)">
-            <summary>
-            Finds the records by last name.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The read only collection of records which consist of this last name.
-            </returns>
-        </member>
         <member name="M:FileCabinetApp.FileCabinetFileSystemService.GetRecords">
             <summary>
             Gets all records which created.
@@ -622,27 +559,6 @@
             Inserts the new record to the current storage.
             </summary>
             <param name="insertRecord">The record for insert.</param>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
-            <summary>Finds the records by first name.</summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The list of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByLastName(System.String)">
-            <summary>Finds the records by last name.</summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The list of records which consist of this last name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByDayOfBirth(System.String)">
-            <summary>Finds the records by birth day.</summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The list of records which consist of this birth date.
-            </returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.Delete(System.String,System.String)">
             <summary>
@@ -997,33 +913,6 @@
             The number of created records.
             </returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
-            <summary>
-            Finds the records by first name.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The read only collection of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
-            <summary>
-            Finds the records by last name.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The read only collection of records which consist of this last name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.FindByDayOfBirth(System.String)">
-            <summary>
-            Finds the records by birth day.
-            </summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The read only collection of records which consist of this birth date.
-            </returns>
-        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
             <summary>
             Makes the snapshot.
@@ -1121,33 +1010,6 @@
             </summary>
             <param name="insertRecord">The id of record for edit.</param>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByDayOfBirth(System.String)">
-            <summary>
-            Writes information about find by date of birth operation to file system storage.
-            </summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The list of records which consist of this birth date.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
-            <summary>
-            Writes information about find by first name operations to file system storage.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The list of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
-            <summary>
-            Writes information about find by last name operations to file system storage.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The list of records which consist of this last name.
-            </returns>
-        </member>
         <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
             <summary>
             Writes information about get record operation to file system storage.
@@ -1214,33 +1076,6 @@
             </summary>
             <param name="newRecord">The new record.</param>
             <returns>The Id number of the new record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByDayOfBirth(System.String)">
-            <summary>
-            Elemenates time of running find operation.
-            </summary>
-            <param name="birthDayParameter">The date parameter.</param>
-            <returns>
-            The list of records which consist of this birth date.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
-            <summary>
-            Elemenates time of running find operation.
-            </summary>
-            <param name="firstName">The first name.</param>
-            <returns>
-            The list of records which consist of this first name.
-            </returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
-            <summary>
-            Elemenates time of running find operation.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>
-            The list of records which consist of this last name.
-            </returns>
         </member>
         <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
             <summary>

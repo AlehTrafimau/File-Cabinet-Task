@@ -129,65 +129,6 @@ namespace FileCabinetApp
             }
         }
 
-        /// <summary>Finds the records by first name.</summary>
-        /// <param name="firstName">The first name.</param>
-        /// <returns>
-        /// The list of records which consist of this first name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-
-            if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
-            {
-                recordsByKey = this.firstNameDictionary[firstName.ToUpperInvariant()];
-            }
-
-            return recordsByKey;
-        }
-
-        /// <summary>Finds the records by last name.</summary>
-        /// <param name="lastName">The last name.</param>
-        /// <returns>
-        /// The list of records which consist of this last name.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-
-            if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
-            {
-                recordsByKey = this.lastNameDictionary[lastName.ToUpperInvariant()];
-            }
-
-            return recordsByKey;
-        }
-
-        /// <summary>Finds the records by birth day.</summary>
-        /// <param name="birthDayParameter">The date parameter.</param>
-        /// <returns>
-        /// The list of records which consist of this birth date.
-        /// </returns>
-        public IEnumerable<FileCabinetRecord> FindByDayOfBirth(string birthDayParameter)
-        {
-            List<FileCabinetRecord> recordsByKey = new ();
-            bool isDateTime = DateTime.TryParse(birthDayParameter, out DateTime dayOfBirth);
-
-            if (!isDateTime)
-            {
-                Console.WriteLine("Convert error. Format date of birth parameter: \"Year - Month - Day\" ");
-                return recordsByKey;
-            }
-
-            string correctFormatOfParameter = dayOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture).ToUpperInvariant();
-            if (this.dateOfBirthDictionary.ContainsKey(correctFormatOfParameter.ToUpperInvariant()))
-            {
-                recordsByKey = this.dateOfBirthDictionary[correctFormatOfParameter];
-            }
-
-            return recordsByKey;
-        }
-
         /// <summary>
         /// Deletes record from current storage by input conditions.
         /// </summary>
