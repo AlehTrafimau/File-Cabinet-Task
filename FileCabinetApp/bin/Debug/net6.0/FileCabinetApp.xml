@@ -573,6 +573,14 @@
             <param name="newParameters">The record which consist of new parameters.</param>
             <param name="findConditions">The record which consist of fields as find conditions.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFileSystemService.SelectRecords(System.Collections.Generic.List{System.Tuple{System.String,System.String}},System.String[],System.String)">
+            <summary>
+            Select record from current storage by input parameters.
+            </summary>
+            <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
+            <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
+            <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             Service to create, storage, edit, find and display records about users.
