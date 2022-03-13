@@ -19,7 +19,7 @@ namespace FileCabinetApp
         /// <param name="fields">The list of necessary fields of records for display.</param>
         public static void Printer(List<FileCabinetRecord> selectedRecords, string[] fields)
         {
-            int[] columnsWidth = IdentificateOfColumnsWidth(fields, selectedRecords);
+            int[] columnsWidth = DeterminateOfColumnsWidth(fields, selectedRecords);
             string line = DefineOfLine(columnsWidth);
             PrintLine(line);
             PrintTitleRow(fields, columnsWidth);
@@ -27,17 +27,17 @@ namespace FileCabinetApp
             foreach (var i in selectedRecords)
             {
                 PrintLine(line);
-                List<(string, int, string)> recordFieldsForPrint = GetNecessaryFieldsOfRecord(i, fields);
+                List<(string, string)> recordFieldsForPrint = GetNecessaryFieldsOfRecord(i, fields);
                 PrintValueRow(recordFieldsForPrint, columnsWidth);
             }
 
             PrintLine(line);
         }
 
-        private static int[] IdentificateOfColumnsWidth(string[] fields, List<FileCabinetRecord> records)
+        private static int[] DeterminateOfColumnsWidth(string[] fields, List<FileCabinetRecord> records)
         {
-            List<int> result = new List<int>();
-            if (fields.Contains("id"))
+            List<int> result = new ();
+            if (fields.Contains("ID"))
             {
                 int maxId = 0;
                 foreach (var i in records)
@@ -54,7 +54,7 @@ namespace FileCabinetApp
                 result.Add(maxLengthOfIdColumn);
             }
 
-            if (fields.Contains("firstname"))
+            if (fields.Contains("FIRSTNAME"))
             {
                 int maxLengthOfFirstName = 0;
                 foreach (var i in records)
@@ -71,7 +71,7 @@ namespace FileCabinetApp
                 result.Add(maxLengthOfFirstName);
             }
 
-            if (fields.Contains("lastname"))
+            if (fields.Contains("LASTNAME"))
             {
                 int maxLengthOfLastName = 0;
                 foreach (var i in records)
@@ -88,24 +88,36 @@ namespace FileCabinetApp
                 result.Add(maxLengthOfLastName);
             }
 
-            if (fields.Contains("dateofbirth"))
+            if (fields.Contains("DATEOFBIRTH"))
             {
                 result.Add(15);
             }
 
-            if (fields.Contains("serieofpassnumber"))
+            if (fields.Contains("SERIEOFPASSNUMBER"))
             {
                 result.Add(20);
             }
 
-            if (fields.Contains("passnumber"))
+            if (fields.Contains("PASSNUMBER"))
             {
                 result.Add(15);
             }
 
-            if (fields.Contains("bankaccount"))
+            if (fields.Contains("BANKACCOUNT"))
             {
-                result.Add(20);
+                int maxLengthOfbankAccount = 0;
+                foreach (var i in records)
+                {
+                    maxLengthOfbankAccount = i.BankAccount.ToString(CultureInfo.InvariantCulture).Length > maxLengthOfbankAccount ? i.BankAccount.ToString(CultureInfo.InvariantCulture).Length : maxLengthOfbankAccount;
+                }
+
+                maxLengthOfbankAccount += 5;
+                if (maxLengthOfbankAccount < 15)
+                {
+                    maxLengthOfbankAccount = 15;
+                }
+
+                result.Add(maxLengthOfbankAccount);
             }
 
             return result.ToArray<int>();
@@ -127,13 +139,13 @@ namespace FileCabinetApp
             return line;
         }
 
-        private static void PrintValueRow(List<(string, int, string)> columnsInfo, int[] widthOfElementTable)
+        private static void PrintValueRow(List<(string, string)> columnsInfo, int[] widthOfElementTable)
         {
             string row = "|";
 
             for (int i = 0; i < columnsInfo.Count; i++)
             {
-                row += AlignCentre(columnsInfo[i].Item1, widthOfElementTable[i], columnsInfo[i].Item2, columnsInfo[i].Item3) + "|";
+                row += AlignCentre(columnsInfo[i].Item1, widthOfElementTable[i], columnsInfo[i].Item2) + "|";
             }
 
             Console.WriteLine(row);
@@ -151,59 +163,59 @@ namespace FileCabinetApp
             Console.WriteLine(row);
         }
 
-        private static string AlignCentre(string text, int lengthOfTitleColumn, int rigth = 0, string position = "default")
+        private static string AlignCentre(string text, int lengthOfTitleColumn, string position = "DEFAULT")
         {
             if (string.IsNullOrEmpty(text))
             {
                 return new string(' ', lengthOfTitleColumn);
             }
-            else if (rigth != 0 && position == "right")
+            else if (text == "FIRSTNAME" || text == "LASTNAME" || text == "SERIEOFPASSNUMBER" || position == "LEFT")
             {
-                return text.PadRight(lengthOfTitleColumn - 2 - (rigth - text.Length)).PadLeft(lengthOfTitleColumn);
+                return text.PadLeft(text.Length + 2).PadRight(lengthOfTitleColumn);
             }
             else
             {
-                return text.PadRight(lengthOfTitleColumn - 2).PadLeft(lengthOfTitleColumn);
+                return text.PadRight(text.Length + 2).PadLeft(lengthOfTitleColumn);
             }
         }
 
-        private static List<(string, int, string)> GetNecessaryFieldsOfRecord(FileCabinetRecord record, string[] fieldsForPrint)
+        private static List<(string, string)> GetNecessaryFieldsOfRecord(FileCabinetRecord record, string[] fieldsForPrint)
         {
-            List<(string, int, string)> fieldsOfRecord = new ();
+            List<(string, string)> fieldsOfRecord = new ();
 
-            if (fieldsForPrint.Contains("id"))
+            if (fieldsForPrint.Contains("ID"))
             {
-                fieldsOfRecord.Add((record.Id.ToString(CultureInfo.InvariantCulture), 2, "right"));
+                fieldsOfRecord.Add((record.Id.ToString(CultureInfo.InvariantCulture), "RIGHT"));
             }
 
-            if (fieldsForPrint.Contains("firstname"))
+            if (fieldsForPrint.Contains("FIRSTNAME"))
             {
-                fieldsOfRecord.Add((record.FirstName, 0, "default"));
+                fieldsOfRecord.Add((record.FirstName, "LEFT"));
             }
 
-            if (fieldsForPrint.Contains("lastname"))
+            if (fieldsForPrint.Contains("LASTNAME"))
             {
-                fieldsOfRecord.Add((record.LastName, 0, "default"));
+                fieldsOfRecord.Add((record.LastName, "LEFT"));
             }
 
-            if (fieldsForPrint.Contains("dateofbirth"))
+            if (fieldsForPrint.Contains("DATEOFBIRTH"))
             {
-                fieldsOfRecord.Add((record.DateOfBirth.ToString("d", CultureInfo.CurrentCulture), 11, "right"));
+                fieldsOfRecord.Add((record.DateOfBirth.ToString("d", CultureInfo.CurrentCulture), "RIGHT"));
             }
 
-            if (fieldsForPrint.Contains("serieofpassnumber"))
+            if (fieldsForPrint.Contains("SERIEOFPASSNUMBER"))
             {
-                fieldsOfRecord.Add((record.SerieOfPassNumber.ToString(), 17, "right"));
+                fieldsOfRecord.Add((record.SerieOfPassNumber.ToString(), "LEFT"));
             }
 
-            if (fieldsForPrint.Contains("passnumber"))
+            if (fieldsForPrint.Contains("PASSNUMBER"))
             {
-                fieldsOfRecord.Add((record.PassNumber.ToString(CultureInfo.InvariantCulture), 10, "right"));
+                fieldsOfRecord.Add((record.PassNumber.ToString(CultureInfo.InvariantCulture), "RIGHT"));
             }
 
-            if (fieldsForPrint.Contains("bankaccount"))
+            if (fieldsForPrint.Contains("BANKACCOUNT"))
             {
-                fieldsOfRecord.Add((record.BankAccount.ToString(CultureInfo.InvariantCulture), 11, "right"));
+                fieldsOfRecord.Add((record.BankAccount.ToString(CultureInfo.InvariantCulture), "RIGHT"));
             }
 
             return fieldsOfRecord;

@@ -62,12 +62,15 @@ namespace FileCabinetApp
 
         private static void SetConsoleParameters(string[] args)
         {
+            string messageUsingStorage = "Data storage will take place in the memory of program.";
+            string validationRules = "This program will be use default validation rules";
+
             for (int i = 0; i < args.Length; i++)
             {
                 switch (args[i].ToUpperInvariant())
                 {
                     case "--VALIDATION-RULES=CUSTOM":
-                        SetValidationRules("CUSTOM");
+                        validationRules = SetValidationRules("CUSTOM");
                         break;
                     case "--VALIDATION-RULES=DEFAULT":
                         break;
@@ -80,7 +83,7 @@ namespace FileCabinetApp
 
                         break;
                     case "--STORAGE=FILE":
-                        SetStorage("FILE");
+                        messageUsingStorage = SetStorage("FILE");
                         break;
                     case "--STORAGE=MEMORY":
                         break;
@@ -104,29 +107,36 @@ namespace FileCabinetApp
                 }
             }
 
-            void SetValidationRules(string rules)
+            Console.WriteLine($"{messageUsingStorage}\n{validationRules}");
+
+            string SetValidationRules(string validationRules)
             {
-                if (rules == "CUSTOM")
+                string validationRulesMessage = string.Empty;
+                if (validationRules == "CUSTOM")
                 {
                     recordValidator = new ValidatorBuilder().CreateCustom();
+                    validationRulesMessage = "This program will be use custom validation rules";
                 }
+
+                return validationRulesMessage;
             }
 
-            void SetStorage(string storage)
+            string SetStorage(string storage)
             {
+                string typeOfStorageMessage = string.Empty;
                 if (storage == "FILE")
                 {
-                    Console.WriteLine("Data storage will take place in the file system.");
+                    typeOfStorageMessage = "Data storage will take place in the file system";
                     FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
                     fileCabinetService = new FileCabinetFileSystemService(fileStream);
                 }
+
+                return typeOfStorageMessage;
             }
         }
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var recordPrinter = new DefaultRecordPrinter();
-
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
             var statHandler = new StatCommandHandler(fileCabinetService);
