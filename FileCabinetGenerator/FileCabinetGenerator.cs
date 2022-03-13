@@ -21,31 +21,23 @@ namespace FileCabinetGenerator
             SetConsoleParameters(args);
             FileCabinetRecordGenerator recordsGenerator = new ();
             ReadOnlyCollection<FileCabinetRecord> newRecords = recordsGenerator.GetRandomRecords(numberOfRecords, startId);
-
-            bool retriveExistsFile = false;
-            if (File.Exists(pathToFile))
+            if (!File.Exists(pathToFile))
             {
-                Console.WriteLine($"File is exist - rewrite {pathToFile}? (Yes/No)");
-                string? retrivePermission = Console.ReadLine();
-                if (retrivePermission != null && retrivePermission.ToUpperInvariant() == "NO")
-                {
-                    retriveExistsFile = true;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Export failed: can't open file {pathToFile}");
+                Console.WriteLine($"Export failed: file {pathToFile} is not exist.");
+                return;
             }
 
-            using StreamWriter streamWriter = new (pathToFile, retriveExistsFile, System.Text.Encoding.Default);
+            if (exportFormat.ToUpperInvariant() != pathToFile[^3..].ToUpperInvariant())
+            {
+                Console.WriteLine($"Export failed: format of export: {exportFormat} in not the same of file format: {pathToFile}.");
+                return;
+            }
+
+            using StreamWriter streamWriter = new (pathToFile, false, System.Text.Encoding.Default);
             switch (exportFormat.ToUpperInvariant())
             {
                 case "CSV":
-                    if (retriveExistsFile == false)
-                    {
-                        streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
-                    }
-
+                    streamWriter.WriteLine("Id, FirstName, LastName, DateOfBirth, SerieOfPassNumber, PassNumber, BankAccount");
                     FileCabinetRecordCsvWriter csvWriter = new (streamWriter);
                     csvWriter.Write(newRecords.ToArray());
                     break;
@@ -68,85 +60,91 @@ namespace FileCabinetGenerator
                 return;
             }
 
-            if (args.Length == 4)
+            for (int i = 0; i < args.Length; i++)
             {
-                if (Regex.IsMatch(args[0].ToLowerInvariant(), @"^--output-type=[c|x]{1}[s|m]{1}[v|l]{1}$"))
+                if (Regex.IsMatch(args[i].ToUpperInvariant(), @"^--OUTPUT-TYPE=\S*$"))
                 {
-                    exportFormat = args[0][^3..];
+                    string[] exportTypeParameters = args[i].Split('=', 2);
+                    exportFormat = exportTypeParameters[1].ToUpperInvariant();
+                    continue;
                 }
 
-                if (Regex.IsMatch(args[1].ToLowerInvariant(), @"^--output=\S*$"))
+                if (Regex.IsMatch(args[i].ToUpperInvariant(), @"^--OUTPUT=\S*$"))
                 {
-                    pathToFile = args[1][9..];
+                    string[] outputParameters = args[i].Split('=', 2);
+                    pathToFile = outputParameters[1];
+                    continue;
                 }
 
-                if (Regex.IsMatch(args[2].ToLowerInvariant(), @"^--records-amount=\d+$"))
+                if (Regex.IsMatch(args[i].ToUpperInvariant(), @"^--RECORDS-AMOUNT=\d+$"))
                 {
-                    bool isNumber = int.TryParse(args[2][17..], out int number);
+                    string[] recordsAmountParameters = args[i].Split('=', 2);
+                    bool isNumber = int.TryParse(recordsAmountParameters[1], out int number);
                     if (isNumber)
                     {
                         numberOfRecords = number;
                     }
-                    else
-                    {
-                        Console.WriteLine($"Invalid parameter for \"--records-amount\"  {args[2][18..]}");
-                    }
+
+                    continue;
                 }
 
-                if (Regex.IsMatch(args[3].ToLowerInvariant(), @"^--start-id=\d+$"))
+                if (Regex.IsMatch(args[i].ToUpperInvariant(), @"^--START-ID=\d+$"))
                 {
-                    bool isNumber = int.TryParse(args[3][11..], out int number);
-                    if (isNumber)
+                    string[] startIdParameters = args[i].Split('=', 2);
+                    bool isIdNumber = int.TryParse(startIdParameters[1], out int startIdNumber);
+                    if (isIdNumber)
                     {
-                        startId = number;
+                        startId = startIdNumber;
                     }
-                    else
-                    {
-                        Console.WriteLine($"Invalid parameter for \"--start-id\"  {args[3][12..]}");
-                    }
-                }
-            }
-            else if (args.Length == 8)
-            {
-                if (args[0].ToLowerInvariant() == "-t")
-                {
-                    exportFormat = args[1];
+
+                    continue;
                 }
 
-                if (args[2].ToLowerInvariant() == "-o")
+                switch (args[i].ToUpperInvariant())
                 {
-                    pathToFile = args[3];
-                }
+                    case "-T":
+                        if (args.Length > i + 1)
+                        {
+                            exportFormat = args[i + 1].ToUpperInvariant();
+                            i++;
+                        }
 
-                if (args[4].ToLowerInvariant() == "-a")
-                {
-                    bool isNumber = int.TryParse(args[5], out int number);
-                    if (isNumber)
-                    {
-                        numberOfRecords = number;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Invalid parameter for \"-a\"  {args[5]}");
-                    }
-                }
+                        break;
+                    case "-O":
+                        if (args.Length > i + 1)
+                        {
+                            pathToFile = args[i + 1];
+                            i++;
+                        }
 
-                if (args[6].ToLowerInvariant() == "-i")
-                {
-                    bool isNumber = int.TryParse(args[7], out int number);
-                    if (isNumber)
-                    {
-                        startId = number;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Invalid parameter for \"--start-id\"  {args[7]}");
-                    }
+                        break;
+                    case "-A":
+                        if (args.Length > i + 1)
+                        {
+                            bool isAmountNumber = int.TryParse(args[i + 1], out int amountNumber);
+                            if (isAmountNumber)
+                            {
+                                numberOfRecords = amountNumber;
+                            }
+
+                            i++;
+                        }
+
+                        break;
+                    case "-I":
+                        if (args.Length > i + 1)
+                        {
+                            bool isIdNumber = int.TryParse(args[i + 1], out int startIdNumber);
+                            if (isIdNumber)
+                            {
+                                startId = startIdNumber;
+                            }
+
+                            i++;
+                        }
+
+                        break;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Invalid parameters");
             }
         }
     }
