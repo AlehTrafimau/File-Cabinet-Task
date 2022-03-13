@@ -15,7 +15,7 @@
             </summary>
             <param name="command">Command for handlers.</param>
             <param name="parameters">Additional parameters for handlers of command.</param>
-            <param name="availableCommands">The list of available commands this program.</param>
+            <param name="availableCommand">The list of available commands this program.</param>
         </member>
         <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
             <summary>
@@ -83,6 +83,17 @@
             Handlings the input request or transmits further.
             </summary>
             <param name="handlingRequest">The input request.</param>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.DefaultRecordPrinter">
+            <summary>
+            Outputs records to console by default format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Outputs records to console by default format.
+            </summary>
+            <param name="records">The sequence of record for display.</param>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler">
             <summary>
@@ -198,6 +209,17 @@
             </summary>
             <param name="handlingRequest">The input request.</param>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.IRecordPrinter">
+            <summary>
+            Define the function to display records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Display the list of records.
+            </summary>
+            <param name="records">The list of records.</param>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
             <summary>
             Defrangents the file system storage.
@@ -263,7 +285,7 @@
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
             <summary>
-            Gets number of records in current storage.
+            Gets number of records in current repo.
             </summary>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
@@ -748,6 +770,52 @@
             </summary>
             <returns>The enummerator for current collection.</returns>
         </member>
+        <member name="T:FileCabinetApp.FilesystemRecordEnumerator">
+            <summary>
+            Implements IEnumerator for filesystem cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FilesystemRecordEnumerator.#ctor(System.Collections.Generic.List{System.Int64},System.IO.FileStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FilesystemRecordEnumerator"/> class.
+            </summary>
+            <param name="collection">The current collection for iteration it content.</param>
+            <param name="fileStream">The current file stream instance for read records from filesystem.</param>
+        </member>
+        <member name="P:FileCabinetApp.FilesystemRecordEnumerator.Current">
+            <summary>
+            Gets the current record from filesystem.
+            </summary>
+            <value>
+            The current record from filesystem.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FilesystemRecordEnumerator.System#Collections#IEnumerator#Current">
+            <summary>
+             Gets the current record from filesystem.
+            </summary>
+            <value>
+            The current record from filesystem.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.FilesystemRecordEnumerator.MoveNext">
+            <summary>
+            Moves the counter of position to 1 if the conditions is true.
+            </summary>
+            <returns>
+            True if moved to one, or false if not.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.FilesystemRecordEnumerator.Reset">
+            <summary>
+            Sets the position counter to initial place.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FilesystemRecordEnumerator.Dispose">
+            <summary>
+            Disposes unmanaged resources.
+            </summary>
+        </member>
         <member name="T:FileCabinetApp.GeneralValidators.DateOfBirthValidator">
             <summary>
             Validates date of birth parameter of record by input rules.
@@ -904,19 +972,6 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
-        </member>
-        <member name="T:FileCabinetApp.RecordsSearcher">
-            <summary>
-            Finds records by input parametrers.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.RecordsSearcher.FindRecords(System.Tuple{System.String,System.String},FileCabinetApp.FileCabinetRecord[])">
-            <summary>
-            Selects records by input parameters.
-            </summary>
-            <param name="findParameter">Parameters for selected records.</param>
-            <param name="usersRecords">The storage foe selected.</param>
-            <returns>The list of selected records.</returns>
         </member>
         <member name="T:FileCabinetApp.SelectPrinter">
             <summary>

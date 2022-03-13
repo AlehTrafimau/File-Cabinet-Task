@@ -419,7 +419,7 @@ namespace FileCabinetApp
             {
                 selectedRecordsByParameters = this.usersRecords;
             }
-            else if (orderOfSelect == "AND" || orderOfSelect == string.Empty)
+            else if (orderOfSelect.ToUpperInvariant() == "AND" || orderOfSelect.ToUpperInvariant() == string.Empty)
             {
                 FileCabinetRecord[] records = this.usersRecords.ToArray<FileCabinetRecord>();
                 foreach (var i in fieldsOfRecordForSelect)

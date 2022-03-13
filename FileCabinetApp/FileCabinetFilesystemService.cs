@@ -491,7 +491,7 @@ namespace FileCabinetApp
             {
                 selectedRecordsByParameters = this.GetRecords().ToList<FileCabinetRecord>();
             }
-            else if (orderOfSelect == "AND" || orderOfSelect == string.Empty)
+            else if (orderOfSelect.ToUpperInvariant() == "AND" || orderOfSelect.ToUpperInvariant() == string.Empty)
             {
                 FileCabinetRecord[] records = this.GetRecords().ToList<FileCabinetRecord>().ToArray<FileCabinetRecord>();
                 foreach (var i in fieldsOfRecordForSelect)
@@ -501,7 +501,7 @@ namespace FileCabinetApp
 
                 selectedRecordsByParameters.AddRange(records);
             }
-            else if (orderOfSelect == "OR")
+            else if (orderOfSelect.ToUpperInvariant() == "OR")
             {
                 FileCabinetRecord[] records = Array.Empty<FileCabinetRecord>();
                 foreach (var i in fieldsOfRecordForSelect)
@@ -577,6 +577,8 @@ namespace FileCabinetApp
             {
                 this.dateOfBirthDictionary.Remove(dateOfBirthKey);
             }
+
+            Console.WriteLine($"Record #{recordId} is removed.");
         }
 
         private void InitializeDictionaries()
