@@ -108,9 +108,9 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             string orderOfFindRecords = string.Empty;
-            if (commands[1].Contains("or", StringComparison.InvariantCulture) || commands[1].Contains("and", StringComparison.InvariantCulture))
+            if (commands[1].Contains("or", StringComparison.InvariantCultureIgnoreCase) || commands[1].Contains("and", StringComparison.InvariantCultureIgnoreCase))
             {
-                orderOfFindRecords = commands[1].Contains("or", StringComparison.InvariantCultureIgnoreCase) ? "OR" : "AND";
+                orderOfFindRecords = commands[1].Contains("or", StringComparison.InvariantCultureIgnoreCase) ? "or" : "and";
             }
 
             string[] parametersForFindRecords = commands[1].Split(new string[] { ",", orderOfFindRecords }, StringSplitOptions.TrimEntries);
