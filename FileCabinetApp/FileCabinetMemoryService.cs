@@ -5,7 +5,7 @@ using System.Linq;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Service to create, storage, edit, find and display records about users.
+    /// Service for processing of records by use the memory system of program as storage.
     /// </summary>
     public class FileCabinetMemoryService : IFileCabinetService
     {

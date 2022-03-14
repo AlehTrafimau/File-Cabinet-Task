@@ -6,7 +6,7 @@ using System.Text;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Service for work to file system.
+    /// Service for processing of records by use the file system as storage.
     /// </summary>
     /// <seealso cref="FileCabinetApp.IFileCabinetService"/>
     internal class FileCabinetFileSystemService : IFileCabinetService
