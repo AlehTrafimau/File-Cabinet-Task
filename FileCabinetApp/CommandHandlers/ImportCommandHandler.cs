@@ -53,6 +53,7 @@ namespace FileCabinetApp.CommandHandlers
             if (!File.Exists(pathToFile))
             {
                 Console.WriteLine($"Import error: file {pathToFile} is not exist.");
+                return;
             }
 
             using StreamReader importStream = new (pathToFile);

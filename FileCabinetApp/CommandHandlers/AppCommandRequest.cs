@@ -11,19 +11,19 @@ namespace FileCabinetApp.CommandHandlers
     /// </summary>
     public class AppCommandRequest
     {
-        private string[] availableCommand;
+        private string[] availableCommands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppCommandRequest"/> class.
         /// </summary>
         /// <param name="command">Command for handlers.</param>
         /// <param name="parameters">Additional parameters for handlers of command.</param>
-        /// <param name="availableCommand">The list of available commands this program.</param>
-        public AppCommandRequest(string command, string parameters, string[] availableCommand)
+        /// <param name="availableCommands">The list of available commands this program.</param>
+        public AppCommandRequest(string command, string parameters, string[] availableCommands)
         {
             this.Command = command.ToUpperInvariant();
             this.Parameters = parameters;
-            this.availableCommand = availableCommand ?? Array.Empty<string>();
+            this.availableCommands = availableCommands ?? Array.Empty<string>();
         }
 
         /// <summary>
@@ -50,21 +50,21 @@ namespace FileCabinetApp.CommandHandlers
         /// </returns>
         public bool CheckCommand()
         {
-            if (!this.availableCommand.Contains(this.Command))
+            if (!this.availableCommands.Contains(this.Command))
             {
-                List<string> partiaularCommand = new ();
-                foreach (var i in this.availableCommand)
+                List<string> similarCommand = new ();
+                foreach (var i in this.availableCommands)
                 {
                     if (i.StartsWith(this.Command[0]))
                     {
-                        partiaularCommand.Add(i);
+                        similarCommand.Add(i);
                     }
                 }
 
-                if (partiaularCommand.Count != 0)
+                if (similarCommand.Count != 0)
                 {
                     Console.WriteLine($"{this.Command} is not a available command. See 'help'.\n\nThe most similar commands are:");
-                    foreach (var i in partiaularCommand)
+                    foreach (var i in similarCommand)
                     {
                         Console.WriteLine($"\t {i.ToLowerInvariant()}");
                     }

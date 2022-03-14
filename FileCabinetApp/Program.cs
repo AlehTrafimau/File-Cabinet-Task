@@ -6,7 +6,7 @@ using FileCabinetApp.DefaultValidators;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// The program for work with file cabinet service to create, storage, edit, find and display records about users.
+    /// The program for processing of records in various file cabinet systems.
     /// </summary>
     public static class Program
     {
@@ -62,44 +62,75 @@ namespace FileCabinetApp
 
         private static void SetConsoleParameters(string[] args)
         {
-            if ((args.Length == 1 && args[0].ToUpperInvariant() == "--VALIDATION-RULES=CUSTOM") || (args.Length == 2 && args[0].ToUpperInvariant() == "-V" && args[1].ToUpperInvariant() == "CUSTOM"))
-            {
-                recordValidator = new ValidatorBuilder().CreateCustom();
+            string cabinetSystemMessage = "Data storage will take place in the memory of program system.";
+            string validationRulesType = "This program will be use dafault validation rules.";
 
-                Console.WriteLine("Using custom validation rules.");
-            }
-            else
+            for (int i = 0; i < args.Length; i++)
             {
-                Console.WriteLine("Using default validation rules.");
+                switch (args[i].ToUpperInvariant())
+                {
+                    case "--VALIDATION-RULES=CUSTOM":
+                        SetValidationRules("CUSTOM");
+                        break;
+                    case "--VALIDATION-RULES=DEFAULT":
+                        break;
+                    case "-V":
+                        if (args.Length > i + 1)
+                        {
+                            SetValidationRules(args[i + 1].ToUpperInvariant());
+                            i++;
+                        }
+
+                        break;
+                    case "--STORAGE=FILE":
+                        SetStorage("FILE");
+                        break;
+                    case "--STORAGE=MEMORY":
+                        break;
+                    case "-S":
+                        if (args.Length > i + 1)
+                        {
+                            SetStorage(args[i + 1].ToUpperInvariant());
+                            i++;
+                        }
+
+                        break;
+                    case "USE-STOPWATCH":
+                        fileCabinetService = new ServiceMeter(fileCabinetService);
+                        break;
+                    case "USE-LOGGER":
+                        StreamWriter streamWriter = new StreamWriter("CabinetServiceDocs.txt", true);
+                        fileCabinetService = new ServiceLogger(streamWriter, fileCabinetService);
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            if ((args.Length == 1 && args[0].ToUpperInvariant() == "--STORAGE=FILE") || (args.Length == 2 && args[0].ToUpperInvariant() == "-S" && args[1].ToUpperInvariant() == "FILE"))
+            Console.WriteLine($"{cabinetSystemMessage}\n{validationRulesType}");
+
+            void SetValidationRules(string rules)
             {
-                Console.WriteLine("Data storage will take place in the file system.");
-                FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
-                fileCabinetService = new FileCabinetFileSystemService(fileStream);
-            }
-            else
-            {
-                Console.WriteLine("Data storage will take place in the memory of program.");
+                if (rules == "CUSTOM")
+                {
+                    validationRulesType = "This program will be use custom validation rules.";
+                    recordValidator = new ValidatorBuilder().CreateCustom();
+                }
             }
 
-            if (args.Length == 1 && args[0].ToUpperInvariant() == "USE-STOPWATCH")
+            void SetStorage(string storage)
             {
-                fileCabinetService = new ServiceMeter(fileCabinetService);
-            }
-
-            if (args.Length == 1 && args[0].ToUpperInvariant() == "USE-LOGGER")
-            {
-                StreamWriter streamWriter = new StreamWriter("CabinetServiceDocs.txt", true);
-                fileCabinetService = new ServiceLogger(streamWriter, fileCabinetService);
+                if (storage == "FILE")
+                {
+                    cabinetSystemMessage = "Data storage will take place in the file system.";
+                    FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
+                    fileCabinetService = new FileCabinetFileSystemService(fileStream);
+                }
             }
         }
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var recordPrinter = new DefaultRecordPrinter();
-
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
             var statHandler = new StatCommandHandler(fileCabinetService);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// Gets number of records in current repo.
+    /// Gets number of records in current storage.
     /// </summary>
     public class StatCommandHandler : ServiceCommandHandlerBase
     {

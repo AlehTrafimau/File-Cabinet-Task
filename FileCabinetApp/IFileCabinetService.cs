@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
+    /// Service for processing of records by use the different system as storage.
     /// </summary>
     public interface IFileCabinetService
     {

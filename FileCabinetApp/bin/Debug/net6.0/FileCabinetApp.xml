@@ -15,7 +15,7 @@
             </summary>
             <param name="command">Command for handlers.</param>
             <param name="parameters">Additional parameters for handlers of command.</param>
-            <param name="availableCommand">The list of available commands this program.</param>
+            <param name="availableCommands">The list of available commands this program.</param>
         </member>
         <member name="P:FileCabinetApp.CommandHandlers.AppCommandRequest.Command">
             <summary>
@@ -83,17 +83,6 @@
             Handlings the input request or transmits further.
             </summary>
             <param name="handlingRequest">The input request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.DefaultRecordPrinter">
-            <summary>
-            Outputs records to console by default format.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>
-            Outputs records to console by default format.
-            </summary>
-            <param name="records">The sequence of record for display.</param>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.DeleteCommandHandler">
             <summary>
@@ -193,7 +182,7 @@
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.InsertCommandHandler">
             <summary>
-            dfdf.
+            Inserts record to the current storage.
             </summary>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordValidator)">
@@ -208,17 +197,6 @@
             Handlings the input request or transmits further.
             </summary>
             <param name="handlingRequest">The input request.</param>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.IRecordPrinter">
-            <summary>
-            Define the function to display records.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>
-            Display the list of records.
-            </summary>
-            <param name="records">The list of records.</param>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
             <summary>
@@ -285,7 +263,7 @@
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
             <summary>
-            Gets number of records in current repo.
+            Gets number of records in current storage.
             </summary>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
@@ -436,7 +414,7 @@
         </member>
         <member name="T:FileCabinetApp.FileCabinetFileSystemService">
             <summary>
-            Service for work to file system.
+            Service for processing of records by use the file system as storage.
             </summary>
             <seealso cref="T:FileCabinetApp.IFileCabinetService"/>
         </member>
@@ -520,7 +498,7 @@
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
-            Service to create, storage, edit, find and display records about users.
+            Service for processing of records by use the memory system of program as storage.
             </summary>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
@@ -881,7 +859,7 @@
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
-            Exists a set of functions to work with resords: create, storage, edit, list, find by various parameters.
+            Service for processing of records by use the different system as storage.
             </summary>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
@@ -966,12 +944,25 @@
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
-            The program for work with file cabinet service to create, storage, edit, find and display records about users.
+            The program for processing of records in various file cabinet systems.
             </summary>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordsSearcher">
+            <summary>
+            Service for search records by input parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.RecordsSearcher.FindRecords(System.Tuple{System.String,System.String},FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            Finds records in input storage by input parameters.
+            </summary>
+            <param name="findParameter">Parameters of records for search.</param>
+            <param name="usersRecords">The storage for search records.</param>
+            <returns>The list of records which match input parametres.</returns>
         </member>
         <member name="T:FileCabinetApp.SelectPrinter">
             <summary>

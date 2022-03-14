@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Service for search records by input parameters.
+    /// </summary>
     internal static class RecordsSearcher
     {
+        /// <summary>
+        /// Finds records in input storage by input parameters.
+        /// </summary>
+        /// <param name="findParameter">Parameters of records for search.</param>
+        /// <param name="usersRecords">The storage for search records.</param>
+        /// <returns>The list of records which match input parametres.</returns>
         public static FileCabinetRecord[] FindRecords(Tuple<string, string> findParameter, FileCabinetRecord[] usersRecords)
         {
             FileCabinetRecord[] findResult = Array.Empty<FileCabinetRecord>();

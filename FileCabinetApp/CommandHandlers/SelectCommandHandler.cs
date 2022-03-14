@@ -61,31 +61,24 @@ namespace FileCabinetApp.CommandHandlers
                 {
                     case "ID":
                         result.Add(new Tuple<string, string>("Id", currentFields[1]));
-
                         break;
                     case "FIRSTNAME":
                         result.Add(new Tuple<string, string>("FirstName", currentFields[1]));
-
                         break;
                     case "LASTNAME":
                         result.Add(new Tuple<string, string>("LastName", currentFields[1]));
-
                         break;
                     case "DATEOFBIRTH":
                         result.Add(new Tuple<string, string>("DateOfBirth", currentFields[1]));
-
                         break;
                     case "SERIEOFPASSNUMBER":
                         result.Add(new Tuple<string, string>("SerieOfPassNumber", currentFields[1]));
-
                         break;
                     case "PASSNUMBER":
                         result.Add(new Tuple<string, string>("PassNumber", currentFields[1]));
-
                         break;
                     case "BANKACCOUNT":
                         result.Add(new Tuple<string, string>("BankAccount", currentFields[1]));
-
                         break;
                     default:
                         continue;
@@ -106,7 +99,7 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             string[] fieldsOfRecordForDisplay = commands[0].Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] validfieldsOfRecordForDisplay = fieldsOfRecordForDisplay.Where(field => this.availableFieldsOfRecords.Contains(field.ToUpperInvariant())).ToArray<string>();
+            string[] validfieldsOfRecordForDisplay = fieldsOfRecordForDisplay.Where(field => this.availableFieldsOfRecords.Contains(field.ToUpperInvariant())).Select(field => field.ToUpperInvariant()).ToArray<string>();
 
             if (commands.Length < 2)
             {
@@ -115,9 +108,9 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             string orderOfFindRecords = string.Empty;
-            if (commands[1].Contains("or", StringComparison.InvariantCulture) || commands[1].Contains("and", StringComparison.InvariantCulture))
+            if (commands[1].Contains("or", StringComparison.InvariantCultureIgnoreCase) || commands[1].Contains("and", StringComparison.InvariantCultureIgnoreCase))
             {
-                orderOfFindRecords = commands[1].Contains("or", StringComparison.InvariantCulture) ? "or" : "and";
+                orderOfFindRecords = commands[1].Contains("or", StringComparison.InvariantCultureIgnoreCase) ? "or" : "and";
             }
 
             string[] parametersForFindRecords = commands[1].Split(new string[] { ",", orderOfFindRecords }, StringSplitOptions.TrimEntries);

@@ -1,7 +1,7 @@
 ﻿namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// dfdf.
+    /// Inserts record to the current storage.
     /// </summary>
     internal class InsertCommandHandler : ServiceCommandHandlerBase
     {
@@ -43,7 +43,7 @@
 
             if (fieldsValues.Length != 2 || fields.Length != values.Length)
             {
-                Console.WriteLine("Invalid commamd. Enter \"values\" command");
+                Console.WriteLine("Invalid commamd. The number of fields must be the same as number of values of field");
                 return;
             }
 
@@ -134,6 +134,11 @@
 
                 this.fileCabinetService.InsertRecord(recordForValidate);
                 Console.WriteLine($"Record #{id} is inserted.");
+            }
+            else
+            {
+                Console.WriteLine("Enter all fields of record for insert by next format: insert(fields name) values (parameters of fields)");
+                return;
             }
         }
     }
