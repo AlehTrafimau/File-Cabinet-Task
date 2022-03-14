@@ -147,7 +147,7 @@ namespace FileCabinetApp
         /// <param name="fieldsOfRecordForSelect">The list of fields with values for select.</param>
         /// <param name="fieldsOfRecordsForDisplay">The list of necessary fields for display of selected records.</param>
         /// <param name="orderOfSelect">The definer of a order of select records, 'or' or 'and'.</param>
-        public virtual void SelectRecords(List<Tuple<string, string>>? fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
+        public virtual void SelectRecords(List<Tuple<string, string>> fieldsOfRecordForSelect, string[] fieldsOfRecordsForDisplay, string orderOfSelect)
         {
             this.stopWatch.Restart();
             this.service.SelectRecords(fieldsOfRecordForSelect, fieldsOfRecordsForDisplay, orderOfSelect);
