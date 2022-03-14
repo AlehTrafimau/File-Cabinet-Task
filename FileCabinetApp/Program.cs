@@ -6,7 +6,7 @@ using FileCabinetApp.DefaultValidators;
 namespace FileCabinetApp
 {
     /// <summary>
-    /// The program for work with file cabinet service to create, storage, edit, find and display records about users.
+    /// The program for processing of records in various file cabinet systems.
     /// </summary>
     public static class Program
     {
@@ -125,8 +125,6 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var recordPrinter = new DefaultRecordPrinter();
-
             var helpHandler = new HelpCommandHandler();
             var createHandler = new CreateCommandHandler(fileCabinetService, recordValidator);
             var statHandler = new StatCommandHandler(fileCabinetService);
