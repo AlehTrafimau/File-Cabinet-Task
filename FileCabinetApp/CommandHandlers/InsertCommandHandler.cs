@@ -1,7 +1,7 @@
 ﻿namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// dfdf.
+    /// Inserts record to the current storage.
     /// </summary>
     internal class InsertCommandHandler : ServiceCommandHandlerBase
     {
