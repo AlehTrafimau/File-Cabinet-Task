@@ -62,6 +62,9 @@ namespace FileCabinetApp
 
         private static void SetConsoleParameters(string[] args)
         {
+            string cabinetSystemMessage = "Data storage will take place in the memory of program system.";
+            string validationRulesType = "This program will be use dafault validation rules.";
+
             for (int i = 0; i < args.Length; i++)
             {
                 switch (args[i].ToUpperInvariant())
@@ -104,10 +107,13 @@ namespace FileCabinetApp
                 }
             }
 
+            Console.WriteLine($"{cabinetSystemMessage}\n{validationRulesType}");
+
             void SetValidationRules(string rules)
             {
                 if (rules == "CUSTOM")
                 {
+                    validationRulesType = "This program will be use custom validation rules.";
                     recordValidator = new ValidatorBuilder().CreateCustom();
                 }
             }
@@ -116,7 +122,7 @@ namespace FileCabinetApp
             {
                 if (storage == "FILE")
                 {
-                    Console.WriteLine("Data storage will take place in the file system.");
+                    cabinetSystemMessage = "Data storage will take place in the file system.";
                     FileStream fileStream = new ("cabinet-records.db", FileMode.OpenOrCreate);
                     fileCabinetService = new FileCabinetFileSystemService(fileStream);
                 }

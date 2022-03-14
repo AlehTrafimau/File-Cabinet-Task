@@ -359,44 +359,48 @@ namespace FileCabinetApp
                 findResult = findConditions.BankAccount != default ? findResult.Where(record => record.BankAccount == findConditions.BankAccount).ToArray() : findResult;
             }
 
-            int[] selectedRecordsId = findResult != Array.Empty<FileCabinetRecord>() ? findResult.Select(record => record.Id).ToArray() : Array.Empty<int>();
-
-            if (selectedRecordsId != Array.Empty<int>())
+            if (findResult != Array.Empty<FileCabinetRecord>())
             {
-                foreach (var i in selectedRecordsId)
+                foreach (var i in findResult)
                 {
+                    int indexOfUpdateRecords = this.usersRecords.IndexOf(i);
                     if (newParameters.FirstName != string.Empty)
                     {
-                        this.usersRecords[i - 1].FirstName = newParameters.FirstName;
+                        this.usersRecords[indexOfUpdateRecords].FirstName = newParameters.FirstName;
                     }
 
                     if (newParameters.LastName != string.Empty)
                     {
-                        this.usersRecords[i - 1].LastName = newParameters.LastName;
+                        this.usersRecords[indexOfUpdateRecords].LastName = newParameters.LastName;
                     }
 
                     if (newParameters.DateOfBirth != default)
                     {
-                        this.usersRecords[i - 1].DateOfBirth = newParameters.DateOfBirth;
+                        this.usersRecords[indexOfUpdateRecords].DateOfBirth = newParameters.DateOfBirth;
                     }
 
                     if (newParameters.SerieOfPassNumber != default)
                     {
-                        this.usersRecords[i - 1].SerieOfPassNumber = newParameters.SerieOfPassNumber;
+                        this.usersRecords[indexOfUpdateRecords].SerieOfPassNumber = newParameters.SerieOfPassNumber;
                     }
 
                     if (newParameters.PassNumber != default)
                     {
-                        this.usersRecords[i - 1].PassNumber = newParameters.PassNumber;
+                        this.usersRecords[indexOfUpdateRecords].PassNumber = newParameters.PassNumber;
                     }
 
                     if (newParameters.BankAccount != default)
                     {
-                        this.usersRecords[i - 1].BankAccount = newParameters.BankAccount;
+                        this.usersRecords[indexOfUpdateRecords].BankAccount = newParameters.BankAccount;
                     }
                 }
 
                 this.selectedRecords.Clear();
+            }
+            else
+            {
+                Console.WriteLine("Records by these parameters are not found");
+                return;
             }
         }
 
